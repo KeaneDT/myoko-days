@@ -6,9 +6,9 @@ An illustrated, green-season itinerary builder for the Myoko area. Its centrepie
 
 Created for the SMU sustainability communication project with Patience Capital Group. The visual direction is deliberately warm, slow and tactile: a landscape to explore, rather than a wall of travel listings.
 
-**Private source repository · browser-based experience · no account or booking backend**
+**GitHub Pages · browser-based experience · no account or booking backend**
 
-**[Explore the live site](https://myoko-days.brinycrab13.chatgpt.site) · [Open Build](https://myoko-days.brinycrab13.chatgpt.site/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.1.0)**
+**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.1.1)**
 
 ![The live Myoko Days 3D map, rendered in the browser](docs/images/map-overview.png)
 
@@ -180,7 +180,9 @@ Material limits remain: some prices, host and operating details are modelled rat
 
 ## Sharing, source and releases
 
-The GitHub repository and release downloads are private to the owner. The deployed experience can be shared independently with the team. **Repository privacy is separate from browser delivery:** visitors can inspect HTML, JavaScript and assets their browser receives. Never put secrets in client files.
+The website is published at **https://keanedt.github.io/myoko-days/** through GitHub Pages, directly from the main branch. The repository, its history and release downloads are public at the owner's request. Visitors can inspect the delivered HTML, JavaScript and assets. Never put secrets in client files.
+
+The site includes robots.txt and a noindex meta directive to ask search engines not to index it. These are voluntary crawler hints, not access controls. No invitations or social announcements are sent by this project; GitHub may still display public repository activity to followers.
 
 The **Mountain Residents** release packages the complete website and preview server. Its release page showcases Haneuma horse, Madarao rabbit, Iizuna fox and Kurohime snake alongside the map. Download, extract and run the server above.
 
