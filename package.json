@@ -1,6 +1,6 @@
 {
   "name": "myoko-days",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Myoko Days green-season itinerary builder and illustrated mountain diorama",
   "scripts": {

@@ -348,7 +348,7 @@
     if (K) {
       let _done = 0; const _n = tokens.length + 1; const _tick = p => p.then(v => { _done++; prog(0.68 + 0.26 * _done / _n); return v; });
       await Promise.all(tokens.map(t => _tick(loadScript(kitPath + "attractions/" + t.a.id + ".js?v=17.3"))).concat(_tick(loadScript(kitPath + "houses.js"))));
-      await loadScript(kitPath + "attractions/train.js?v=16.0"); await loadScript(kitPath + "trains.js?v=17.18"); await loadScript(kitPath + "grazers.js?v=21.0"); await loadScript(kitPath + "critters.js?v=21.0").catch(() => null);
+      await loadScript(kitPath + "attractions/train.js?v=16.0"); await loadScript(kitPath + "trains.js?v=17.18"); await loadScript(kitPath + "grazers.js?v=21.1"); await loadScript(kitPath + "critters.js?v=21.1").catch(() => null);
       try {
         if (window.MyokoTrains) { trains = window.MyokoTrains.create({ T, K, scene, L, heightAt, EXAG, reduce: () => matchMedia("(prefers-reduced-motion: reduce)").matches }); trains.prepare(); }
       } catch (e) { trains = null; modelErrors.push("trains: " + e.message); }

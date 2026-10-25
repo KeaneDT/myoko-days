@@ -146,14 +146,35 @@ window.MyokoGrazers = (function () {
       }
       a.shadow.visible=true;a.shadow.position.set(p.x,gy(p.x,p.z)+4,p.z);a.shadow.rotation.y=-hd;
       a.shadow.scale.set(a.key==='horse'?210:90,1,a.key==='horse'?72:48);a.shadow.material.opacity=.15*(1-air/110);
+      if(a.key==='horse'&&a.haze){const u=a.haze,d=root.position.distanceTo(u.uCamPos.value)/Math.max(1,u.uViewDist.value);a.shadow.material.opacity*=1-.65*smooth((d-.65)/1.25);}
       root.userData.motion={state:a.state,x:a.x,z:a.z,air:a.air,distance:a.distance,routeScale:a.path.scale};
     }
     function setObstacles(next){plots=next||[];actors.forEach(a=>{a.path=route(a);pose(a,0);});}
     function setAtmosphere(shared,glsl){
-      const clones=new Map();group.traverse(o=>{if(!o.isMesh||o===actors[0].shadow||o===actors[1].shadow)return;
-        if(!clones.has(o.material)){const m=o.material.clone();m.onBeforeCompile=shader=>{Object.assign(shader.uniforms,shared);shader.vertexShader='varying vec3 vGrazerWorld;\n'+shader.vertexShader.replace('#include <worldpos_vertex>','#include <worldpos_vertex>\nvGrazerWorld=(modelMatrix*vec4(transformed,1.0)).xyz;');shader.fragmentShader=glsl.uniforms+'\n'+glsl.palette+'\n'+glsl.paint+'\nvarying vec3 vGrazerWorld;\n'+shader.fragmentShader.replace('#include <fog_fragment>','#include <fog_fragment>\ngl_FragColor.rgb=pAerial(gl_FragColor.rgb,vGrazerWorld);');};m.customProgramCacheKey=()=> 'myoko-grazers-v21';clones.set(o.material,m);}o.material=clones.get(o.material);
+      actors.forEach(a=>{
+        a.haze=shared;
+        const clones=new Map();
+        // A dark coat needs a little more of the same landscape mist to sit in the distant meadow.
+        // The extra veil clears smoothly on approach; the rabbit keeps its existing treatment.
+        const veil=a.key==='horse'?`float meadowMist=0.28*smoothstep(0.45,1.10,length(vGrazerWorld-uCamPos)/max(uViewDist,1.0));
+          gl_FragColor.rgb=mix(gl_FragColor.rgb,mix(ENZAN,PAPER,0.16),meadowMist);`:'';
+        a.rig.root.traverse(o=>{if(!o.isMesh)return;
+          if(!clones.has(o.material)){
+            const m=o.material.clone();
+            m.onBeforeCompile=shader=>{
+              Object.assign(shader.uniforms,shared);
+              shader.vertexShader='varying vec3 vGrazerWorld;\n'+shader.vertexShader.replace('#include <worldpos_vertex>','#include <worldpos_vertex>\nvGrazerWorld=(modelMatrix*vec4(transformed,1.0)).xyz;');
+              shader.fragmentShader=glsl.uniforms+'\n'+glsl.palette+'\n'+glsl.paint+'\nvarying vec3 vGrazerWorld;\n'+shader.fragmentShader.replace('#include <fog_fragment>','#include <fog_fragment>\ngl_FragColor.rgb=pAerial(gl_FragColor.rgb,vGrazerWorld);\n'+veil);
+            };
+            m.customProgramCacheKey=()=> 'myoko-grazers-v21.1-'+a.key;
+            clones.set(o.material,m);
+          }
+          o.material=clones.get(o.material);
+        });
+        pose(a,0);
       });
     }
+
     setObstacles([]);
     return{group,setObstacles,setAtmosphere,update:dt=>actors.forEach(a=>pose(a,dt)),
       info:()=>actors.map(a=>({key:a.key,st:a.state,x:a.x,z:a.z,visible:a.rig.root.visible,air:a.air,routeLength:a.path&&a.path.length,routeScale:a.path&&a.path.scale})),

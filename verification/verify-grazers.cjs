@@ -20,6 +20,11 @@ for(let frame=0;frame<24000;frame++){
 for(const key of ['horse','rabbit']){assert.ok(states[key].has('graze')&&states[key].has('listen'));results[key]={states:[...states[key]],bounds:bounds[key]};}
 assert.ok(states.horse.has('dash')&&states.horse.has('walk'));assert.ok(states.rabbit.has('hop'));
 const shared={uCamPos:{value:new T.Vector3()},uViewDist:{value:1000}};animals.setAtmosphere(shared,{uniforms:'',palette:'',paint:''});
-let fog=0;animals.group.traverse(o=>{if(o.isMesh&&o.material.customProgramCacheKey?.()==='myoko-grazers-v21')fog++;});assert.ok(fog>50);
+let fog=0;animals.group.traverse(o=>{if(o.isMesh&&o.material.customProgramCacheKey?.().startsWith('myoko-grazers-v21.1-'))fog++;});assert.ok(fog>50);
+for(const a of animals.actors){
+ let checked=0;
+ a.rig.root.traverse(o=>{if(!o.isMesh)return;const shader={uniforms:{},vertexShader:'#include <worldpos_vertex>',fragmentShader:'#include <fog_fragment>'};o.material.onBeforeCompile(shader);assert.equal(shader.uniforms.uCamPos,shared.uCamPos);assert.ok(shader.fragmentShader.includes('pAerial('));assert.equal(shader.fragmentShader.includes('float meadowMist='),a.key==='horse');checked++;});
+ assert.ok(checked>10);
+}
 results.frames=24000;results.simulatedSeconds=1512;results.foggedMeshes=fog;
 fs.writeFileSync(path.join(__dirname,'grazer-results.json'),JSON.stringify(results,null,2));console.log('PASS all grazer motion states, grounded rests, persistent visibility, route wrap, full-footprint habitat checks and private haze materials.');console.log(results);
