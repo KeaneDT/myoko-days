@@ -29,13 +29,13 @@ window.MD = window.MD || {};
   MD.tripFilm = {compose, destroy() { dispose(); dispose = () => {}; }, mount(root, days) {
     MD.tripFilm.destroy();
     if (!root) return;
-    const {clips, missing} = compose(days), total = clips.reduce((n,c) => n+c.duration, 0);
+    const {clips, missing} = compose(days), chapters=clips.map((c,i)=>({c,i})).filter((x,i,a)=>i===0||x.c.id!==a[i-1].c.id), total = clips.reduce((n,c) => n+c.duration, 0);
     root.innerHTML = `<div class="trip-film__heading"><div><p class="label">A glimpse of your itinerary</p><h2>Your days, in motion.</h2></div><p>Real moments from the team’s October 2026 fieldwork, drawn from the activities in your plan.</p></div>`;
     if (!clips.length) {
       root.innerHTML += `<div class="trip-film__empty"><span aria-hidden="true">▷</span><h3>${missing.length?'Your plan is ready. Its footage is still to come.':'Start with a place that draws you in.'}</h3><p>${missing.length?'There is no matched footage for these planned activities yet.':'Add activities to your itinerary to bring your trip film to life.'}</p><a class="linkbtn" href="#build">Return to your itinerary →</a></div>`;
       return;
     }
-    root.innerHTML += `<div class="trip-film__screen"><div class="trip-film__picture"><img class="trip-film__backdrop" src="${esc(clips[0].poster)}" alt=""><video class="trip-film__video" muted playsinline preload="metadata" aria-label="Your itinerary film"></video><video class="trip-film__video" muted playsinline preload="none" aria-hidden="true"></video><div class="trip-film__shade"></div><span class="trip-film__credit">Myoko Days · fieldwork film</span><button type="button" class="trip-film__start" data-film-start aria-label="Play your trip film">▷<span>Play your trip</span></button></div><div class="trip-film__caption"><span class="label" data-film-day></span><h3 data-film-name></h3></div></div><div class="trip-film__controls"><button type="button" data-film-prev aria-label="Previous film clip">←</button><button type="button" data-film-play aria-label="Play your trip film">Play</button><button type="button" data-film-next aria-label="Next film clip">→</button><label class="sr-only" for="filmSeek">Seek through your trip film</label><input id="filmSeek" type="range" min="0" max="${total}" value="0" step="0.1"><span class="trip-film__time" data-film-time></span><span class="trip-film__silent">Silent film</span></div><div class="trip-film__chapters" aria-label="Film chapters">${clips.map((c,i)=>`<button type="button" data-film-chapter="${i}" aria-label="Day ${c.day}: ${esc(c.name)}, clip ${i%2+1}"><img src="${esc(c.poster)}" alt=""><span><small>Day ${c.day} · ${i%2+1}/2</small>${esc(c.name)}</span></button>`).join('')}</div><p class="trip-film__note">${missing.length?`No matched footage yet for ${missing.map(esc).join(' · ')}. These activities remain in your written itinerary.`:'Made from the activities in your itinerary, in day order.'} Historical fieldwork footage; conditions may differ.</p><p class="sr-only" data-film-status aria-live="polite"></p>`;
+    root.innerHTML += `<div class="trip-film__screen"><div class="trip-film__picture"><img class="trip-film__backdrop" src="${esc(clips[0].poster)}" alt=""><video class="trip-film__video" muted playsinline preload="metadata" aria-label="Your itinerary film"></video><video class="trip-film__video" muted playsinline preload="none" aria-hidden="true"></video><div class="trip-film__shade"></div><span class="trip-film__credit">Myoko Days · fieldwork film</span><button type="button" class="trip-film__start" data-film-start aria-label="Play your trip film">▷<span>Play your trip</span></button></div><div class="trip-film__caption"><span class="label" data-film-day></span><h3 data-film-name></h3></div></div><div class="trip-film__controls"><button type="button" data-film-prev title="Previous activity" aria-label="Previous activity">←</button><button type="button" data-film-play aria-label="Play your trip film">Play</button><button type="button" data-film-next title="Next activity" aria-label="Next activity">→</button><label class="sr-only" for="filmSeek">Seek through your trip film</label><input id="filmSeek" type="range" min="0" max="${total}" value="0" step="0.1"><span class="trip-film__time" data-film-time></span><span class="trip-film__silent">Silent film</span></div><div class="trip-film__chapters" aria-label="Film chapters">${chapters.map(({c,i})=>`<button type="button" data-film-chapter="${i}" aria-label="Skip to ${esc(c.name)}, Day ${c.day}"><img src="${esc(c.poster)}" alt=""><span><small>Day ${c.day}</small>${esc(c.name)}</span></button>`).join('')}</div><p class="trip-film__note">${missing.length?`No matched footage yet for ${missing.map(esc).join(' · ')}. These activities remain in your written itinerary.`:'Made from the activities in your itinerary, in day order.'} Historical fieldwork footage; conditions may differ.</p><p class="sr-only" data-film-status aria-live="polite"></p>`;
     const videos = [...root.querySelectorAll('video')], play = root.querySelector('[data-film-play]'), startButton = root.querySelector('[data-film-start]'), seek = root.querySelector('#filmSeek');
     const ac = new AbortController(), failed = new Set();
     let index = 0, active = 0, running = false, dead = false, generation = 0, loadingTimer;
@@ -71,10 +71,11 @@ window.MD = window.MD || {};
       const video=videos[active], c=clips[index];
       videos.forEach((v,i)=>{v.classList.toggle('is-active',i===active);v.setAttribute('aria-hidden',String(i!==active));});
       root.querySelector('.trip-film__backdrop').src=c.poster;
-      root.querySelector('[data-film-day]').textContent=`Day ${c.day} · ${index+1} of ${clips.length}`;
+      root.querySelector('[data-film-day]').textContent=`Day ${c.day} · activity ${chapters.findIndex(x=>x.c.id===c.id)+1} of ${chapters.length}`;
       root.querySelector('[data-film-name]').textContent=c.name;
       root.querySelector('[data-film-status]').textContent=`Day ${c.day}: ${c.name}`;
-      root.querySelectorAll('[data-film-chapter]').forEach((b,i)=>{b.classList.toggle('is-current',i===index);b.setAttribute('aria-current',i===index?'true':'false');});
+      root.querySelectorAll('[data-film-chapter]').forEach(b=>{const on=clips[Number(b.dataset.filmChapter)].id===c.id;b.classList.toggle('is-current',on);b.setAttribute('aria-current',on?'true':'false');});
+      root.querySelector('[data-film-prev]').disabled=chapters.findIndex(x=>x.c.id===c.id)===0;root.querySelector('[data-film-next]').disabled=chapters.findIndex(x=>x.c.id===c.id)===chapters.length-1;
       const ready=()=>{
         if(dead||token!==generation) return;
         clearTimeout(loadingTimer);
@@ -109,8 +110,8 @@ window.MD = window.MD || {};
     });
     listen(play,'click',()=>{if(!running&&videos[active].ended)show(0,0,true);else setRunning(!running);});
     listen(startButton,'click',()=>{if(videos[active].ended)show(0,0,true);else setRunning(true);});
-    listen(root.querySelector('[data-film-prev]'),'click',()=>show(index-1));
-    listen(root.querySelector('[data-film-next]'),'click',()=>show(index+1));
+    listen(root.querySelector('[data-film-prev]'),'click',()=>{const chapter=chapters[chapters.findIndex(x=>x.c.id===clips[index].id)-1];if(chapter)show(chapter.i);});
+    listen(root.querySelector('[data-film-next]'),'click',()=>{const chapter=chapters[chapters.findIndex(x=>x.c.id===clips[index].id)+1];if(chapter)show(chapter.i);});
     root.querySelectorAll('[data-film-chapter]').forEach(b=>listen(b,'click',()=>show(Number(b.dataset.filmChapter))));
     listen(seek,'input',()=>{
       let value=Math.min(Number(seek.value),total-.1), target=0;

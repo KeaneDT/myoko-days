@@ -8,7 +8,7 @@ Created for the SMU sustainability communication project with Patience Capital G
 
 **GitHub Pages · browser-based experience · no account or booking backend**
 
-**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.1.1)**
+**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.2.0)**
 
 ![The live Myoko Days 3D map, rendered in the browser](docs/images/map-overview.png)
 
@@ -20,6 +20,29 @@ Created for the SMU sustainability communication project with Patience Capital G
 
 Trip state stays in the current browser's localStorage. The prototype makes no reservations, accepts no payments and sends no booking enquiries.
 
+## Three ways to feel Myoko
+
+![Restore, Discover and Move: three starting itineraries](docs/images/three-ways.png)
+
+**Find your rhythm.** Slow down, follow your curiosity or head outdoors. Restore, Discover and Move are invitations to shape a trip, with every included activity shown before choosing a starting itinerary.
+
+The home film fills the current viewport across desktop, portrait and short landscape screens, with responsive copy, safe-area spacing and a cover crop.
+
+## Dates, prices and decisions you control
+
+![Compact calendar with direct date, month and year controls](docs/images/price-calendar.png)
+
+Plan explains Friday/Saturday, holiday and seasonal rate differences before date selection. The compact calendar sits beside the selected journey and one-day-earlier/later stay comparisons. Month/year dropdowns, arrows and direct date entry make changes quick. Colours use the same estimated room-night model as the stay quote, rather than live availability. On phones, the two parts stack without horizontal overflow.
+
+- **Manual placement is explicit.** Adding or moving an activity never silently displaces another activity, switches to a different day or grows the trip. A conflict dialog offers free blocks, clearly stated moves/removals, extension where needed, or cancellation.
+- **Best Day dragging opts into sorting.** Dropping onto Best Day retains the automatic solver. Starting a sample itinerary also fits that initial selection to the chosen length.
+- **Full-day means both blocks.** Full-day outings reserve morning and afternoon, away from arrival/departure travel blocks. Shortening a trip keeps unresolved activities visible for a decision rather than removing them.
+- **Map controls stay useful.** Activity close buttons remain at the top right while details scroll. Day numbers retain contrast in active/hover states. Help closes on outside clicks and map interaction.
+
+![Compact accommodation choices in Review](docs/images/review-stays.png)
+
+Review shows four compact stay options with mountain tier icons and nightly guide prices. Changing a stay updates costs and routes while preserving the reader's position and the film. Film arrows skip **by activity**, grouping multiple clips from the same place; the day stays visible as context.
+
 ## Build: a landscape you can plan inside
 
 ![The Build workspace with its 3D map and trip controls](docs/images/build-workspace.png)
@@ -27,7 +50,7 @@ Trip state stays in the current browser's localStorage. The prototype makes no r
 - **Explore the relief.** Pan and zoom through Myoko, Kurohime, Madarao and Iizuna, Lake Nojiri, the highlands and the valley toward Arai. Return to the full composition with the overview control.
 - **Open places directly.** Attraction models are selectable. Type filters and the Places list offer another route to the same content; extra nearby ideas can be shown separately.
 - **Understand a place before adding it.** Activity information connects location, season, effort, duration, planning price and fieldwork photographs or clips where available.
-- **Arrange the trip.** Add a place to a selected day, move or swap itinerary blocks, inspect days and costs, and continue to Review. The day dock keeps the emerging plan close to the map.
+- **Arrange the trip.** Add a place to a selected day, move activities with explicit conflict choices, inspect days and costs, and continue to Review. The day dock keeps the emerging plan close to the map.
 - **Notice the small things.** Farms, roofs, railway details, forest clusters, water strokes, mist and residents make the region feel inhabited without requiring another click.
 
 The map is **geographically adapted and deliberately stylised**. Landmarks have room to read, models are enlarged relative to the landscape, and some placements are adjusted for composition and selection. It is not a navigation or hiking-safety map.
@@ -174,9 +197,9 @@ npm install
 npm test
 ```
 
-Checks cover **20 planner assertions and 400 random trips**; **18,000 irregular frames** for snake/fox persistence, terrain contact and route safety; and **24,000 frames / 1,512 simulated seconds** for horse/rabbit states, footprint clearance, grazing, planted pauses, continuity and haze material isolation. Browser review covers the integrated map and production-model renders. These are targeted checks, not a complete security or real-device/cross-browser audit.
+Checks cover **20 planner assertions and 400 random trips**, plus explicit-conflict handling, full-day reservations, quote consistency and **250 random manual-placement itineraries**; **18,000 irregular frames** for snake/fox persistence, terrain contact and route safety; and **24,000 frames / 1,512 simulated seconds** for horse/rabbit states, footprint clearance, grazing, planted pauses, continuity and haze material isolation. Browser review covers the integrated map and production-model renders. These are targeted checks, not a complete security or real-device/cross-browser audit.
 
-Material limits remain: some prices, host and operating details are modelled rather than live quotes; a full-day outing can currently coexist with another half-day activity; a failed initial map prefetch can impede retry; and malformed saved-state identifiers need stricter own-key validation. Historical fieldwork media does not establish current availability. [ASSUMPTIONS.md](ASSUMPTIONS.md) retains modelled inputs and confirmation needs.
+Material limits remain: some prices, host and operating details are modelled rather than live quotes; a failed initial map prefetch can impede retry; and malformed saved-state identifiers need stricter own-key validation. Historical fieldwork media does not establish current availability. [ASSUMPTIONS.md](ASSUMPTIONS.md) retains modelled inputs and confirmation needs.
 
 ## Sharing, source and releases
 

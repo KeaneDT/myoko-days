@@ -12,6 +12,7 @@ function invariant(s,label=''){
   assert.ok(p.days.length===s.days,label+' day count');
   for(const d of p.days){
     for(const sl of ['am','pm']){const a=d[sl];if(!a)continue;
+      if(sl==='pm'&&a===d.am&&P.isLong(a))continue;
       assert.ok(!seen.has(a.id),label+' duplicate '+a.id);seen.add(a.id);
       assert.equal(P.availability(a,s,d.i),'', label+` ${a.id} unavailable on day ${d.i}`);
       assert.ok(!P.slotWhy(a,s,d.i,sl),label+` ${a.id} blocked in ${d.i}/${sl}`);}
@@ -22,7 +23,7 @@ function invariant(s,label=''){
 }
 const rng=seed=>()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296);
 
-test('half-day blocks: no activity takes a whole day, e-bike included',()=>{
+test('half-day activities occupy one block, including e-bike',()=>{
   for(const a of D.activities)assert.ok(a.u<=1||['mtmyoko','foodwalk'].includes(a.id),a.id+' u='+a.u);
   const s=state(['ebike','sup'],{days:3});const r=P.add(s,'ebike',{});assert.ok(r.ok);
   const s2={...s,sel:new Set(['ebike']),placements:r.placements};const r2=P.add(s2,'kayak',{});assert.ok(r2.ok);

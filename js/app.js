@@ -94,7 +94,7 @@
   }
   const lunches = n => n + (n === 1 ? " lunch" : " lunches");
   const priceTxt = a => a.price == null || a.price === 0 ? "Free" : yen(a.price);
-  const lenTxt = a => a.u === 2 ? "Long outing" : a.u === 1 ? (a.w === "am" ? "Morning" : a.w === "pm" ? "Afternoon" : "Half day") : a.slot === "eve" ? "Evening" : "Short stop";
+  const lenTxt = a => a.u === 2 ? "Full day" : a.u === 1 ? (a.w === "am" ? "Morning" : a.w === "pm" ? "Afternoon" : "Half day") : a.slot === "eve" ? "Evening" : "Short stop";
   const MON = { 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct" };
   function runsTxt(a) {
     const m = Object.keys(D.months).map(Number).filter(x => a.months.includes(x));
@@ -130,22 +130,48 @@
   function addPlace(id, o) {
     o = o || {};
     const a = D.byId[id]; if (!a) return { ok: false, why: "Unknown activity", options: [] };
-    if (S.sel.has(id)) return { ok: true, already: true };
+    if (S.sel.has(id) && !o.auto) return { ok: true, already: true };
     const t = o.target === undefined ? S.target : o.target;
     const before = snap();
-    let r = null;
-    if (t && t.slot) {
-      const tmp = { ...S, sel: new Set([...S.sel, id]) };
-      const pr = P.place(tmp, id, t.day, t.slot);
-      if (pr.ok) r = { ...pr, retargeted: false };
-    }
-    if (!r) r = P.add(S, id, { targetDay: t ? t.day : null, lock: !!t });
-    if (!r.ok) return r;
+    const r=o.auto?P.add(S,id,{targetDay:null,lock:false}):P.direct(S,id,t);
+    if(!r.ok){requestPlacement(id,t,r.why);return r;}
     S.sel.add(id); S.placements = r.placements; S.days = r.days || S.days; S.removed = [];
     S.focusNew = id;
     changed({ added: id, moved: (r.moved || []).map(m => m.id) });
     toast(sentence(r, a), { undo: () => restore(before) });
     return r;
+  }
+  function requestPlacement(id,target,why){
+    const a=D.byId[id];if(!a)return;
+    let dlg=document.getElementById('placementDialog');if(!dlg){dlg=document.createElement('dialog');dlg.id='placementDialog';dlg.className='plan-conflict';dlg.setAttribute('aria-labelledby','conflictTitle');document.body.appendChild(dlg);}
+    const choices=[],seen=new Set();
+    const offer=(label,r,removed=[])=>{if(!r?.ok)return;const key=JSON.stringify([r.placements,removed]);if(seen.has(key))return;seen.add(key);choices.push({label,r,removed});};
+    const temp={...S,sel:new Set([...S.sel,id])};
+    P.candidates(a,S).forEach(c=>offer(`${S.sel.has(id)?'Move':'Add'} ${a.name} to Day ${c.day+1} ${c.slot==='am'?'morning':'afternoon'}${P.isLong(a)?' · full day':''}`,P.direct(temp,id,{day:c.day,slot:c.slot})));
+    const occupied=target?Object.entries(S.placements).filter(([key,p])=>key!==id&&p.day===target.day&&(P.isLong(a)||P.isLong(D.byId[key])||!target.slot||p.slot===target.slot)).map(([key])=>key):[...S.sel].filter(x=>x!==id);
+    occupied.forEach(other=>{
+      const without={...temp,sel:new Set([...temp.sel].filter(x=>x!==other)),placements:{...temp.placements}};delete without.placements[other];
+      const replaced=P.direct(without,id,target);
+      offer(`Remove ${D.byId[other].name}; ${S.sel.has(id)?'move':'add'} ${a.name}${replaced?.placed?' to '+where(replaced.placed):''}`,replaced,[other]);
+      if(target){
+        for(const c of P.candidates(D.byId[other],S)){
+          if(c.day===target.day&&(!target.slot||c.slot===target.slot))continue;
+          const moved=P.direct(temp,other,{day:c.day,slot:c.slot});if(!moved.ok)continue;
+          const placed=P.direct({...temp,placements:moved.placements},id,target);
+          if(placed.ok){offer(`Move ${D.byId[other].name} to ${where(moved.placed)}; place ${a.name} here`,placed);break;}
+        }
+      }
+    });
+    if(target&&occupied.length>1){const cleared={...temp,sel:new Set([...temp.sel].filter(x=>!occupied.includes(x))),placements:{...temp.placements}};occupied.forEach(x=>delete cleared.placements[x]);offer(`Remove ${occupied.map(x=>D.byId[x].name).join(' and ')}; place ${a.name} here`,P.direct(cleared,id,target),occupied);}
+    if(S.days<MAX_DAYS&&!choices.some(c=>!c.removed.length)){const r=P.direct({...temp,days:S.days+1},id,null);offer(`Extend the trip to ${S.days+1} days; place ${a.name}${r.placed?' on '+where(r.placed):''}`,r);}
+    dlg.innerHTML=`<p class="label">Your itinerary · your choice</p><h2 id="conflictTitle">Make room for ${esc(a.name)}</h2><p>${esc(why||'Choose a new block or remove this activity.')} Nothing will change until you choose.</p><div class="plan-conflict__choices">${choices.map((c,i)=>`<button type="button" data-placement-choice="${i}">${esc(c.label)}</button>`).join('')}${S.sel.has(id)?`<button type="button" data-placement-remove>Remove ${esc(a.name)} from my trip</button>`:''}</div><button type="button" class="plan-conflict__cancel" data-placement-cancel>Keep my plan unchanged</button>`;
+    dlg.onclick=e=>{
+      if(e.target===dlg||e.target.closest('[data-placement-cancel]')){dlg.close();return;}
+      if(e.target.closest('[data-placement-remove]')){dlg.close();removePlace(id);return;}
+      const b=e.target.closest('[data-placement-choice]');if(!b)return;const c=choices[Number(b.dataset.placementChoice)],before=snap();
+      c.removed.forEach(key=>S.sel.delete(key));S.sel.add(id);S.placements=c.r.placements;S.days=c.r.days||S.days;dlg.close();changed({added:id,moved:[id]});toast(c.label,{undo:()=>restore(before)});
+    };
+    if(!dlg.open)dlg.showModal();
   }
   function removePlace(id) {
     const a = D.byId[id]; if (!a || !S.sel.has(id)) return;
@@ -161,7 +187,7 @@
     const isNew = !S.sel.has(id);
     const tmp = isNew ? { ...S, sel: new Set([...S.sel, id]) } : S;
     const r = P.place(tmp, id, day, slot);
-    if (!r.ok) { toast(r.why, { kind: "warn" }); return r; }
+    if (!r.ok) { requestPlacement(id,{day,slot},r.why); return r; }
     if (isNew) S.sel.add(id);
     S.placements = r.placements; S.days = r.days || S.days;
     changed({ added: isNew ? id : null, moved: [id, ...(r.moved || []).map(m => m.id)] });
@@ -174,23 +200,19 @@
   function moveToDay(id, day) {
     const before = snap();
     const r = P.move(S, id, day);
-    if (!r.ok) { toast(r.why, { kind: "warn" }); return r; }
+    if (!r.ok) { requestPlacement(id,{day},r.why); return r; }
     S.placements = r.placements; S.days = r.days || S.days;
     changed({ moved: [id] });
     toast(day === -1 ? "Taken out of your days" : `${D.byId[id].name} moved to ${where(r.placed)}`, { undo: () => restore(before) });
     return r;
   }
   /* After any setting changes: drop what can no longer happen, re-fit the rest. Returns the names that were taken out. */
-  function reconcile() {
-    const gone = [];
-    [...S.sel].forEach(id => { const why = avail(D.byId[id]); if (why) { S.sel.delete(id); delete S.placements[id]; gone.push({ name: D.byId[id].name, why }); } });
-    const r = P.fit(S);
-    S.placements = r.placements;
-    r.dropped.forEach(id => { if (S.sel.has(id)) { S.sel.delete(id); gone.push({ name: D.byId[id].name, why: "No free block left" }); } });
-    if (S.target && S.target.day >= S.days) S.target = null;
-    if (S.focus && !D.byId[S.focus]) S.focus = null;
-    S.removed = gone;
-    return gone;
+  function reconcile(){
+    // Keep the visitor's choices and exact placements. Invalid/overfull items remain visibly unresolved.
+    const overflow=P.schedule(S).overflow;
+    if(S.target&&S.target.day>=S.days)S.target=null;
+    S.removed=overflow.map(a=>({name:a.name,why:'Choose a new block or remove this activity'}));
+    return S.removed;
   }
   function changeSetting(k, v) {
     const before = snap();
@@ -198,7 +220,7 @@
     if (k === "month") { const d = new Date(S.date + "T12:00:00"); d.setDate(1); d.setMonth(v - 1); if (localDate(d) < today()) d.setFullYear(d.getFullYear() + 1); S.date = localDate(d); }
     const gone = reconcile();
     changed({ settings: true });
-    toast(gone.length ? `Took out ${gone.length === 1 ? gone[0].name : gone.length + " activities"} that no longer fit` : "Updated. Your days adjusted around it.", { kind: gone.length ? "warn" : "", undo: () => restore(before) });
+    toast(gone.length ? `Kept your choices. ${gone.length} need a new block; choose where to move them in Build.` : "Updated. Your activities stay where you placed them.", { kind: gone.length ? "warn" : "", undo: () => restore(before) });
     return gone;
   }
   /* the stay: one of the three PCG properties, or "own" (activities only). It never touches the days. */
@@ -219,7 +241,7 @@
     S.date = value; S.month = Number(value.slice(5, 7));
     const gone = reconcile();
     changed({ settings: true });
-    toast(gone.length ? `New dates. Took out ${gone.length === 1 ? gone[0].name : gone.length + " activities"} that no longer fit` : "New dates. Your days adjusted.", { kind: gone.length ? "warn" : "", undo: () => restore(before) });
+    toast(gone.length ? `New dates. ${gone.length} choices need a new block; nothing was removed.` : "New dates. Your activity order is unchanged.", { kind: gone.length ? "warn" : "", undo: () => restore(before) });
     return true;
   }
   /* Start from a sample itinerary or a blank page */
@@ -263,7 +285,7 @@
         <p class="shape__promise">${esc(c.promise)}</p>
         ${rec ? `<p class="shape__why">${esc(recWhy())}</p>` : ""}
         <p class="shape__meta">${S.days} days · ${D.effort[ef] || "Choose your pace"} walking · ${lunches(pv.ids.filter(id => D.byId[id].lunch).length)}</p>
-        <ul class="shape__list">${pv.ids.slice(0, 4).map(id => `<li>${esc(D.byId[id].name)}</li>`).join("")}${pv.ids.length > 4 ? `<li class="shape__more">+ ${pv.ids.length - 4} more</li>` : ""}</ul>
+        <ul class="shape__list">${pv.ids.map(id => `<li>${esc(D.byId[id].name)}</li>`).join("")}</ul>
         <p class="shape__drop">${pv.ids.length} ${pv.ids.length === 1 ? "stop" : "stops"} across your days.${pv.dropped ? ` ${pv.dropped} left out to respect your settings.` : ""}</p>
         <div class="shape__foot">
           <div class="shape__price"><small>Activities</small><b>${pv.yen ? yen(pv.yen) : "Free"}</b>${sq.stay ? `<span class="shape__with">With ${esc(sq.option.name)}: <span class="shape__with-n">${sgd(pv.yen + sq.perPerson)}</span> per person</span>` : ""}</div>
@@ -296,12 +318,9 @@
     return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
   }
   function dateControl(id, value) {
-    const A_ = dateAllowed(), v = P.validDate(value) ? value : snapDate(Number(today().slice(0, 4)), 9, 7);
-    const [y, m, d] = v.split("-").map(Number);
-    const days = []; for (let i = A_.minDay(y, m); i <= dim(y, m); i++) days.push(i);
-    const sel = (part, label, opts, cur) => `<label class="dsel__f"><span class="sr-only">${label}</span><select data-dpart="${part}" aria-label="${label}">${opts.map(([val, txt]) => `<option value="${val}"${val === cur ? " selected" : ""}>${txt}</option>`).join("")}</select></label>`;
-    return `<div class="dsel" id="${id}" data-dsel role="group" aria-label="First day">${sel("d", "Day", days.map(n => [n, n]), d)}${sel("m", "Month", A_.monthsFor(y).map(n => [n, MONTH_NAMES[n]]), m)}${sel("y", "Year", A_.years.map(n => [n, n]), y)}</div>`;
+    return MD.calendar.render(id,value);
   }
+
   function readDate(el) {
     const g = k => Number(el.querySelector(`[data-dpart="${k}"]`).value);
     return snapDate(g("y"), g("m"), g("d"));
@@ -390,8 +409,8 @@
   const dots = n => `<span class="efdots" title="${EF[n] || ""}" aria-label="${EF[n] || ""}">${[1, 2, 3, 4, 5].map(i => `<i${i <= n ? ' class="on"' : ""}></i>`).join("")}</span>`;
   const MODEL3D = new Set(["imori", "daruma", "picnic", "naena", "soba", "zip", "madarao", "ebike", "sup", "kayak", "cruise", "winery", "culture", "rice", "forest", "train"]);   // activities that have a crafted 3D model
   const bImg = (a, cls) => a.img ? `<img class="${cls}" src="${esc(thumb(a))}" alt="" loading="lazy" decoding="async">` : `<span class="${cls} ${cls}--ico" aria-hidden="true">${esc((CATS[a.cat] || "·").slice(0, 1))}</span>`;
-  function renderBook() {
-    MD.tripFilm?.destroy();
+  function renderBook(stayOnly=false) {
+    if(!stayOnly)MD.tripFilm?.destroy();
     const plan = P.schedule(S), ids = plan.days.flatMap(d => [...d.items, ...d.extras].map(a => a.id)), t = P.totals({ ...S, sel: new Set(ids) });
     const g = getAround(plan), nights = S.days - 1, nAct = ids.length, sq = MD.stay.quote(S);
     const dayTitle = d => d.zones.length ? d.zones.map(z => esc(D.zones[z].short)).join(" · ") : d.edge === "arrival" ? "Arrival" : d.edge === "departure" ? "Departure" : "A free day";
@@ -420,15 +439,15 @@
       ${row(`Chartered van · ${g.rideDays} day${g.rideDays === 1 ? "" : "s"}`, `${g.rideDays} × ${yen(g.perDay)} = ${yen(g.total)} for the group. Your share, split ${g.party} way${g.party === 1 ? "" : "s"}`, yen(g.share))}
       ${row("Transport subtotal", "", yen(D.railReturn + g.share), "sub")}
       <h3 class="ledger__h">Your stay</h3>
-      ${sq.stay
+      <div class="ledger__stay" style="min-height:${(nights+1)*88}px">${sq.stay
         ? sq.nights.map(n => row(esc(dayTag(n.date)), `${esc(sq.option.name)}${n.tags.length ? " · " + esc(n.tags.join(" · ")) : ""} · ${yen(n.rate)} a room`, yen(n.rate * sq.rooms / sq.party))).join("") + row("Stay subtotal", `${nights === 1 ? "1 night" : nights + " nights"} · ${sq.rooms === 1 ? "1 room" : sq.rooms + " rooms"} for ${sq.party}`, yen(sq.perPerson), "sub")
-        : row("Your own stay", "Arranged by you. Your days start from Myoko-Kogen Station", "Not included", "muted")}
+        : row("Your own stay", "Arranged by you. Your days start from Myoko-Kogen Station", "Not included", "muted")}</div>
       ${row("Meals and personal extras", "Beyond what an activity includes", "Not included", "muted")}
       <div class="ledger__total"><div><span class="ledger__k">Trip total per person</span><small>Activities, rail, van share${sq.stay ? " and stay" : ""}</small></div><div class="ledger__amt"><b>${yen(perPerson)}</b><span>${sgd(perPerson)}</span></div></div></div>`;
     const stayPanel = `<div class="panel panel--card stay-panel"><div class="panel__head"><h2>Your stay</h2></div>
         <p>${sq.stay ? `${esc(sq.option.name)}, ${esc(sq.option.line.toLowerCase())}. ${nights === 1 ? "1 night" : nights + " nights"} from ${esc(dayShort(0))}.` : "You are arranging your own stay. You can add one of our three properties at any time."}</p>
-        <div class="seg seg--stay" role="group" aria-label="Where will you stay?">${MD.stay.ORDER.map(k => `<button type="button" data-stay-b="${k}" aria-pressed="${S.stay === k}">${esc(MD.stay.OPTIONS[k].pcg ? MD.stay.OPTIONS[k].name : "Somewhere else")}</button>`).join("")}</div></div>`;
-    $("#bookRoot").innerHTML = `<header class="bk-head"><div class="bk-head__t"><p class="label">03 · Review your trip</p><h1>Your Myoko trip.</h1></div><p class="bk-head__meta">Prepared for<br><b>Patience Capital Group</b></p><p class="bk-head__p">${dayLong(0)} to ${dayLong(S.days - 1)} · ${S.days} days, ${nights} nights.</p></header>
+        <div class="stay-review-grid" role="group" aria-label="Where will you stay?">${MD.stay.ORDER.map(k=>{const o=MD.stay.OPTIONS[k],q=MD.stay.quote({...S,stay:k});return `<button type="button" data-stay-b="${k}" aria-pressed="${S.stay===k}">${o.pcg?PEAKS(o.tier):`<span aria-hidden="true">⌂</span>`}<b>${esc(o.name)}</b><small>${o.pcg?"$".repeat(o.tier)+" · "+yen(q.avgRoom)+" / room / night":"Your own accommodation"}</small></button>`;}).join("")}</div></div>`;
+    const bookHTML = `<header class="bk-head"><div class="bk-head__t"><p class="label">03 · Review your trip</p><h1>Your Myoko trip.</h1></div><p class="bk-head__meta">Prepared for<br><b>Patience Capital Group</b></p><p class="bk-head__p">${dayLong(0)} to ${dayLong(S.days - 1)} · ${S.days} days, ${nights} nights.</p></header>
       <section class="bk-hero" aria-label="Your trip film and itinerary">
         <div class="bk-hero__film"><section class="trip-film" id="tripFilm" aria-label="Your trip film"></section></div>
         <aside class="bk-rail" aria-label="Your days at a glance"><div class="rail__cols" aria-hidden="true"><span></span><span>Morning</span><span>Afternoon</span></div><ol class="rail">${rail}</ol>${plan.overflow.length ? `<div class="notice"><b>Not in this itinerary:</b> ${plan.overflow.map(a => esc(a.name)).join(", ")}. Excluded from the subtotal.</div>` : ""}<div class="bk-rail__f"><a class="linkbtn" href="#build">Edit days</a><a class="linkbtn" href="#day-1" data-jump="day-1">Day-by-day details ↓</a></div></aside>
@@ -447,6 +466,18 @@
         ${stayPanel}
         <div class="panel panel--card"><div class="panel__head"><h2>Plan your rail journey</h2></div><p>Tokyo → Nagano by Hokuriku Shinkansen, then the Kita-Shinano Line to Myoko-Kogen.</p><div class="panel__act"><a class="btn btn--sm" href="https://www.eki-net.com/en/jreast-train-reservation/Top/Index" target="_blank" rel="noopener">JR East reservations ↗</a><a class="linkbtn" href="https://www.shinanorailway.co.jp/rail-info/time-table/" target="_blank" rel="noopener">Kita-Shinano timetables (Japanese) ↗</a></div></div>
         <div class="panel panel--card save-panel"><div class="panel__head"><h2>Keep your plan</h2></div><p>Save your dates, days and costs. No name or email is needed.</p><div class="panel__act"><button type="button" class="btn" id="downloadPlan">Download plan</button><button type="button" class="btn btn--ghost" id="copyPlan">Copy plan</button></div><p id="copyMsg" class="small" aria-live="polite"></p></div></section>`;
+    if(stayOnly){
+      const oldPanelTop=$('#bookRoot .stay-panel')?.getBoundingClientRect().top;
+      const draft=document.createElement('div');draft.innerHTML=bookHTML;
+      for(const selector of ['.stay-panel','.ledger','.bk-stats']){const old=$("#bookRoot "+selector),fresh=draft.querySelector(selector);if(old&&fresh)old.replaceWith(fresh);}
+      document.querySelectorAll('#bookRoot .bday2').forEach(card=>{
+        const fresh=draft.querySelector('#'+card.id);if(!fresh)return;
+        for(const cls of ['.bday2__ride','.bday2__km']){const old=card.querySelector(cls),next=fresh.querySelector(cls);if(old&&next)old.replaceWith(next);else if(old)old.remove();else if(next)(cls==='.bday2__km'?card.querySelector('.bday2__h'):card.querySelector('.bday2__body')).appendChild(next);}
+      });
+      if(oldPanelTop!=null){const delta=$('#bookRoot .stay-panel').getBoundingClientRect().top-oldPanelTop;window.scrollBy({top:delta,behavior:'instant'});}
+      return;
+    }
+    $("#bookRoot").innerHTML=bookHTML;
     MD.tripFilm.mount($("#tripFilm"), plan.days);
     if (MD.tiles) MD.tiles.mount($("#bookRoot"));
     const fn = $("#tripFilm .trip-film__note"), slot = $("#filmNote"); if (fn && slot) slot.replaceWith(fn); else if (slot) slot.remove();
@@ -483,13 +514,13 @@
     if (q) {
       const k = q.dataset.q, v = k === "who" ? q.dataset.v : Number(q.dataset.v), before = snap();
       S[k] = v; reconcile(); changed({ settings: true }); renderPlan();
-      if (S.removed.length) toast(`Took out ${S.removed.length === 1 ? S.removed[0].name : S.removed.length + " activities"} that no longer fit`, { kind: "warn", undo: () => { restore(before); renderPlan(); } });
+      if (S.removed.length) toast(`Kept all choices. ${S.removed.length} need a new block in Build.`, { kind: "warn", undo: () => { restore(before); renderPlan(); } });
       return;
     }
     const st = t.closest("[data-stay]");
     if (st) { setStay(st.dataset.stay, true); const k = st.dataset.stay; renderPlan(); const again = document.querySelector(`[data-stay="${k}"]`); if (again) again.focus({ preventScroll: true }); return; }
     const sb = t.closest("[data-stay-b]");
-    if (sb) { setStay(sb.dataset.stayB, true); renderBook(); const again = document.querySelector(`[data-stay-b="${sb.dataset.stayB}"]`); if (again) again.focus({ preventScroll: true }); return; }
+    if (sb) { const anchor=document.querySelector('.stay-panel').getBoundingClientRect().top;document.documentElement.style.overflowAnchor='none';setStay(sb.dataset.stayB, true); renderBook(true);const keep=()=>window.scrollBy({top:document.querySelector('.stay-panel').getBoundingClientRect().top-anchor,behavior:'instant'});keep();requestAnimationFrame(()=>{keep();requestAnimationFrame(()=>{keep();document.documentElement.style.overflowAnchor='';});}); const again = document.querySelector(`[data-stay-b="${sb.dataset.stayB}"]`); if (again) again.focus({ preventScroll: true }); return; }
     const sh = t.closest("[data-shift]");
     if (sh) { setDate(sh.dataset.shift); renderPlan(); return; }
     const c = t.closest("[data-course]");
@@ -583,7 +614,7 @@
     S, D, P, $, $$, esc, yen, sgd, ARROW, dateControl, readDate, reduceMotion, smooth, CATS, WALK_LABEL, MIN_DAYS, MAX_DAYS,
     save, snap, restore, changed, toast, countUp, reveal, thumb, today, localDate,
     priceTxt, lenTxt, runsTxt, isPinned, dateLabel, dayShort, dayLong, where, avail, caution, dayNote,
-    getAround, setStay, stayName, dayTag, nightsWord, addPlace, removePlace, togglePlace, placeManual, moveToDay, reconcile, changeSetting, setDate, pickCourse, clearTrip, startCourse, startBlank, coursePreview,
+    getAround, setStay, stayName, dayTag, nightsWord, addPlace, removePlace, togglePlace, placeManual, moveToDay, requestPlacement, reconcile, changeSetting, setDate, pickCourse, clearTrip, startCourse, startBlank, coursePreview,
     onChange: fn => listeners.push(fn), planText, renderPlan, renderBook, route,
     start() {
       if (!hasSavedTrip) { startBlank(); S.stay = "own"; S.days = 3; blankDefaults = true; }   // v17.4: nothing is chosen until the visitor picks a course (or a blank map) on the Plan page, so going straight to Build gives an empty map: no places, 3 days, and "somewhere else" as the stay (no PCG base is chosen for them)

@@ -108,6 +108,8 @@ MD.map = (function () {
       scene.zoomAt(e.clientX, e.clientY, Math.exp(-Math.max(-120, Math.min(120, dy)) * 0.0022));
     }, { passive: false });
     rootEl.appendChild(stageEl);
+    document.addEventListener('pointerdown',e=>{if(!key.contains(e.target))key.open=false;},true);
+    stageEl.addEventListener('wheel',()=>{key.open=false;},{passive:true,capture:true});
   }
   function flash(text, ms) {
     hintEl.textContent = text; hintEl.classList.remove("is-gone");

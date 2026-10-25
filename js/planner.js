@@ -1,17 +1,8 @@
-/* Myoko Days — planning engine (v10).
-   Principles
-   - Every activity takes ONE half-day block (morning or afternoon). Nothing locks out a whole day.
-     Four researched outings run long (u = 2 in the data); they still sit in one block but carry a "long outing"
-     flag, which only adds a soft preference to leave the rest of that day light.
-   - Short stops (museum, farmers' shop) and the evening onsen are add-ons: they ride along with a day and never take a block.
-   - Areas can be mixed freely in one day. The planner prefers neighbouring areas (a soft cost from the real distance between
-     area centres) but never refuses a combination.
-   - Day 1 afternoon and the last morning are usable for gentler activities (the original team rule), not reserved.
-   - Adding is never a dead end: the engine finds the best free block; if there is none it re-arranges activities the
-     visitor has not pinned; if that is not enough it can grow the trip by a day. When nothing works it returns concrete
-     ways forward (swap, extend, change a setting) instead of a refusal.
-   - Placement values are { day, slot: 'am' | 'pm' | 'x', locked }. 'x' marks an add-on. locked = the visitor placed it by hand.
-   All functions are pure: they take a state and return a result; they never mutate their input. */
+/* Myoko Days planning engine.
+   Half-day activities take one block; full-day outings reserve morning and afternoon.
+   direct/place/move preserve every other placement and never extend the trip.
+   add is the automatic solver used by Best Day dragging; fit starts sample courses.
+   Pure results let the UI request explicit moves/removals without mutating a failed attempt. */
 window.MD = window.MD || {};
 MD.planner = (() => {
   const D = MD.data;
@@ -23,6 +14,7 @@ MD.planner = (() => {
   };
   const SLOTS = ['am', 'pm'];
   const slotKey = (day, slot) => day * 2 + (slot === 'pm' ? 1 : 0);
+  const occupiedKeys=(a,p)=>isLong(a)?[slotKey(p.day,'am'),slotKey(p.day,'pm')]:[slotKey(p.day,p.slot)];
 
   /* ---------- dates ---------- */
   const validDate = value => {
@@ -82,6 +74,7 @@ MD.planner = (() => {
     const last = s.days - 1;
     if (!Number.isInteger(day) || day < 0 || day > last) return 'That day is outside your trip';
     if (!SLOTS.includes(slot)) return 'Choose a morning or afternoon';
+    if(isLong(a)&&(day===0||day===last))return 'A full-day outing needs a complete day between arrival and departure';
     if (day === 0 && slot === 'am') return 'Day 1 morning is for travelling to Myoko';
     if (day === last && slot === 'pm') return 'The last afternoon is kept for the journey home';
     if ((day === 0 || day === last) && a.ef > RULES.edgeEffort) return day === 0 ? 'Too demanding for an arrival afternoon' : 'Too demanding for the morning you leave';
@@ -127,9 +120,9 @@ MD.planner = (() => {
       const a = D.byId[id], p = s.placements && s.placements[id];
       if (!a || !p || isAddon(a) || p.slot === 'x') return;
       if (availability(a, s, p.day) || slotWhy(a, s, p.day, p.slot)) return;
-      const k = slotKey(p.day, p.slot);
-      if (used.has(k)) return;
-      used.add(k); out[id] = { day: p.day, slot: p.slot, locked: !!p.locked };
+      const keys=occupiedKeys(a,p);
+      if(keys.some(k=>used.has(k)))return;
+      keys.forEach(k=>used.add(k)); out[id] = { day: p.day, slot: p.slot, locked: !!p.locked };
     });
     return out;
   }
@@ -152,10 +145,10 @@ MD.planner = (() => {
   function solve(s, ids, fixed, o) {
     o = o || {};
     const occ = new Map();
-    Object.entries(fixed).forEach(([id, p]) => occ.set(slotKey(p.day, p.slot), id));
+    Object.entries(fixed).forEach(([id,p])=>occupiedKeys(D.byId[id],p).forEach(k=>occ.set(k,id)));
     const items = ids.map(id => D.byId[id]);
     const cand = items.map(a => {
-      let c = candidates(a, s).filter(x => !occ.has(x.k));
+      let c = candidates(a,s).filter(x=>occupiedKeys(a,x).every(k=>!occ.has(k)));
       const r = o.restrict && o.restrict[a.id];
       if (r) c = c.filter(r);
       return c.map(x => ({ ...x, u: unary(a, x, s, o.prev) })).sort((p, q) => p.u - q.u);
@@ -170,13 +163,13 @@ MD.planner = (() => {
       nodes++;
       const i = order[n], a = items[i];
       for (const c of cand[i]) {
-        if (occ.has(c.k)) continue;
+        const keys=occupiedKeys(a,c);if(keys.some(k=>occ.has(k)))continue;
         let add = c.u;
         const partner = occ.get(slotKey(c.day, c.slot === 'am' ? 'pm' : 'am'));
         if (partner) add += pair(a, D.byId[partner]);
-        occ.set(c.k, a.id); chosen[i] = c;
+        keys.forEach(k=>occ.set(k,a.id));chosen[i]=c;
         rec(n + 1, cost + add);
-        occ.delete(c.k);
+        keys.forEach(k=>occ.delete(k));
       }
     })(0, 0);
     if (!best) return null;
@@ -240,10 +233,10 @@ MD.planner = (() => {
       i, am: null, pm: null, items: [], extras: [], zones: [],
       canAM: i > 0, canPM: i < last, edge: i === 0 ? 'arrival' : i === last ? 'departure' : null
     }));
-    Object.entries(placed).forEach(([id, p]) => { days[p.day][p.slot] = D.byId[id]; });
+    Object.entries(placed).forEach(([id,p])=>{days[p.day][p.slot]=D.byId[id];if(isLong(D.byId[id]))days[p.day].pm=D.byId[id];});
     Object.entries(addons).forEach(([id, p]) => { days[p.day].extras.push(D.byId[id]); });
     days.forEach(d => {
-      d.items = [d.am, d.pm].filter(Boolean);
+      d.items = [...new Set([d.am,d.pm].filter(Boolean))];
       d.zones = [...new Set(d.items.map(a => a.zone))];
       d.km = d.zones.length === 2 ? Math.round(zoneKm(d.zones[0], d.zones[1])) : 0;
       d.long = d.items.some(isLong);
@@ -331,40 +324,20 @@ MD.planner = (() => {
   const preview = add;
 
   /* ---------- place by hand (drag and drop, or "move to") ---------- */
-  function place(s, id, day, slot) {
-    const a = D.byId[id];
-    if (!a || !s.sel.has(id)) return { ok: false, why: 'Choose an activity first' };
-    if (isAddon(a)) return placeAddon(s, id, day);
-    const why = (Number.isInteger(day) && availability(a, s, day)) || slotWhy(a, s, day, slot);
-    if (why) return { ok: false, why };
-    const placedAll = validPlacements(s), addons = validAddons(s);
-    const src = placedAll[id], base = { ...placedAll }; delete base[id];
-    const hereId = Object.keys(base).find(x => base[x].day === day && base[x].slot === slot);
-    const mine = { day, slot, locked: true };
-    if (!hereId) {
-      const placements = buildPlacements(s, base, addons, {}, []); placements[id] = mine;
-      return { ok: true, placements, placed: { day, slot }, moved: [], extended: false, days: s.days, rearranged: false };
-    }
-    const occ = D.byId[hereId], occP = base[hereId];
-    if (src && !availability(occ, s, src.day) && !slotWhy(occ, s, src.day, src.slot)) {
-      const placements = buildPlacements(s, base, addons, {}, []);
-      placements[hereId] = { day: src.day, slot: src.slot, locked: occP.locked }; placements[id] = mine;
-      return { ok: true, placements, placed: { day, slot }, moved: [{ id: hereId, from: { day, slot }, to: { day: src.day, slot: src.slot } }], swapped: hereId, extended: false, days: s.days, rearranged: false };
-    }
-    const attempt = st => {
-      const rest = { ...base }; delete rest[hereId];
-      const r = twoStage(st, [hereId], rest, { [id]: { day, slot } }, null);
-      if (!r) return null;
-      const assign = { ...r.assign, [id]: { day, slot } };
-      const placements = buildPlacements(st, rest, addons, assign, [id]);
-      placements[hereId] = { ...assign[hereId], locked: false };
-      return { ok: true, placements, placed: { day, slot }, moved: movedList({ ...base }, assign, id), extended: false, days: st.days, rearranged: true };
-    };
-    let r = attempt(s);
-    if (r) return r;
-    if (s.flex !== false && s.days < RULES.maxDays) { r = attempt({ ...s, days: s.days + 1 }); if (r) return { ...r, extended: true }; }
-    return { ok: false, why: `${occ.name} has nowhere else to go. Move it first, or remove it.` };
+  // Explicit placement never displaces another activity or extends the trip.
+  function direct(s,id,target){
+    const a=D.byId[id];if(!a)return{ok:false,why:'Unknown activity'};
+    const off=availability(a);if(off)return{ok:false,why:off};
+    const placed=validPlacements(s),addons=validAddons(s);delete placed[id];delete addons[id];
+    if(isAddon(a)){const day=target?.day??chooseAddonDay(a,s,dayItems(s,placed));if(!addonDayOk(a,s,day))return{ok:false,why:'This add-on does not fit that day'};return{ok:true,placements:{...placed,...addons,[id]:{day,slot:'x',locked:true}},placed:{day,slot:'x'},days:s.days,moved:[]};}
+    let choices=candidates(a,s);if(target?.day!=null)choices=choices.filter(c=>c.day===target.day);if(target?.slot)choices=choices.filter(c=>c.slot===target.slot);
+    const occ=new Map();Object.entries(placed).forEach(([key,p])=>occupiedKeys(D.byId[key],p).forEach(k=>occ.set(k,key)));
+    const free=choices.filter(c=>occupiedKeys(a,c).every(k=>!occ.has(k))).sort((x,y)=>unary(a,x,s,placed)-unary(a,y,s,placed));
+    if(free.length){const {day,slot}=free[0],p={day,slot,locked:!!target};return{ok:true,placements:{...placed,...addons,[id]:p},placed:p,days:s.days,moved:[],caution:caution(a,s,day)};}
+    const conflicts=[...new Set(choices.flatMap(c=>occupiedKeys(a,c).map(k=>occ.get(k))).filter(Boolean))];
+    return{ok:false,code:'conflict',why:choices.length?'There is not enough free time in the selected day or block. Nothing has moved.':target?.slot?slotWhy(a,s,target.day,target.slot)||'This activity needs a different day.':'This activity needs a different day or more time.',conflicts};
   }
+  function place(s,id,day,slot){if(!s.sel.has(id))return{ok:false,why:'Choose an activity first'};return direct(s,id,{day,slot});}
   function placeAddon(s, id, day) {
     const a = D.byId[id];
     if (!addonDayOk(a, s, day)) return { ok: false, why: availability(a, s, day) || (a.slot === 'eve' ? 'An evening is not spent after you leave' : 'That day is outside your trip') };
@@ -499,5 +472,5 @@ MD.planner = (() => {
   const recommended = s => s.walk >= 5 ? 'active' : s.who === 'friends' ? 'discover' : 'restore';
 
 
-  return { RULES, availability, caution, slotWhy, candidates, explain, totals, schedule, dayIndex, slotOf, recommended, add, preview, place, move, swap, fit, arrange, suggest, suggestPlan, zoneKm, dateAt, validDate, isLong, isAddon };
+  return { RULES, direct, availability, caution, slotWhy, candidates, explain, totals, schedule, dayIndex, slotOf, recommended, add, preview, place, move, swap, fit, arrange, suggest, suggestPlan, zoneKm, dateAt, validDate, isLong, isAddon };
 })();

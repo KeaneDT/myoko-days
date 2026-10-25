@@ -1,6 +1,6 @@
 /* Myoko Days — the build workspace: the map on the left, "Your days" docked on the right, one screen, no scrolling between them.
    Adding a place from anywhere (pin, card, list, a day's suggestion) goes through MD.app.addPlace, which asks the planner for the
-   best free block, shuffling days the visitor hasn't pinned if needed. */
+   best free block without moving anything else. Best Day dragging explicitly enables automatic sorting. */
 (function () {
   "use strict";
   const A = MD.app, S = A.S, D = A.D, P = A.P;
@@ -63,6 +63,7 @@
   function slotRow(d, slot) {
     const a = d[slot], usable = slot === "am" ? d.canAM : d.canPM;
     const t = SLOT[slot];
+    if(slot==='pm'&&a&&a===d.am)return `<div class="slot slot--continuation"><span class="slot__t">Afternoon</span><p>Reserved for ${esc(a.name)} · full-day outing</p></div>`;
     if (!usable) return `<div class="slot slot--travel"><span class="slot__t">${t}</span><p class="slot__travel"><svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 5h11l3 4v5H3z M3 10h14 M6.5 16.2a1.4 1.4 0 1 0 .01 0 M13.5 16.2a1.4 1.4 0 1 0 .01 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>${d.edge === "arrival" ? "Travelling to Myoko. Nothing to add here." : "Travelling home. Nothing to add here."}</p></div>`;
     const light = d.edge && !a ? `<span class="slot__light">${d.edge === "arrival" ? "Arriving by lunchtime? Choose something easy." : "Choose something easy, back in good time."}</span>` : "";
     if (a) return `<div class="slot" data-drop="${d.i}" data-slot="${slot}"><span class="slot__t">${t}</span>${itemRow(a, d)}</div>`;
@@ -84,7 +85,7 @@
     const box = $("#dockDays"), top = box.scrollTop;
     const tip = "";
     const empty = !S.sel.size ? `<div class="starter"><p><b>Your days are empty.</b> Add places from the Places tab, or start from a ready-made trip:</p><div class="starter__row"><button type="button" class="btn btn--sm" data-pane="places">Browse places</button>${["restore", "discover", "active"].map(k => `<button type="button" class="linkbtn" data-restart="${k}">${esc(D.courses[k].name)}</button>`).join("")}</div></div>` : "";
-    const over = plan.overflow.length ? `<div class="attn"><b>${plan.overflow.length === 1 ? "One choice needs a block" : plan.overflow.length + " choices need a block"}.</b> ${plan.overflow.map(a => esc(a.name)).join(", ")}. <button type="button" class="linkbtn" data-refit>Fit them in</button></div>` : "";
+    const over = plan.overflow.length ? `<div class="attn"><b>${plan.overflow.length === 1 ? "One choice needs a block" : plan.overflow.length + " choices need a block"}.</b> ${plan.overflow.map(a => esc(a.name)).join(", ")}. ${plan.overflow.map(a=>`<button type="button" class="linkbtn" data-resolve="${a.id}">Move or remove ${esc(a.name)}</button>`).join(" ")}</div>` : "";
     box.innerHTML = tip + empty + over + plan.days.map(dayCard).join("") +
       `<div class="dock__more">${S.days < A.MAX_DAYS ? '<button type="button" class="linkbtn" data-addday>Add a day +</button>' : ""}${S.days > A.MIN_DAYS ? '<button type="button" class="linkbtn" data-dropday>Remove last day</button>' : ""}${S.sel.size ? '<button type="button" class="linkbtn" data-clear>Clear all</button>' : ""}</div>`;
     box.scrollTop = top;
@@ -113,7 +114,7 @@
     const seg = (key, list, cur) => `<div class="seg" role="group">${list.map(([v, l]) => `<button type="button" data-set="${key}" data-v="${v}" aria-pressed="${String(cur) === String(v)}">${esc(l)}</button>`).join("")}</div>`;
     box.innerHTML = `<div class="ts"><div class="ts__row ts__row--col ts__row--date"><span id="ts-date-l">First day</span>${A.dateControl("ts-date", S.date)}</div><p class="ts__echo">${esc(A.dayLong(0))} to ${esc(A.dayLong(S.days - 1))}</p>
       <div class="ts__row"><span>Length</span>${seg("days", [3, 4, 5, 6, 7].map(n => [n, n]), S.days)}</div>
-      <label class="ts__check"><input type="checkbox" id="ts-flex"${S.flex ? " checked" : ""}><span>Let my trip grow by a day when I add more places than fit</span></label>
+      <p class="small">Manual additions stay where you choose. Only a drop on Best Day can rearrange activities or extend the trip.</p>
       <div class="ts__row"><span>Walking</span>${seg("walk", [[3, "Flat & short"], [4, "Some hills"], [5, "Active"]], S.walk)}</div>
       <div class="ts__row ts__row--col"><span>Where you stay</span><div class="ts__stay" role="group" aria-label="Where you stay">${MD.stay.ORDER.map(k => `<button type="button" class="ts__stayb" data-stayset="${k}" aria-pressed="${S.stay === k}"><b>${esc(MD.stay.OPTIONS[k].pcg ? MD.stay.OPTIONS[k].name : "Somewhere else")}</b><small>${esc(MD.stay.OPTIONS[k].line)}</small></button>`).join("")}</div></div>
       <div class="ts__row ts__row--col"><span>Start again from</span><div class="ts__starts">${["restore", "discover", "active"].map(k => `<button type="button" class="linkbtn" data-restart="${k}">${esc(D.courses[k].name)}</button>`).join("")}<button type="button" class="linkbtn" data-restart="blank">A blank map</button></div></div></div>`;
@@ -196,14 +197,13 @@
   /* ---------- the card that opens from a pin or a row ---------- */
   function addState(a) {
     if (S.sel.has(a.id)) return { kind: "in" };
-    const t = S.target;
-    let r = null;
-    if (t && t.slot) { const pr = P.place({ ...S, sel: new Set([...S.sel, a.id]) }, a.id, t.day, t.slot); if (pr.ok) r = { ...pr, retargeted: false }; }
-    if (!r) r = P.add(S, a.id, { targetDay: t ? t.day : null, lock: !!t });
-    return r.ok ? { kind: "ok", r } : { kind: "blocked", r };
+    const r=P.direct(S,a.id,S.target);
+    return r.ok?{kind:'ok',r}:{kind:'blocked',r};
   }
+
   const REQ = { zip: "Safety briefing language, age and weight limits apply.", sup: "Swimming ability is required; equipment and the safety briefing are provided.", kayak: "Water confidence is required; equipment and the safety briefing are provided.", ebike: "Riding ability and route conditions matter; the briefing and equipment are provided." };
   function blockedUI(a, r) {
+    if(r.code==='conflict')return `<p class="pc__why">${esc(r.why)}</p><button type="button" class="btn btn--sm" data-resolve="${a.id}">Choose where it goes</button>`;
     let h = `<p class="pc__why">${esc(r.why)}.</p>`;
     const btns = [];
     if (r.code === "walk") btns.push(`<button type="button" class="btn btn--sm" data-fix="walk">Raise walking to “${esc(A.WALK_LABEL[a.ef] || "Active days")}” and add</button>`);
@@ -231,10 +231,10 @@
       const cn = A.caution(a, r.placed && r.placed.day);
       action = `<button type="button" class="btn pc__add" data-add="${a.id}">${esc(label)} ${ARROW}</button>${note ? `<p class="pc__note">${esc(note)}</p>` : ""}${cn ? `<p class="pc__note pc__note--soft">${esc(cn)}. You can still add it.</p>` : ""}`;
     } else action = blockedUI(a, st.r);
-    box.innerHTML = `<div class="pc__media">${picture(a, "pc__img")}${MD.mediaLibrary[a.id] ? `<button type="button" class="gallery-open" data-gallery="${a.id}">${MD.mediaLibrary[a.id].photos.length} photos · ${MD.mediaLibrary[a.id].videos.length} films <span aria-hidden="true">↗</span></button>` : (a.img ? '<span class="image-caption">Illustrative image</span>' : "")}<button type="button" class="pc__x" data-close aria-label="Close details">×</button></div>
+    box.innerHTML = `<div class="pc__closebar"><button type="button" class="pc__x" data-close aria-label="Close details">×</button></div><div class="pc__media">${picture(a, "pc__img")}${MD.mediaLibrary[a.id] ? `<button type="button" class="gallery-open" data-gallery="${a.id}">${MD.mediaLibrary[a.id].photos.length} photos · ${MD.mediaLibrary[a.id].videos.length} films <span aria-hidden="true">↗</span></button>` : (a.img ? '<span class="image-caption">Illustrative image</span>' : "")}</div>
       <div class="pc__body"><p class="label">${esc(D.zones[a.zone].short)} · ${esc(A.CATS[a.cat] || "")}${a.src === "desk" ? " · More in the area" : ""}</p><h3>${esc(a.name)}</h3>${a.stops && a.stops.length > 1 && ui.stop != null && a.stops[ui.stop] ? `<p class="pc__stop"><span>Stop ${ui.stop + 1} of ${a.stops.length}</span> ${esc(a.stops[ui.stop].name)}</p>` : ""}<p class="pc__desc">${esc(a.desc)}</p>${a.stops && a.stops.length > 1 ? `<ol class="stops stops--tour" aria-label="Stops, in order">${a.stops.map((st, i) => `<li${ui.stop === i ? ' class="is-here"' : ""}><button type="button" data-stop="${i}" data-stopof="${a.id}">${esc(st.name)}</button></li>`).join("")}</ol>` : ""}
-        <p class="pc__line"><span>${P.isLong(a) ? "Long outing" : A.lenTxt(a)}</span><span>${price}</span><span>${esc(D.effort[a.ef])}</span></p>
-        ${P.isLong(a) ? `<p class="pc__long">Runs most of a day. It takes one block, so keep the other half light.</p>` : ""}
+        <p class="pc__line"><span>${P.isLong(a) ? "Full day" : A.lenTxt(a)}</span><span>${price}</span><span>${esc(D.effort[a.ef])}</span></p>
+        ${P.isLong(a) ? `<p class="pc__long">A full-day outing reserves both morning and afternoon.</p>` : ""}
         <div class="pc__action">${action}</div>
         <details class="pc__more"><summary>Details &amp; checks</summary><p class="pc__season"><b>Season</b> ${A.runsTxt(a)}</p>${REQ[a.id] ? `<p class="detail__check">${REQ[a.id]}</p>` : ""}<p class="detail__check">Host: ${esc(a.host)}. Lunch: ${a.lunch ? "included" : "not included"}.</p></details></div>`;
   }
@@ -362,6 +362,7 @@
     if (t.closest("[data-typemenu]")) { ui.typeMenu = !ui.typeMenu; render(); return; }
     if (ui.typeMenu && !t.closest(".tmenu")) { ui.typeMenu = false; render(); }
     if (t.closest("[data-clearfilters]")) { S.catFilter = []; S.zoneFilter = ""; S.fitsOnly = false; S.showExtras = false; S.query = ""; render(); return; }
+    const resolve=t.closest('[data-resolve]');if(resolve){const r=P.direct(S,resolve.dataset.resolve,S.target);A.requestPlacement(resolve.dataset.resolve,S.target,r.ok?'Choose a free block or remove this activity.':r.why);return;}
     if (t.closest("[data-coachclose]")) { dismissCoach(); return; }
     if (t.closest("[data-cleartarget]")) { S.target = null; A.changed(); return; }
     const pick = t.closest("[data-pickday]");
@@ -436,7 +437,7 @@
   /* ---------- drag and drop: from a day, or from the places list into a day ---------- */
   let drag = null;
   function slotFits(a, el) {
-    if (el.dataset.dropchip === "auto") return !S.sel.has(a.id);   // Best Day takes any place not yet in the trip and picks its block
+    if (el.dataset.dropchip === "auto") return true;   // Best Day takes any place not yet in the trip and picks its block
     if (el.dataset.dropchip != null) return true;   // a day chip always accepts: the planner finds the best block that day
     if (el.dataset.dropextra != null) return P.isAddon(a);
     const day = Number(el.dataset.drop), slot = el.dataset.slot;
@@ -453,13 +454,12 @@
   function dropEval(a, el) {
     if (!el) return null;
     if (el.dataset.dropchip === "auto") {
-      if (S.sel.has(a.id)) return { ok: false, why: "Already in your trip" };
       const r = P.add(S, a.id, { lock: false });
       return { ...r, day: null, slot: null, chip: true, hint: r.ok ? (r.extended ? "Adds a day" : "Add to the Best Day") : "" };
     }
     if (el.dataset.dropchip != null) {
       const day = Number(el.dataset.dropchip), inT = S.sel.has(a.id);
-      const r = inT ? P.move(S, a.id, day) : P.add(S, a.id, { targetDay: day, lock: true });
+      const r = inT ? P.move(S, a.id, day) : P.direct(S,a.id,{day});
       return { ...r, day, slot: null, chip: true, hint: r.ok ? (r.extended ? "Adds a day" : r.retargeted ? "Goes to the Best Day" : (inT ? "Move to Day " : "Add to Day ") + (day + 1)) : "" };
     }
     if (el.dataset.dropextra != null) { const day = Number(el.dataset.dropextra); return P.isAddon(a) ? { ok: true, day, slot: "x" } : { ok: false, why: "Add-ons only" }; }
@@ -479,6 +479,7 @@
   document.addEventListener("dragstart", e => { if (ui.active && e.target.closest && e.target.closest("#dock, #drawer")) e.preventDefault(); });
   document.addEventListener("pointerdown", e => {
     if (!ui.active) return;
+    if(!e.target.closest('#coach'))dismissCoach();
     const h = e.target.closest("[data-grab],[data-grabplace]"); if (!h || e.button !== 0) return;
     const card = !!h.dataset.grabplace;
     if (card && (coarseQ.matches || narrowQ.matches || e.target.closest(".pl__add"))) return;   // on touch, + is the way to add; the + button itself never starts a drag
@@ -511,7 +512,7 @@
     if (tgt && tgt.closest("#dockDays, #dayStrip")) {
       const r = dropEval(a, tgt);
       if (r && r.ok) { tgt.classList.add("is-drop-target"); const m = r.chip ? r.hint : r.swapped ? `Swaps with ${D.byId[r.swapped].name}` : r.moved && r.moved.length ? `Moves ${D.byId[r.moved[0].id].name}` : r.extended ? "Adds a day" : "Drop here"; dropHint(m, false, d.x, d.y); }
-      else if (r) { tgt.classList.add("is-drop-bad"); dropHint(r.why || "Can't go here", true, d.x, d.y); }
+      else if (r) { tgt.classList.add("is-drop-bad"); dropHint(r.code==="conflict"?"Release to choose what moves or is removed":r.why || "Can't go here", r.code!=="conflict", d.x, d.y); }
     } else { const b = $("#dropHint"); if (b) b.remove(); }
   });
   document.addEventListener("pointerup", e => {
@@ -521,7 +522,7 @@
     const id = d.id, dragged = !!d.ghost; clearDrag();
     if (dragged) { swallow = true; setTimeout(() => { swallow = false; }, 80); }
     if (!target) return;
-    if (target.dataset.dropchip === "auto") { if (!S.sel.has(id)) { const r = A.addPlace(id, { target: null }); if (!r.ok) A.toast(r.why, { kind: "warn" }); } return; }
+    if (target.dataset.dropchip === "auto") { { const r = A.addPlace(id, { target: null, auto:true }); if (!r.ok) A.toast(r.why, { kind: "warn" }); } return; }
     if (target.dataset.dropchip != null) { const day = Number(target.dataset.dropchip); if (S.sel.has(id)) A.moveToDay(id, day); else { const r = A.addPlace(id, { target: { day, slot: null } }); if (!r.ok) A.toast(r.why, { kind: "warn" }); } return; }
     if (target.dataset.dropextra != null) A.moveToDay(id, Number(target.dataset.dropextra)); else A.placeManual(id, Number(target.dataset.drop), target.dataset.slot);
   });
@@ -533,11 +534,13 @@
     if (S.coachSeen || narrowQ.matches) { if (c) c.remove(); return; }
     if (c) return;
     c = document.createElement("section"); c.id = "coach"; c.className = "coach"; c.setAttribute("aria-label", "How this works");
-    c.innerHTML = `<ol class="coach__steps"><li><b>1</b><span><strong>Pick places</strong>Press <i class="plusdot" aria-hidden="true">+</i> or click a pin.</span></li><li><b>2</b><span><strong>Days fill themselves</strong>Drag to rearrange.</span></li><li><b>3</b><span><strong>Review</strong>Costs and notes.</span></li></ol><button type="button" class="btn btn--sm" data-coachclose>Got it</button><button type="button" class="coach__x" data-coachclose aria-label="Close">×</button>`;
+    c.innerHTML = `<ol class="coach__steps"><li><b>1</b><span><strong>Pick places</strong>Press <i class="plusdot" aria-hidden="true">+</i> or click a pin.</span></li><li><b>2</b><span><strong>Choose a day</strong>Drop on Best Day to auto-sort.</span></li><li><b>3</b><span><strong>Review</strong>Costs and notes.</span></li></ol><button type="button" class="btn btn--sm" data-coachclose>Got it</button><button type="button" class="coach__x" data-coachclose aria-label="Close">×</button>`;
     wrap.appendChild(c);
   }
   function dismissCoach() { S.coachSeen = true; try { localStorage.setItem("md_coach12", "1"); } catch (err) { /* ignore */ } const c = $("#coach"); if (c) c.remove(); }
 
+  document.addEventListener('pointerdown',e=>{if(ui.active&&!e.target.closest('#coach'))dismissCoach();},true);
+  document.addEventListener('wheel',e=>{if(ui.active&&e.target.closest('#mapWrap'))dismissCoach();},{passive:true,capture:true});
   /* ---------- enter / leave ---------- */
   function enter() {
     ui.active = true;

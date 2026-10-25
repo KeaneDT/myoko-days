@@ -62,5 +62,6 @@ MD.assume = (function () {
     { id: "A-R2", group: "Map", label: "Trains", value: "A Shinano Railway train from Kurohime and an Echigo Tokimeki train from Sekiyama, taking turns to arrive, wait at Myoko-Kogen and leave", where: "assets/diorama/kit/trains.js", basis: "Illustrative movement only; it is not the real timetable. Both lines share the one drawn track and platform, where in reality the Shinano trains use platform 2 and the Echigo Tokimeki trains platform 3.", owner: "Team" }
   ];
 
+  items.push({ id:"A-S11", group:"Stay", label:"Calendar price colours and own-stay comparison", value:"Lower: within 2% of the displayed month's minimum nightly rate; standard: up to 20% above it; higher: above 20%. Own-stay comparisons use Madarao Kogen Hotel without adding accommodation to the trip.", where:"js/calendar.js", basis:"Interface comparison bands for the existing modelled room-night rates, not live prices or availability. Adjacent-date arrows compare the complete stay total for the same trip length, party and property.", owner:"Team to review before launch" });
   return { v, items };
 })();
