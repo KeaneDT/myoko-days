@@ -1,0 +1,21 @@
+{
+  "simulatedSeconds": 998,
+  "frames": 18000,
+  "habitatSamples": 180,
+  "travelUnits": 33664,
+  "maxFrameTravel": 6.047777480426882,
+  "states": [
+    "slither",
+    "look",
+    "rest"
+  ],
+  "restFrames": 1284,
+  "bounds": {
+    "minX": -11013.039125752652,
+    "maxX": -10215.251615175872,
+    "minZ": -1938.800629265678,
+    "maxZ": -1477.7931947503548
+  },
+  "triangles": 2324,
+  "foggedFoxMeshes": 34
+}

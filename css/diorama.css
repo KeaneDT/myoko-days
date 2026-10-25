@@ -1,0 +1,86 @@
+/* Myoko Days: the painted 3D diorama map (js/map.js). Builds on the .imap-* rules in build.css. */
+.dio { background: #F4E5C8; }
+/* a very quiet seigaiha (wave) pattern on the paper, calmer toward the middle where the board sits */
+.dio__stage { cursor: grab; background-color: #F4E5C8;
+  background-image: radial-gradient(ellipse 58% 62% at 44% 52%, rgba(244, 229, 200, .94) 0%, rgba(244, 229, 200, .72) 55%, rgba(244, 229, 200, 0) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='36' viewBox='0 0 72 36'%3E%3Cg fill='%23F4E5C8' stroke='%23A8844F' stroke-opacity='.17' stroke-width='.8'%3E%3Cg id='r'%3E%3Cg id='w'%3E%3Ccircle cx='0' cy='0' r='18'/%3E%3Ccircle cx='0' cy='0' r='13.5' fill='none'/%3E%3Ccircle cx='0' cy='0' r='9' fill='none'/%3E%3Ccircle cx='0' cy='0' r='4.5' fill='none'/%3E%3Ccircle cx='0' cy='0' r='1.3' fill='%23A8844F' fill-opacity='.2' stroke='none'/%3E%3Ccircle cx='0' cy='0' r='15.75' fill='none' stroke-opacity='.08'/%3E%3Ccircle cx='0' cy='0' r='11.25' fill='none' stroke-opacity='.08'/%3E%3Ccircle cx='0' cy='0' r='6.75' fill='none' stroke-opacity='.08'/%3E%3C/g%3E%3Cuse href='%23w' x='36'/%3E%3Cuse href='%23w' x='72'/%3E%3C/g%3E%3Cg transform='translate(18 18)'%3E%3Cuse href='%23w'/%3E%3Cuse href='%23w' x='36'/%3E%3Cuse href='%23w' x='72'/%3E%3C/g%3E%3Cg transform='translate(0 36)'%3E%3Cuse href='%23r'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-size: 100% 100%, 72px 36px; }
+.dio__stage.is-dragging { cursor: grabbing; }
+.dio__scene { position: absolute; inset: 0; }
+.dio__scene canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.dio .imap-overlay { overflow: hidden; }
+
+/* loading: the paper and a seal, fading out when the map is ready */
+.dio__load { position: absolute; inset: 0; z-index: 40; display: grid; place-content: center; justify-items: center; gap: 14px; background: #F4E5C8; color: var(--ink-2); font: italic 400 var(--fs-14)/1.3 var(--serif); transition: opacity 800ms var(--ease); }
+.dio__load.is-gone { opacity: 0; pointer-events: none; }
+.dio__loadseal { display: grid; place-items: center; width: 44px; height: 44px; background: var(--shu); color: var(--paper); font: 500 22px/1 var(--serif); font-style: normal; animation: dioBreathe 1.8s var(--ease) infinite alternate; }
+@keyframes dioBreathe { from { opacity: .55; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
+
+/* the key: a small card on the right edge (hidden while an activity's details are open) */
+.dio-key { position: absolute; z-index: 24; right: max(20px, env(safe-area-inset-right, 0px)); top: 50%; transform: translateY(-62%); width: 186px; padding: 12px 14px 12px; background: rgba(244, 243, 239, .9); border: 1px solid var(--line-2); box-shadow: var(--shadow-1, 0 2px 6px rgba(25, 28, 26, .12)); font: 400 var(--fs-12)/1.35 var(--sans); color: var(--ink-2); pointer-events: none; }
+.dio-key p { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+.dio-key__t { font: 500 10.5px/1 var(--sans) !important; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px !important; }
+.dio-key__n { margin: 10px 0 0 !important; padding-top: 9px; border-top: 1px solid var(--line); font-style: italic; font-family: var(--serif); color: var(--ink-3); }
+.dio-key__ring { flex: none; display: grid; place-items: center; width: 18px; height: 12px; border-radius: 50%; border: 2px solid var(--kin, #C4A25E); background: rgba(244, 229, 200, .5); }
+.dio-key__ring--in { border-color: #B0452C; }
+.dio-key__ring--off { border-color: #8C8C84; opacity: .7; }
+.dio-key__ring--base { border-color: #2E3B35; }
+#mapWrap.has-detail .dio-key { display: none; }
+@media (max-width: 1100px) { .dio-key { display: none; } }
+
+/* zoom controls */
+.dio__ctl { position: absolute; right: max(18px, env(safe-area-inset-right, 0px)); bottom: 22px; z-index: 30; display: grid; background: rgba(244, 243, 239, .94); border: 1px solid var(--line-2); box-shadow: var(--shadow-1, 0 2px 6px rgba(25, 28, 26, .14)); }
+.dio__ctl button { width: 36px; height: 36px; display: grid; place-items: center; border: 0; background: transparent; color: var(--ink); font: 400 20px/1 var(--serif); cursor: pointer; }
+.dio__ctl button + button { border-top: 1px solid var(--line-2); }
+.dio__ctl button:hover { background: var(--white, #fff); }
+.dio__ctl button:focus-visible { outline: 2px solid var(--shu); outline-offset: -2px; }
+
+/* each activity: an invisible, focusable hit area over its seal ring (pointer clicks go to the canvas) */
+.dio-pin { position: absolute; left: 0; top: 0; width: 0; height: 0; padding: 0; border: 0; background: transparent; pointer-events: none; z-index: 12; }
+.dio-pin::after { content: ""; position: absolute; left: calc(var(--r, 20px) * -1); top: calc(var(--r, 20px) * -.72); width: calc(var(--r, 20px) * 2); height: calc(var(--r, 20px) * 1.44); border-radius: 50%; }
+.dio-pin:focus-visible::after { outline: 2px solid var(--shu); outline-offset: 4px; }
+/* "more in the area": small paper pins (no model) */
+.dio-pin--dot { pointer-events: auto; cursor: pointer; }
+.dio-pin--dot::after { display: none; }
+.dio-pin__tag { position: absolute; left: -13px; top: -32px; width: 26px; height: 26px; display: grid; place-items: center; background: rgba(244, 243, 239, .94); border: 1px dashed var(--ink-2); color: var(--ink); box-shadow: 0 2px 6px rgba(25, 28, 26, .18); transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast); }
+.dio-pin__tag::after { content: ""; position: absolute; left: 50%; bottom: -7px; width: 1px; height: 6px; background: var(--ink-2); }
+.dio-pin--dot.is-hot .dio-pin__tag, .dio-pin--dot:hover .dio-pin__tag { transform: translateY(-2px); background: var(--white, #fff); }
+.dio-pin--dot.dio-pin--in .dio-pin__tag { background: var(--shu); border: 1px solid var(--shu); color: var(--paper); }
+.dio-pin--dot.dio-pin--off .dio-pin__tag { opacity: .5; filter: grayscale(1); }
+.dio-pin--dot:focus-visible { outline: none; }
+.dio-pin--dot:focus-visible .dio-pin__tag { outline: 2px solid var(--shu); outline-offset: 2px; }
+.dio-pin.is-dimmed { opacity: .25; }
+
+/* the day seal above an activity in your trip */
+.dio-seal { position: absolute; left: 0; top: 0; z-index: 16; margin: -9px 0 0 -9px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: var(--shu); color: var(--paper); font: 600 11px/1 var(--serif); box-shadow: 0 0 0 1.5px rgba(251, 243, 228, .96), 0 0 0 2.5px rgba(46, 59, 53, .45), 0 2px 5px rgba(60, 30, 20, .3); pointer-events: none; }
+
+/* names: shown only while you point at an activity */
+.dio-label { position: absolute; left: 0; top: 0; z-index: 20; padding: 2px 7px; background: rgba(244, 243, 239, .88); font: 500 var(--fs-12)/1.25 var(--sans); color: var(--ink); white-space: nowrap; transform-origin: 0 0; pointer-events: none; translate: -50% 0; }
+.dio-base { position: absolute; left: 0; top: 0; z-index: 15; padding: 3px 8px; translate: -50% 8px; background: var(--ink); color: var(--paper); font: 500 var(--fs-11)/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; pointer-events: none; }
+
+/* peaks: name, Japanese, height, set like the painting's cartouches */
+.dio-peak { position: absolute; left: 0; top: 0; z-index: 9; translate: -50% -100%; display: grid; justify-items: center; gap: 1px; pointer-events: none; text-align: center; text-shadow: 0 0 3px rgba(244, 229, 200, 1), 0 0 7px rgba(244, 229, 200, .95), 0 0 12px rgba(244, 229, 200, .8); }
+.dio-peak b { font: 500 var(--fs-13)/1.1 var(--serif); color: var(--ink); letter-spacing: .02em; }
+.dio-peak i { font: 400 11px/1 var(--serif); font-style: normal; color: var(--ink); letter-spacing: .1em; }
+.dio-peak small { font: 400 10.5px/1.2 var(--sans); letter-spacing: .08em; color: var(--ink); }
+.dio .imap-landmark { transform: none; translate: -50% -50%; }
+.dio .dio-route { stroke-dasharray: none; }
+
+@media (max-width: 640px) {
+  .dio-peak small, .dio-peak i { display: none; }
+  .dio__ctl { bottom: 70px; }
+}
+@media (prefers-reduced-motion: reduce) { .dio__loadseal { animation: none; } }
+
+/* phones and small windows: List view only */
+body.no-map #fg-view { display: none; }
+body.no-map [data-showmap], body.no-map #jumpDays { display: none !important; }
+body.no-map .stage__list::before { content: "The 3D map opens on a larger screen. Every activity is listed here."; display: block; margin: 0 var(--gutter) 4px; padding: 12px 0 12px 14px; border-left: 2px solid var(--shu); font-size: var(--fs-13); color: var(--ink-2); }
+
+/* in the trip but not fitting the days: a hollow seal with "!" */
+.dio-seal.is-over { background: var(--paper); color: var(--shu); box-shadow: 0 0 0 1.5px var(--shu), 0 0 0 3px rgba(251, 243, 228, .9), 0 2px 5px rgba(60, 30, 20, .3); font-weight: 700; }
+.dio-key__ring--over { display: inline-grid; place-items: center; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--shu); background: var(--paper); color: var(--shu); font: 700 9px/1 var(--serif); font-style: normal; }
+.dio-key__over[hidden] { display: none; }
+
+/* overlay labels track the camera every frame: no fade/visibility easing, or they lag behind a fast zoom */
+.dio .imap-landmark, .dio-peak, .dio-label, .dio-base, .dio-seal, .dio-pin { transition: none; }

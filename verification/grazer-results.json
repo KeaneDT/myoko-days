@@ -1,0 +1,35 @@
+{
+  "horse": {
+    "states": [
+      "walk",
+      "settle",
+      "graze",
+      "listen",
+      "dash",
+      "rest"
+    ],
+    "bounds": {
+      "minX": -4310.491845323063,
+      "maxX": -3687.9747895582063,
+      "minZ": -13199.971159169403,
+      "maxZ": -12800.053690651144
+    }
+  },
+  "rabbit": {
+    "states": [
+      "rest",
+      "graze",
+      "listen",
+      "hop"
+    ],
+    "bounds": {
+      "minX": -2666.9114405468613,
+      "maxX": -2133.0901312183064,
+      "minZ": 12430.000001695867,
+      "maxZ": 12769.92117352021
+    }
+  },
+  "frames": 24000,
+  "simulatedSeconds": 1512,
+  "foggedMeshes": 63
+}

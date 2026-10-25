@@ -1,0 +1,226 @@
+[
+  {
+    "file": "assets\\clips\\apple\\1.mp4",
+    "bytes": 1506976,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\apple\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 2411 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt2020nc/bt2020/arib-std-b67, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2406 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n      Side data:\n        Ambient Viewing Environment, ambient_illuminance=314.000000, ambient_light_x=0.312700, ambient_light_y=0.329000\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\apple\\2.mp4",
+    "bytes": 1419299,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\apple\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 2270 kb/s\n  Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2266 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\coffee\\1.mp4",
+    "bytes": 737886,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\coffee\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 1180 kb/s\n  Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 1176 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\coffee\\2.mp4",
+    "bytes": 723093,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\coffee\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:04.50, start: 0.000000, bitrate: 1285 kb/s\n  Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 1281 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\culture\\1.mp4",
+    "bytes": 1555663,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\culture\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 2489 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt2020nc/bt2020/arib-std-b67, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2484 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n      Side data:\n        Ambient Viewing Environment, ambient_illuminance=314.000000, ambient_light_x=0.312700, ambient_light_y=0.329000\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\culture\\2.mp4",
+    "bytes": 2712257,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\culture\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 4339 kb/s\n  Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 4335 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\daruma\\1.mp4",
+    "bytes": 1214346,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\daruma\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 1942 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 1937 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n        timecode        : 18:21:57:00\n  Stream #0:1[0x2](eng): Data: none (tmcd / 0x64636D74), 0 kb/s\n      Metadata:\n        handler_name    : VideoHandler\n        timecode        : 18:21:57:00\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\daruma\\2.mp4",
+    "bytes": 454275,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\daruma\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:04.97, start: 0.033008, bitrate: 731 kb/s\n  Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 727 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\ebike\\1.mp4",
+    "bytes": 1297973,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\ebike\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 2076 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2072 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\ebike\\2.mp4",
+    "bytes": 3486393,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\ebike\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 5578 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 5573 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n        timecode        : 19:31:11:06\n  Stream #0:1[0x2](eng): Data: none (tmcd / 0x64636D74), 0 kb/s\n      Metadata:\n        handler_name    : VideoHandler\n        timecode        : 19:31:11:06\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\imori\\1.mp4",
+    "bytes": 1837526,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\imori\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 2940 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt2020nc/bt2020/arib-std-b67, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2935 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n      Side data:\n        Ambient Viewing Environment, ambient_illuminance=314.000000, ambient_light_x=0.312700, ambient_light_y=0.329000\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\imori\\2.mp4",
+    "bytes": 1750960,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\imori\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 2801 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt2020nc/bt2020/arib-std-b67, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2797 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n      Side data:\n        Ambient Viewing Environment, ambient_illuminance=314.000000, ambient_light_x=0.312700, ambient_light_y=0.329000\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\kayak\\1.mp4",
+    "bytes": 6287150,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\kayak\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 10059 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 10054 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n        timecode        : 22:51:17:02\n  Stream #0:1[0x2](eng): Data: none (tmcd / 0x64636D74), 0 kb/s\n      Metadata:\n        handler_name    : VideoHandler\n        timecode        : 22:51:17:02\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\kayak\\2.mp4",
+    "bytes": 2914813,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\kayak\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 4663 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt2020nc/bt2020/arib-std-b67, progressive), 720x1280 [SAR 1:1 DAR 9:16], 4659 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n      Side data:\n        Ambient Viewing Environment, ambient_illuminance=314.000000, ambient_light_x=0.312700, ambient_light_y=0.329000\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\naena\\1.mp4",
+    "bytes": 2540310,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\naena\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 4064 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt2020nc/bt2020/arib-std-b67, progressive), 720x1280 [SAR 1:1 DAR 9:16], 4060 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n      Side data:\n        Ambient Viewing Environment, ambient_illuminance=314.000000, ambient_light_x=0.312700, ambient_light_y=0.329000\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\naena\\2.mp4",
+    "bytes": 1971192,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\naena\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 3153 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 3148 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n        timecode        : 23:40:38:02\n  Stream #0:1[0x2](eng): Data: none (tmcd / 0x64636D74), 0 kb/s\n      Metadata:\n        handler_name    : VideoHandler\n        timecode        : 23:40:38:02\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\picnic\\1.mp4",
+    "bytes": 2040816,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\picnic\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 3265 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 3260 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n        timecode        : 21:40:27:04\n  Stream #0:1[0x2](eng): Data: none (tmcd / 0x64636D74), 0 kb/s\n      Metadata:\n        handler_name    : VideoHandler\n        timecode        : 21:40:27:04\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\picnic\\2.mp4",
+    "bytes": 2116490,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\picnic\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 3386 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 3381 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n        timecode        : 22:22:11:16\n  Stream #0:1[0x2](eng): Data: none (tmcd / 0x64636D74), 0 kb/s\n      Metadata:\n        handler_name    : VideoHandler\n        timecode        : 22:22:11:16\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\sake\\1.mp4",
+    "bytes": 1962246,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\sake\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 3139 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt2020nc/bt2020/arib-std-b67, progressive), 1280x720 [SAR 1:1 DAR 16:9], 3135 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n      Side data:\n        Ambient Viewing Environment, ambient_illuminance=314.000000, ambient_light_x=0.312700, ambient_light_y=0.329000\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\sake\\2.mp4",
+    "bytes": 1590174,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\sake\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:04.97, start: 0.033008, bitrate: 2561 kb/s\n  Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2557 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\soba\\1.mp4",
+    "bytes": 1683294,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\soba\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 2693 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt2020nc/bt2020/arib-std-b67, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2688 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n      Side data:\n        Ambient Viewing Environment, ambient_illuminance=314.000000, ambient_light_x=0.312700, ambient_light_y=0.329000\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\soba\\2.mp4",
+    "bytes": 849880,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\soba\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 1359 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt2020nc/bt2020/arib-std-b67, progressive), 1280x720 [SAR 1:1 DAR 16:9], 1355 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n      Side data:\n        Ambient Viewing Environment, ambient_illuminance=314.000000, ambient_light_x=0.312700, ambient_light_y=0.329000\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\sup\\1.mp4",
+    "bytes": 4039289,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\sup\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 6462 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/smpte432/bt709, progressive), 960x1280 [SAR 1:1 DAR 3:4], 6458 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\sup\\2.mp4",
+    "bytes": 5031317,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\sup\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 8050 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 720x1280 [SAR 1:1 DAR 9:16], 8045 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : Core Media Video\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\winery\\1.mp4",
+    "bytes": 3898408,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\winery\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 6237 kb/s\n  Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 6233 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\winery\\2.mp4",
+    "bytes": 816193,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\winery\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 1305 kb/s\n  Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 1301 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\zip\\1.mp4",
+    "bytes": 1797907,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\zip\\1.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 2876 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 2871 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n        timecode        : 18:56:22;29\n  Stream #0:1[0x2](eng): Data: none (tmcd / 0x64636D74), 0 kb/s\n      Metadata:\n        handler_name    : VideoHandler\n        timecode        : 18:56:22;29\nAt least one output file must be specified\n"
+  },
+  {
+    "file": "assets\\clips\\zip\\2.mp4",
+    "bytes": 3651518,
+    "decode": "pass",
+    "codec": "H.264/8-bit 4:2:0",
+    "audio": false,
+    "metadata": "Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'prototype-review\\v9\\assets\\clips\\zip\\2.mp4':\n  Metadata:\n    major_brand     : isom\n    minor_version   : 512\n    compatible_brands: isomiso2avc1mp41\n    encoder         : Lavf61.7.100\n  Duration: 00:00:05.00, start: 0.000000, bitrate: 5842 kb/s\n  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720 [SAR 1:1 DAR 16:9], 5837 kb/s, 30 fps, 30 tbr, 15360 tbn (default)\n      Metadata:\n        handler_name    : VideoHandler\n        vendor_id       : [0][0][0][0]\n        encoder         : Lavc61.19.100 libx264\n        timecode        : 19:27:28:16\n  Stream #0:1[0x2](eng): Data: none (tmcd / 0x64636D74), 0 kb/s\n      Metadata:\n        handler_name    : VideoHandler\n        timecode        : 19:27:28:16\nAt least one output file must be specified\n"
+  }
+]

@@ -1,0 +1,169 @@
+/* Myoko Days v16 — the stay: cards on Plan, nights strip, Review panel, Build settings, map tags.
+   Same washi, moss and vermilion as the rest of the site; hairlines, sharp corners, serif numerals. */
+
+/* ───────── Plan: question 05, a full-width row inside the question frame ───────── */
+.q--stay { grid-column: 1 / -1; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 6px 16px; padding: 25px 0 6px; }
+.q--stay .q__t { grid-column: 2; }
+.stay-lede { grid-column: 2; margin: 0 0 14px; max-width: 64ch; font-size: 13.5px; line-height: 1.65; color: #5e6758; }
+.stay-cards { grid-column: 2; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.stay-card { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; padding: 18px 18px 16px; text-align: left; background: #f1ecdf; border: 1px solid #d7cebf; color: var(--ink); transition: background-color var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast), transform var(--dur-med) var(--ease); }
+.stay-card:hover { border-color: var(--moss); transform: translateY(-2px); }
+.stay-card__peaks { color: #a58a4a; margin-bottom: 4px; }
+.stay-card__line { font: 500 var(--fs-11)/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+.stay-card__name { font: 400 1.32rem/1.2 var(--serif); letter-spacing: -.005em; text-wrap: balance; }
+.stay-card__blurb { font-size: 12.5px; line-height: 1.55; color: var(--ink-2); }
+.stay-card__price { margin-top: auto; padding-top: 22px; display: flex; align-items: baseline; gap: 7px; }
+.stay-card__price b { font: 400 1.55rem/1.1 var(--serif); font-variant-numeric: lining-nums tabular-nums; }
+.stay-card__price .stay-card__none { font-size: 1.15rem; line-height: 1.25; }
+.stay-card__price small { font: 400 11.5px/1.3 var(--sans); color: var(--ink-3); }
+.stay-card__pp { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.stay-card__mark { position: absolute; top: 14px; right: 16px; font: 500 var(--fs-11)/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #e8c987; }
+.stay-card[aria-pressed="true"] { background: #2b4336; border-color: #2b4336; color: #fff7e7; box-shadow: 0 10px 26px rgba(43, 67, 54, .22); }
+.stay-card[aria-pressed="true"] .stay-card__line, .stay-card[aria-pressed="true"] .stay-card__price small { color: rgba(255, 247, 231, .7); }
+.stay-card[aria-pressed="true"] .stay-card__blurb, .stay-card[aria-pressed="true"] .stay-card__pp { color: rgba(255, 247, 231, .86); }
+.stay-card[aria-pressed="true"] .stay-card__peaks { color: #e8c987; }
+.stay-card--own { background: transparent; border-style: dashed; }
+.stay-card--own[aria-pressed="true"] { background: #2b4336; border-style: solid; }
+.stay-card:focus-visible { outline: 2px solid var(--shu); outline-offset: 3px; }
+
+.stay-detail { grid-column: 2; margin-top: 16px; padding-top: 16px; border-top: 1px solid #d7cebf; }
+.stay-nights__h { margin: 0 0 10px; font: 500 var(--fs-11)/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+.nights { display: flex; flex-wrap: wrap; gap: 8px; }
+.night { display: grid; gap: 2px; min-width: 112px; padding: 10px 14px; background: #fbf8f0; border: 1px solid #d7cebf; }
+.night--peak { border-color: #c4a25e; background: #fbf4e2; }
+.night__d { font-size: 12px; color: var(--ink-2); }
+.night__r { font: 400 1.15rem/1.2 var(--serif); font-variant-numeric: lining-nums tabular-nums; }
+.night__t { font: 500 10.5px/1.3 var(--sans); font-style: normal; letter-spacing: .1em; text-transform: uppercase; color: #8a6a24; }
+.night__t--quiet { color: var(--ink-3); }
+.stay-nights__sum { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 18px; margin: 14px 0 0; font-size: 13px; color: var(--ink-2); }
+.stay-nights__sum b { font: 400 1.5rem/1.1 var(--serif); color: var(--moss); font-variant-numeric: lining-nums tabular-nums; }
+.stay-nights__sum b small { font: 400 12px var(--sans); color: var(--ink-3); }
+.stay-hint { margin: 10px 0 0; font-size: 12.5px; color: var(--shu); }
+.stay-hint .linkbtn { margin-left: 6px; }
+.stay-note { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-2); max-width: 64ch; }
+
+/* course cards: the total with the stay */
+.shape__with { display: block; margin-top: 4px; font: 400 12px/1.4 var(--sans); color: var(--ink-2); }
+.shape__with-n { font-weight: 500; color: var(--moss); font-variant-numeric: tabular-nums; }
+#planCourses .shape__price { min-width: 0; }
+#planCourses .shape__with { max-width: 26ch; }
+
+/* ───────── Build: the stay choice inside Edit trip ───────── */
+.ts__stay { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; }
+.ts__stayb { display: grid; gap: 2px; padding: 9px 11px; text-align: left; background: var(--white); border: 1px solid var(--line-2); transition: background-color var(--dur-fast), border-color var(--dur-fast); }
+.ts__stayb b { font: 500 12.5px/1.3 var(--sans); }
+.ts__stayb small { font: 400 11px/1.3 var(--sans); color: var(--ink-3); }
+.ts__stayb:hover { border-color: var(--moss); }
+.ts__stayb[aria-pressed="true"] { background: var(--moss); border-color: var(--moss); color: var(--paper); }
+.ts__stayb[aria-pressed="true"] small { color: rgba(244, 243, 239, .72); }
+
+/* ───────── Review: stay panel, total tile, three cards across ───────── */
+.stay-panel .seg--stay { display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin-top: auto; }
+.stay-panel .seg--stay button { justify-content: center; text-align: center; }
+.stay-panel p { margin-bottom: 18px; }
+.seg--stay button { min-height: 38px; font-size: 12.5px; }
+.stat--total b { color: var(--shu); }
+.stat--total::before { background: var(--shu); }
+.bk-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .bk-cards { grid-template-columns: 1fr; } }
+
+/* ───────── map: the property you stay at carries a name tag; the others are unlabelled ───────── */
+.dio-prop { position: absolute; left: 0; top: 0; z-index: 14; padding: 3px 8px; translate: -50% 8px; background: var(--moss); color: var(--paper); border: 1px solid var(--moss); font: 500 var(--fs-11)/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .15s ease; }
+.dio-prop.is-hot { opacity: 1; }
+
+/* ───────── narrow screens ───────── */
+@media (max-width: 1100px) { .stay-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .q--stay { grid-template-columns: 30px minmax(0, 1fr); }
+  .stay-card { padding: 14px 14px 13px; }
+  .stay-card__name { font-size: 1.15rem; }
+  .stay-card__price b { font-size: 1.3rem; }
+  .night { min-width: 0; flex: 1 1 calc(50% - 8px); }
+}
+@media (max-width: 440px) { .stay-cards { grid-template-columns: 1fr; } .ts__stay { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .stay-card, .stay-card:hover { transition: none; transform: none; } }
+
+/* ═══ v17.3 · phones: nothing clipped, nothing too small to tap ═══ */
+.mf__short { display: none; }
+@media (max-width: 560px) {
+  /* Build: the bar over the map fits one row on a 320 px screen, or wraps */
+  .mapfilters { flex-wrap: wrap; gap: 6px 8px; padding: 6px 10px; overflow: visible; width: auto; max-width: none; right: 0; }
+  .mf { padding: 0 10px; letter-spacing: .06em; }
+  .mapfilters .tbtn { padding-left: 10px; padding-right: 10px; }
+  .mf__long { display: none; }
+  .mf__short { display: inline; }
+  .mf__sw { gap: 6px; flex: none; }
+  .mf__sw span { font-size: 12.5px; }
+}
+@media (max-width: 400px) { .mf__long--sm { display: none; } .mf { padding: 0 8px; gap: 6px; } }
+@media (pointer: coarse) {
+  /* every control gets a 44 px touch area without changing how it looks */
+  .hd__nav a { padding: 16px 2px; }
+  .brand { padding: 10px 6px; margin: -10px -6px; }
+  .foot a { display: inline-block; padding: 12px 0; }
+  .foot__small a { padding: 0; }
+  .link-arrow, .hero-pause { min-height: 44px; }
+  .linkbtn { display: inline-flex; align-items: center; min-height: 44px; }
+  .dayc__pick { min-height: 44px; align-items: center; }
+  .mf__sw input[type=checkbox], .tmenu__opt input[type=checkbox] { width: 22px; height: 22px; }
+  .mf__sw, .tmenu__opt { min-height: 44px; }
+  .item__btn { width: 40px; height: 40px; }
+  .pl__grip, .item__grip { width: 40px; height: 40px; }
+  .mf, .mapfilters .tbtn { min-height: 40px; }
+  .dio-key__t, button[data-z] { min-width: 44px; min-height: 44px; }
+  .dk-edit { min-height: 44px; }
+  .item__name { position: relative; }
+  .item__name::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, 44px); transform: translateY(-50%); }
+  .trip-film__controls button, .fd__controls button { min-width: 44px; min-height: 44px; }
+  .trip-film__controls input[type=range] { min-height: 32px; }
+  .seg--stay button { min-height: 44px; }
+}
+
+/* v17.4: "Watch the film" sits beside "Pause motion", in the same quiet text style */
+.hero__ctls { display: inline-flex; align-items: center; gap: 8px 28px; flex-wrap: wrap; justify-content: flex-end; }
+.hero .hero__ctls .hero-film-toggle { position: static; display: inline-block; min-height: 0; padding: 6px 0; gap: 0; border: 0; border-bottom: 1px solid rgba(251, 246, 234, .45); border-radius: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; font: 500 11px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: rgba(251, 246, 234, .85); }
+.hero .hero__ctls .hero-film-toggle:hover { color: #fff; border-bottom-color: #fff; background: none; }
+@media (pointer: coarse) { .hero .hero__ctls .hero-film-toggle { min-height: 44px; display: inline-flex; align-items: center; } }
+@media (max-width: 560px) { .hero__coord { display: none; } .hero__bar { justify-content: flex-start; } .hero__ctls { flex-wrap: nowrap; gap: 0 22px; } }
+
+/* v17.6: the poster no longer zooms (it used to drift from 106 % to 100 % under the fading-in video, which read as a zoom), and the video fades in quickly over a poster that is now its own first frame */
+.hero__img, .hero__img.is-loaded { transform: none; transition: none; }
+.hero__video { transition: opacity .5s var(--ease); }
+
+/* v17.9: activity badges are a zoom-in detail. Zoomed out the map shows terrain, names and rings only; the badges fade in as you zoom in.
+   Badges are also a little see-through so the ground (and names such as Lake Nojiri) read behind them. A trip's numbered badges, a hovered or selected badge stay. */
+.dio-pin__tag { transition: transform var(--dur-fast, .16s) var(--ease), background-color .16s, box-shadow .16s, opacity .35s var(--ease); }
+.dio-pin:not(.dio-pin--in) .dio-pin__tag { background-color: rgba(255, 255, 255, .72); opacity: .9; }
+.dio-pin--in .dio-pin__tag { opacity: .92; }
+.dio-pin:hover .dio-pin__tag, .dio-pin.is-hot .dio-pin__tag { opacity: 1; background-color: #fff; }
+.dio-pin--in .dio-pin__tag.is-over { background-color: #fff; }
+.dio.badges-off .dio-pin:not(.dio-pin--in):not(.is-hot):not(:hover):not(:focus-visible) .dio-pin__tag { opacity: 0; transform: scale(.55); pointer-events: none; }
+.dio.badges-off .dio-pin--dot:not(.dio-pin--in):not(.is-hot):not(:focus-visible) { pointer-events: none; }
+
+/* v17.9: the Local Culture Tour reads as one route. Each of its four stops wears the ordinary torii badge with its number (the Sekigawa gate is 1);
+   a dotted line joins them while the tour is hovered or open, and the card lists the stops in order. */
+.dio-num { position: absolute; right: -5px; top: -5px; min-width: 14px; height: 14px; padding: 0 3px; box-sizing: border-box; display: grid; place-items: center; border-radius: 7px; background: var(--ink); color: #fff; font: 600 9.5px/1 var(--serif); font-style: normal; pointer-events: none; box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .85); }
+.dio-pin--in .dio-num { background: #fff; color: var(--shu); box-shadow: 0 0 0 1.5px var(--shu); }
+.dio-stop { position: absolute; left: 0; top: 0; width: 0; height: 0; padding: 0; border: 0; background: transparent; z-index: 12; pointer-events: none; }
+.dio-stop__d { position: absolute; left: calc(var(--d, 24px) / -2); top: calc(var(--d, 24px) / -2); width: var(--d, 24px); height: var(--d, 24px); display: grid; place-items: center; border-radius: 50%; box-sizing: border-box;
+  background: rgba(255, 255, 255, .72); color: var(--ink); border: 1.5px solid rgba(46, 59, 53, .6); box-shadow: 0 0 0 2px rgba(255, 255, 255, .55), 0 2px 6px rgba(25, 28, 26, .38); opacity: .9;
+  pointer-events: auto; cursor: pointer; transition: transform .16s var(--ease), opacity .35s var(--ease), background-color .16s; }
+.dio-stop__d svg { display: block; width: calc(var(--d, 24px) * .54); height: calc(var(--d, 24px) * .54); }
+.dio-stop:hover .dio-stop__d, .dio-stop.is-hot .dio-stop__d { transform: scale(1.16); opacity: 1; background-color: #fff; }
+.dio-stop.is-in .dio-stop__d { background: var(--shu); color: #fff; border: 2px solid #fff; box-shadow: 0 0 0 1.5px var(--shu), 0 2px 7px rgba(110, 30, 16, .5); }
+.dio-stop.is-in .dio-num { background: #fff; color: var(--shu); box-shadow: 0 0 0 1.5px var(--shu); }
+.dio-stop.is-dimmed .dio-stop__d { opacity: .25; }
+.dio-stop:focus-visible .dio-stop__d { outline: 2px solid var(--shu); outline-offset: 2px; }
+.dio.badges-off .dio-stop:not(.is-hot):not(:focus-visible) .dio-stop__d { opacity: 0; transform: scale(.55); pointer-events: none; }
+.dio-tour { fill: none; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.dio-tour--bg { stroke: rgba(255, 255, 255, .7); stroke-width: 5; }
+.dio-tour--dots { stroke: var(--shu); stroke-width: 3; stroke-dasharray: .1 7.5; }
+.stops--tour { margin-top: 10px; }
+.stops--tour li { padding: 0 0 0 30px; }
+.stops--tour li::before { top: 7px; }
+.stops--tour button { display: block; width: 100%; text-align: left; padding: 8px 0; background: none; border: 0; font: inherit; color: inherit; cursor: pointer; }
+.stops--tour button:hover { color: var(--ink); }
+.stops--tour li.is-here { color: var(--ink); }
+.stops--tour li.is-here button { font-weight: 600; }
+.pc__stop { margin: -2px 0 8px; font-size: var(--fs-13); color: var(--ink-2); }
+.pc__stop span { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 10px; background: rgba(46, 59, 53, .1); color: var(--ink); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }

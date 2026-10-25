@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Myoko snake · model review</title>
+<style>body{margin:0;background:#eae6d8;color:#35443a;font:14px system-ui}header{padding:20px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}h1{font:24px Georgia;margin:0 auto 0 0}button,a{padding:9px 14px;border:1px solid #8c9278;border-radius:4px;background:#f7f4e9;color:inherit;text-decoration:none;cursor:pointer}#stage{height:calc(100vh - 125px);min-height:400px}canvas{display:block;width:100%;height:100%}p{margin:12px 24px;font-size:13px}</style>
+<header><h1>Kurohime snake · actual model</h1><button id="pause">Pause</button><button id="angle">View from above</button><button id="capture">Save image</button><a href="../#build">Full map</a></header><div id="stage"></div><p id="status">Loading the production model and terrain…</p>
+<script src="../js/vendor/three-r128.min.js"></script><script src="../assets/diorama/kit/kit.js"></script><script src="../assets/diorama/kit/critters.js?v=20.0"></script>
+<script>
+(async()=>{
+ const T=THREE,base='../assets/diorama/data/';
+ const L=await fetch(base+'layout.json').then(r=>r.json());const img=new Image();img.src=base+'relief-height-lo.png';await img.decode();
+ const cv=document.createElement('canvas');cv.width=img.width;cv.height=img.height;const cx=cv.getContext('2d',{willReadFrequently:true});cx.drawImage(img,0,0);const pixels=cx.getImageData(0,0,cv.width,cv.height).data;
+ const W=cv.width,H=cv.height,SN=L.spanMetres.northSouth,SE=L.spanMetres.eastWest,E=L.exaggeration;
+ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+ function heightAt(x,z){const r=clamp((SN/2-x)/SN*H-.5,0,H-1.001),c=clamp((z+SE/2)/SE*W-.5,0,W-1.001),i=Math.floor(r),j=Math.floor(c),fr=r-i,fc=c-j;const h=(r,c)=>(pixels[(r*W+c)*4]*256+pixels[(r*W+c)*4+1])/10-50;return (h(i,j)*(1-fc)+h(i,j+1)*fc)*(1-fr)+(h(i+1,j)*(1-fc)+h(i+1,j+1)*fc)*fr;}
+ const animals=MyokoCritters.create({T,kit:MyokoKit.api,L,heightAt,EXAG:E}),snake=animals.group.getObjectByName('kurohime-snake');
+ if(!snake)throw Error('No validated snake route');
+ const scene=new T.Scene();scene.background=new T.Color(0xeae6d8);scene.add(snake);MyokoKit.lights().forEach(l=>scene.add(l));
+ const zone=animals.zones.snake, ground=new T.PlaneGeometry(2600,2000,60,48);ground.rotateX(-Math.PI/2);const gp=ground.attributes.position;
+ for(let i=0;i<gp.count;i++){const x=gp.getX(i)+zone.x,z=gp.getZ(i)+zone.z;gp.setXYZ(i,x,heightAt(x,z)*E,z);}ground.computeVertexNormals();
+ scene.add(new T.Mesh(ground,new T.MeshLambertMaterial({color:0xb5bb86})));
+ const renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));document.getElementById('stage').appendChild(renderer.domElement);
+ const camera=new T.PerspectiveCamera(34,1,10,10000);let paused=false,top=false,clock=0,last=performance.now();
+ animals.force('snake');animals.update(0,3);for(let i=1;i<=120;i++)animals.update(i/30,3);clock=4;
+ const status=document.getElementById('status');
+ document.getElementById('pause').onclick=e=>{paused=!paused;e.target.textContent=paused?'Resume':'Pause';};
+ document.getElementById('angle').onclick=e=>{top=!top;e.target.textContent=top?'Three-quarter view':'View from above';};
+ function render(){const centers=snake.userData.centers,mid=centers[Math.floor(centers.length/2)];if(!mid)return;const stage=document.getElementById('stage'),w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();camera.position.set(mid.x-150,mid.y+(top?1650:720),mid.z+(top?5:1050));camera.lookAt(mid.x,mid.y,mid.z);renderer.render(scene,camera);}
+ document.getElementById('capture').onclick=()=>{render();const a=document.createElement('a');a.href=renderer.domElement.toDataURL('image/png');a.download='myoko-v19-snake-model.png';a.click();};
+ function frame(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(!paused){clock+=dt;animals.update(clock,3);}render();status.textContent='Connected tapered skin · actual terrain contact · '+animals.info().find(a=>a.key==='snake').st+' · camera follows for inspection';requestAnimationFrame(frame);}requestAnimationFrame(frame);
+})().catch(e=>document.getElementById('status').textContent=e.message);
+</script></html>

@@ -1,0 +1,33 @@
+[
+  {
+    "case": "Inherited key in saved course",
+    "accepted": "constructor",
+    "error": "Cannot read properties of undefined (reading 'filter')",
+    "exposure": "Corrupted or deliberately edited same-origin localStorage; no remote input path identified."
+  },
+  {
+    "case": "Long outings treated as one block",
+    "outings": [
+      {
+        "id": "mtmyoko",
+        "name": "Guided Mt Myoko Summit Hike"
+      },
+      {
+        "id": "foodwalk",
+        "name": "Arai Food Walk"
+      }
+    ]
+  },
+  {
+    "case": "Full-day mountain climb plus afternoon kayaking",
+    "accepted": [
+      "Guided Mt Myoko Summit Hike",
+      "Kayaking"
+    ],
+    "longWarning": true
+  },
+  {
+    "case": "Preload failure is cached as a fulfilled null promise",
+    "evidence": "prefetch catches a rejection to null, then start reuses the same promise instead of retrying."
+  }
+]

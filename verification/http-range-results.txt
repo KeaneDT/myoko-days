@@ -1,0 +1,4 @@
+PASS exact bytes for bounded 10-109, suffix -64, and open-ended 100- requests (HTTP 206).
+PASS HEAD range 0-127 returns Content-Length 128 and no body.
+PASS out-of-bounds range returns HTTP 416.
+Browser timeline reached 29.9s in a 30s film; active clip time was 4.899999s.

@@ -1,0 +1,10 @@
+{
+  "name": "myoko-days",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Myoko Days green-season itinerary builder and illustrated mountain diorama",
+  "scripts": {
+    "test": "node verification/verify-v10.cjs && node verification/verify-critters.cjs && node verification/verify-grazers.cjs"
+  },
+  "devDependencies": { "pngjs": "7.0.0" }
+}

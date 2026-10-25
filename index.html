@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Myoko Days</title>
+<meta name="description" content="Explore Myoko on an illustrated 3D map. Choose places and your days arrange themselves around them. Made for Patience Capital Group.">
+<meta name="theme-color" content="#F4F3EF">
+<meta property="og:title" content="Myoko Days">
+<meta property="og:description" content="Make room for Myoko. Choose places on an illustrated 3D map and shape the days around them.">
+<meta property="og:image" content="assets/video/hero-poster.jpg">
+<link rel="icon" href="assets/brand/myoko-peaks.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/shippori-mincho-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/build.css">
+<link rel="stylesheet" href="css/diorama.css">
+<link rel="stylesheet" href="css/refinement.css">
+<link rel="stylesheet" href="css/editorial.css?v=8.3">
+<link rel="stylesheet" href="css/media.css?v=9.2">
+<link rel="stylesheet" href="css/studio.css?v=12.3">
+<link rel="stylesheet" href="css/v12.css?v=16.2">
+<link rel="stylesheet" href="css/v16.css?v=17.11">
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body class="on-home">
+<a class="skip" href="#main">Skip to content</a>
+<noscript><p style="padding:24px;font-family:Georgia,serif">Myoko Days needs JavaScript to draw the map and plan your days.</p></noscript>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<header class="hd" id="siteHeader">
+  <a class="brand" href="#home" aria-label="Myoko Days, home"><span class="seal seal--peaks" aria-hidden="true"><svg viewBox="0 0 48 32" fill="none"><path d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m9 18 4 3 3-4m7-5 4 4 4-4m6 6 2 3 2-3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M3 31h42" stroke="currentColor" stroke-width=".8"/></svg></span><span class="brand__name">Myoko Days</span></a>
+  <nav class="hd__nav" aria-label="Main">
+    <a href="#about" data-nav="about">The area</a>
+    <span class="hd__sep" aria-hidden="true"></span>
+    <a href="#plan" data-nav="plan"><i>01</i>Plan</a>
+    <a href="#build" data-nav="build"><i>02</i>Build <span class="hd__count" id="navcount" data-n="0" title="Places in your trip"><b id="navn">0</b><em> places</em></span></a>
+    <a href="#book" data-nav="book"><i>03</i>Review</a>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1">
+  <!-- ═══════════════ HOME ═══════════════ -->
+  <section class="view" id="v-home">
+    <div class="hero">
+      <div class="hero__media" id="heroMedia" aria-hidden="true">
+        <video class="hero__video" id="heroVideo" autoplay muted loop playsinline preload="auto" poster="assets/video/hero-poster.jpg?v=17.7"><source src="assets/video/hero.mp4?v=17.7" type="video/mp4"></video><img class="hero__img" id="heroImg" src="assets/video/hero-poster.jpg?v=17.7" alt="" fetchpriority="high" decoding="async">
+      </div>
+      <div class="hero__shade" aria-hidden="true"></div>
+      <div class="hero__in">
+        <div class="hero__copy">
+          <p class="hero__eyebrow rise" style="--d:.1s">Myoko Days <i aria-hidden="true"></i> Niigata &amp; Nagano</p>
+          <h1 class="hero__title rise" style="--d:.2s">Make room for Myoko.</h1>
+          <p class="hero__lede rise" style="--d:.35s">Lakes, waterfalls and mountain towns on one illustrated 3D map. Choose the places that draw you, and your days arrange themselves around them.</p>
+          <div class="hero__actions rise" style="--d:.5s">
+            <a class="btn btn--light" href="#plan">Plan your trip <span class="arrow" aria-hidden="true"></span></a>
+          </div>
+        </div>
+      </div>
+      <div class="hero__bar rise" style="--d:.7s"><span class="hero__coord" aria-hidden="true">36°52′ N · 138°13′ E</span><span class="hero__ctls"><button type="button" id="heroVideoToggle" class="hero-pause hero-film-toggle" aria-label="Watch the Myoko film">Watch the film</button><button type="button" id="heroPause" class="hero-pause" aria-label="Pause background video">Pause motion</button></span></div>
+    </div>
+
+    <section class="intro" id="intro">
+      <div class="wrap intro__grid">
+        <p class="label label--rule" data-reveal>Myoko Days</p>
+        <div>
+          <p class="statement" data-reveal>A little mountain air. A day by the lake. <em>Time to follow your curiosity.</em></p>
+          <div class="facts" data-reveal>
+            <div class="fact"><b>One map</b><span>Choose a place and it joins your days. No juggling.</span></div>
+            <div class="fact"><b>3 to 7 days</b><span>A short getaway or a longer stay. The trip grows with you.</span></div>
+            <div class="fact"><b>Your pace</b><span>Set your dates and walking comfort. Each day respects both.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sect sect--top0" id="courses">
+      <div class="wrap">
+        <div class="sect__head">
+          <p class="label" data-reveal><span class="label__n">A</span>Three ways in</p>
+          <div data-reveal><h2>Choose how the days should feel.</h2><p>Begin with a considered itinerary, then make it yours. Add a place and the days adjust. Leave a little room for yourself.</p></div>
+        </div>
+        <div class="shapes" id="homeCourses"></div>
+      </div>
+    </section>
+
+    <section class="mapfeat" aria-labelledby="mapfeatTitle">
+      <div class="mapfeat__art">
+        <img id="mapfeatImg" src="assets/map/myoko-earth.jpg?v=12.3" alt="Satellite view of the Myoko region: Lake Nojiri, the Myoko and Kurohime peaks, and the plains toward Arai" width="2576" height="1206" loading="lazy" decoding="async">
+        <span class="mapfeat__credit">Google Earth</span>
+      </div>
+      <span class="mapfeat__frame" aria-hidden="true"></span>
+      <span class="mapfeat__ticks" aria-hidden="true"></span>
+      <span class="mapfeat__ticks mapfeat__ticks--b" aria-hidden="true"></span>
+      <div class="mapfeat__txt">
+        <div data-reveal>
+          <p class="label"><span class="label__n">B</span>One map</p>
+          <h2 id="mapfeatTitle">Find your next day out on one 3D map.</h2>
+          <p>Turn it, zoom in, and open any place. Add it, and it slots into the best free morning or afternoon. Your days sit beside the map, always in view.</p>
+          <a class="btn" href="#build">Open the map <span class="arrow" aria-hidden="true"></span></a>
+        </div>
+      </div>
+      <div class="mapfeat__compass" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1"><circle cx="20" cy="20" r="17"/><path d="M20 3v34M3 20h34" opacity=".35"/><path d="M37 20L22 17.5 20 20l2 2.5z" fill="currentColor"/><path d="M3 20l15 2.5 2-2.5-2-2.5z"/></svg>
+        <span>N →</span>
+      </div>
+    </section>
+
+    <section class="sect">
+      <div class="wrap">
+        <div class="sect__head">
+          <p class="label" data-reveal><span class="label__n">C</span>How it works</p>
+          <div data-reveal><h2>From a place that catches your eye to a day of your own.</h2></div>
+        </div>
+        <div class="steps">
+          <div class="step" data-reveal><span class="step__n"><i>01</i>Plan</span><h3>Pick a shape</h3><p>Restore, Discover or Move. Begin with a plan shaped around your dates and walking comfort.</p></div>
+          <div class="step" data-reveal style="--d:.1s"><span class="step__n"><i>02</i>Build</span><h3>Add from the map</h3><p>Open any place and add it. It takes the best free block, and other days shift gently to make room.</p></div>
+          <div class="step" data-reveal style="--d:.2s"><span class="step__n"><i>03</i>Review</span><h3>Fine-tune and review</h3><p>Drag anything to another morning or afternoon. Review the details, then keep a copy of your plan.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sect sect--top0">
+      <div class="wrap gallery" id="homeStrip"></div>
+    </section>
+
+    <section class="sect sect--paper2">
+      <div class="wrap">
+        <div class="sect__head">
+          <p class="label" data-reveal><span class="label__n">D</span>Local perspectives</p>
+          <div data-reveal><h2>The people who make Myoko.</h2><p>People whose local knowledge shaped these days.</p></div>
+        </div>
+        <ol class="hosts" id="homeHosts"></ol><div class="fieldwork-journal" id="fieldworkJournal" aria-label="More fieldwork galleries"></div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="closing__img" aria-hidden="true"><img id="closingImg" src="assets/img/valley-view.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="closing__in" data-reveal>
+        <p class="label label--light label--rule">When you're ready</p>
+        <h2>Make the days your own.</h2>
+        <p>Choose a lake morning, a mountain view or a taste of local life. Leave room for the journey, and for yourself.</p>
+        <a class="btn btn--light" href="#plan">Plan your trip <span class="arrow" aria-hidden="true"></span></a>
+      </div>
+    </section>
+  </section>
+
+  <!-- ═══════════════ THE AREA ═══════════════ -->
+  <section class="view" id="v-about" hidden>
+    <header class="pagehead">
+      <div><p class="label label--rule">The area</p><h1>Mountains, lakes, local life.</h1></div>
+      <p class="lede">Myoko is a hot-spring and mountain area on the Niigata–Nagano border. Known for snow in winter, it has lakes, waterfalls, rice fields and onsen towns the rest of the year.</p>
+    </header>
+    <div class="pageband" data-reveal="img"><img id="aboutImg" src="assets/img/valley-wide.jpg" alt="Wide view over the Myoko valley" loading="lazy" decoding="async"></div>
+    <div class="wrap">
+      <section class="arow">
+        <div data-reveal><p class="label"><span class="label__n">A</span>When</p><h2>Choose your season.</h2></div>
+        <div class="arow__body" data-reveal>
+          <p>You can plan from July to October. Each activity lists the months it runs.</p>
+          <div class="season-notes"><p><b>July–August</b> · Long light evenings, lake days and cool mornings in the highlands.</p><p><b>September–October</b> · Rice harvest, clear air and the first colour on the mountains.</p></div>
+        </div>
+      </section>
+      <section class="arow">
+        <div data-reveal><p class="label"><span class="label__n">B</span>Getting there</p><h2>Two ways in by rail.</h2></div>
+        <div class="arow__body" data-reveal>
+          <ol class="timeline">
+            <li><b>Tokyo → Nagano</b><span>Hokuriku Shinkansen. Reserved seats are booked with JR East.</span></li>
+            <li><b>Nagano → Myoko-Kogen</b><span>Shinano Railway Kita-Shinano Line, a change of train at Nagano, ending at Myoko-Kogen.</span></li>
+            <li><b>Or by Jōetsumyōkō</b><span>Leave the Hokuriku Shinkansen at Jōetsumyōkō and take the Echigo Tokimeki Myoko Haneuma Line through Arai and Sekiyama to Myoko-Kogen. The two lines meet at Myoko-Kogen, where you change trains across the platform.</span></li>
+            <li><b>Around Myoko</b><span>Keinan buses link the station with Ikenotaira. Your plan includes a chartered van on the days you have something booked, so the mountain and lakeside places are covered.</span></li>
+          </ol>
+        </div>
+      </section>
+      <section class="arow">
+        <div data-reveal><p class="label"><span class="label__n">C</span>Good to know</p><h2>Before you go.</h2></div>
+        <div class="arow__body cols2" data-reveal>
+          <div><h3>Planning essentials</h3>
+            <ul class="ticks">
+              <li><b>The last mile.</b> Rail reaches the region and the chartered van takes you to each meeting point and back.</li>
+              <li><b>Local operators.</b> Run by people who live here.</li>
+              <li><b>Seasons differ by activity.</b> Each place lists the months it runs.</li>
+            </ul></div>
+          <div><h3>Customs</h3>
+            <ul class="ticks">
+              <li>Many small shops take <b>cash only</b>.</li>
+              <li>A <b>national park</b>: stay on trails and take rubbish home.</li>
+              <li>Onsen: wash first, no swimwear; some baths don't allow tattoos.</li>
+            </ul></div>
+        </div>
+      </section>
+      <section class="arow">
+        <div data-reveal><p class="label"><span class="label__n">D</span>Questions</p><h2>Asked often.</h2></div>
+        <div class="arow__body faq" data-reveal>
+          <details><summary>How do the days arrange themselves?</summary><p>Every activity takes one morning or afternoon. When you add a place, it goes into the best free block. If none is free, days you haven't pinned by hand shift to make room, and the trip can grow by a day. Anything you place yourself stays where you put it.</p></details>
+          <details><summary>Can I change my saved plan?</summary><p>Yes. Open Build, change anything, and your days rearrange around it.</p></details>
+          <details><summary>Is it suitable for older parents?</summary><p>Choose "Flat and short" walking when you plan. Activities above that effort level will not be added unless you raise the setting. The setting is a guide to effort, not an accessibility guarantee.</p></details>
+                    <details><summary>What if it rains?</summary><p>Keep some free time in your days. Anything that cannot run in bad weather can be moved to another morning or afternoon.</p></details>
+        </div>
+      </section>
+      <div class="sect--tight center"><a class="btn" href="#plan">Plan your trip <span class="arrow" aria-hidden="true"></span></a></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PLAN ═══════════════ -->
+  <section class="view" id="v-plan" hidden>
+    <header class="planhead">
+      <img src="assets/img/fieldwork/imori-1.jpg" alt="Imori-ike pond during the team’s October 2026 fieldwork" decoding="async">
+      <div class="planhead__in">
+        <p class="label label--light"><span class="label__n">01</span>Plan</p>
+        <h1>A few days, beautifully yours.</h1>
+        <p>A few quick choices set the rhythm. You can change any of them later.</p>
+      </div>
+    </header>
+    <div class="wrap sect sect--tight">
+      <div class="questions" id="questions"></div>
+      <div class="rec" id="planRec" aria-live="polite" hidden></div>
+      <div class="plan__pick"><h2>Choose a starting point</h2><p>Each is a starting point you can change on the map.</p></div>
+      <div class="shapes" id="planCourses"></div>
+      <div class="plan__blank"><p>Prefer to choose everything yourself?</p><a href="#build" id="blankStart" class="btn btn--ghost">Open an empty map <span class="arrow" aria-hidden="true"></span></a></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ BUILD: one workspace, map and days side by side ═══════════════ -->
+  <section class="view" id="v-build" hidden>
+    <h1 class="sr-only">Build your trip</h1>
+    <div class="studio" id="studio">
+      <section class="studio__map" id="mapWrap" aria-label="Map of Myoko activities">
+        <div id="map" class="map" aria-label="Interactive illustrated map of Myoko-area activities. Every activity is also in the Places list."></div>
+        <div class="mapfilters" id="mapFilters" role="toolbar" aria-label="Show places by type"></div>
+        <article class="pcard" id="detail" hidden aria-label="Activity details"></article>
+      </section>
+      <aside class="dock" id="dock" aria-label="Your trip">
+        <aside class="drawer" id="drawer" aria-label="All places" inert></aside>
+        <header class="dock__head" id="dockHead"></header>
+        <div class="dtabs" id="dockTabs" role="tablist" aria-label="Places or your days"></div>
+        <div class="tripset" id="tripSet" hidden></div>
+        <div class="dock__panel" id="dockDays" aria-live="polite"></div>
+        <footer class="dock__foot" id="dockFoot"></footer>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═══════════════ REVIEW & SAVE ═══════════════ -->
+  <section class="view" id="v-book" hidden>
+    <div class="book" id="bookRoot"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <div>
+        <a class="brand" href="#home"><span class="seal seal--peaks" aria-hidden="true"><svg viewBox="0 0 48 32" fill="none"><path d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m9 18 4 3 3-4m7-5 4 4 4-4m6 6 2 3 2-3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M3 31h42" stroke="currentColor" stroke-width=".8"/></svg></span><span class="brand__name">Myoko Days</span></a>
+        <p class="foot__desc">A green-season itinerary builder for Myoko, made for Patience Capital Group.</p>
+      </div>
+      <div><h4>Plan</h4><ul><li><a href="#plan">01 · Plan a trip</a></li><li><a href="#build">02 · Build on the map</a></li><li><a href="#book">03 · Review your trip</a></li></ul></div>
+      <div><h4>Read</h4><ul><li><a href="#about">The area</a></li><li><a href="#courses">Three ways in</a></li><li><a href="ASSUMPTIONS.md" target="_blank" rel="noopener">Modelling assumptions</a></li></ul></div>
+    </div>
+    <p class="foot__small">Prices are per person and include tax, subject to availability. Stay rates are per room per night and change with the dates. The map is a hand-built 3D diorama of the real terrain, painted in the style of a 1920s bird’s-eye map: illustrated and not to scale. To fit the board, the two wide plains are shortened by about a third, and rivers, peaks and trees are drawn larger than life. Morning and afternoon blocks are planning allowances, not operator opening times. Distances between areas are straight-line figures from map coordinates.</p>
+  </div>
+</footer>
+
+<dialog id="filmDialog" class="film-dialog" aria-label="Myoko film"><div class="fd__stage" id="fdStage"><video id="fullFilm" playsinline preload="metadata" poster="assets/video/hero-poster.jpg?v=17.7"><source src="assets/video/hero.mp4?v=17.7" type="video/mp4">Your browser cannot play this film.</video><button type="button" id="filmClose" class="film-close" aria-label="Close film"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button><div class="fd__bar" id="fdBar"><button type="button" id="fdPlay" class="fd__play" aria-label="Pause"><svg class="i-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="i-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button><input id="fdSeek" class="fd__seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek"><span class="fd__time" id="fdTime">0:00 / 0:00</span></div></div><p class="fd__note">Use the written activity details for availability and times.</p></dialog>
+<script src="js/assumptions.js?v=17.0"></script>
+<script src="js/stay.js?v=16.2"></script>
+<script src="js/data.js?v=16.5"></script>
+<script src="js/planner.js?v=12.3"></script>
+<script src="js/vignettes.js"></script>
+<script src="js/map.js?v=21.0"></script>
+<script src="js/media-data.js?v=13.1"></script><script src="js/media.js?v=9.2"></script>
+<script src="js/focus-data.js?v=13.1"></script><script src="js/focus.js?v=11.0"></script>
+<script src="js/app.js?v=17.7"></script><script src="js/studio.js?v=17.10"></script><script src="js/tiles.js?v=13.1"></script><script src="js/filmplayer.js?v=12.5d"></script>
+</body>
+</html>

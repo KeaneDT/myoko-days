@@ -1,0 +1,29 @@
+PASS strict calendar validation rejects rollover and invalid dates
+PASS unscheduled choices does not place or silently remove new choices
+PASS existing e-bike day survives adding kayaking and arrangement
+PASS invalid move and swap are atomic; valid swap works
+PASS per-day availability respects September–October and October–November
+PASS closed activity, camping and walking limits apply to every placement path
+PASS all themes, walking levels, months and trip lengths conserve choices and obey capacity
+PASS unpriced activities remain TBC in totals
+PASS application starts with blocked storage and malformed saves
+PASS restored incompatible placements return to unscheduled choices with no stale assignment
+PASS Active theme preserves chosen walking limit and preview matches unscheduled choices
+PASS changing date and duration reconciles assignments; undo restores exact state
+PASS export contains exact year, base, unscheduled choices and cost limitations
+PASS entry files have language metadata and local asset references resolve
+PASS exact-block moves preserve the chosen morning/afternoon and do not mutate input
+PASS dropping on another compatible activity swaps both blocks atomically
+PASS morning-only or area-invalid drops preserve the previous valid itinerary
+PASS a full-day activity consumes both blocks; cannot overlap another stop
+PASS adding directly schedules a stop without moving existing placements
+PASS target-day failure rejects the new activity without a hidden queue
+PASS starting each sample provides only fitted scheduled stops and matching preview costs
+PASS shrinking a stay clears an invalid target day
+PASS evening experiences cannot be placed in a morning or afternoon block
+PASS trip film uses exact scheduled activity IDs and reports missing footage
+PASS trip film excludes unscheduled selections and respects rearranged days
+PASS trip film empty and duplicate activity cases are bounded
+PASS curated galleries have playable files and exact local image references
+
+27 test groups passed. 108 theme/date/pace/duration combinations checked. No provider or real-device validation implied.

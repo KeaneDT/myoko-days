@@ -1,0 +1,877 @@
+{
+  "sourceRoot": "Desktop/Myoko",
+  "galleries": {
+    "zip": {
+      "name": "Madarao forest zip line",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/zip-1.jpg",
+          "caption": "Into the forest",
+          "source": "02 Zipline/Videos/Zipline_2026-10-06_035.mp4",
+          "sourceFrame": 3,
+          "sourceSHA256": "1b90b77753154d7fd562888403ae5725d44d8353e8de1c14860a2decabc8d8bd",
+          "assetSHA256": "c6eb5873498b7d89d2682b1100ad6fea56d2a6bb8c507598ff2b6bdfa63c1bf4"
+        },
+        {
+          "src": "assets/img/fieldwork/zip-2.jpg",
+          "caption": "A moment in flight",
+          "source": "02 Zipline/Videos/Zipline_2026-10-06_057.mp4",
+          "sourceFrame": 2.8,
+          "sourceSHA256": "d908e45799878ecf951e049a2cace3cc03c6c43c4dbe579b45fde173786c5054",
+          "assetSHA256": "b8487beb5866bfebd36b65159d061bcca9cd93d82dd88721c8e8a709912d6f4f"
+        },
+        {
+          "src": "assets/img/fieldwork/zip-3.jpg",
+          "caption": "Before the course",
+          "source": "02 Zipline/Photos/Zipline_2026-10-06_002.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "c206070355ba4630e99e56ea05b1863daf6d75c28f8a53007678053620576bd7",
+          "assetSHA256": "9d9d820d2103905d3b267329947ea88f955bce2c00070b20711249cb3727b062"
+        },
+        {
+          "src": "assets/img/fieldwork/zip-4.jpg",
+          "caption": "Meeting the instructor",
+          "source": "02 Zipline/Photos/Zipline_2026-10-06_004.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "a30c44f8a30997b242b4cbf2675619c6274d8f349d86528f6c25b02ae7aaf208",
+          "assetSHA256": "2bd9f2ec4078c56793081bdfabe6d6d5822e60b3c8a8e964391ea947c73a9638"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/zip/1.mp4",
+          "poster": "assets/clips/zip/1.jpg",
+          "duration": 5,
+          "caption": "Madarao forest zip line · film 1",
+          "source": "02 Zipline/Videos/Zipline_2026-10-06_035.mp4",
+          "start": 1,
+          "sourceSHA256": "1b90b77753154d7fd562888403ae5725d44d8353e8de1c14860a2decabc8d8bd",
+          "assetSHA256": "8412b3f0f411a80f92672bd67fab028ee6f49ef6c484c684c10587136a323f69",
+          "posterFrame": 1.5,
+          "posterSHA256": "63790701273ceaf41c86643493a428e8d5bc339e773c524cf19dcdf0bfd8a3d6"
+        },
+        {
+          "src": "assets/clips/zip/2.mp4",
+          "poster": "assets/clips/zip/2.jpg",
+          "duration": 5,
+          "caption": "Madarao forest zip line · film 2",
+          "source": "02 Zipline/Videos/Zipline_2026-10-06_057.mp4",
+          "start": 1,
+          "sourceSHA256": "d908e45799878ecf951e049a2cace3cc03c6c43c4dbe579b45fde173786c5054",
+          "assetSHA256": "362d83b9134e9dd378d7c98f5963f716b7ae0d0d048a6ddc7af5b222668cfd4b",
+          "posterFrame": 1.5,
+          "posterSHA256": "61a4c36f23e4925f396150de98f3cc1c1859c205f4e63779f3b30192ce8023d9"
+        }
+      ]
+    },
+    "picnic": {
+      "name": "Sasagamine highland picnic",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/picnic-1.jpg",
+          "caption": "Mist over the highlands",
+          "source": "03 Sasagamine/Photos/Sasagamine_2026-10-06_169.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "5aac31cdffd137d94fb699b7b69f5979183ce63051f073a37fbcde18fd89db67",
+          "assetSHA256": "8fc9ee4289e3e27d3ab99af5c0d72b970cf2c918e5bc0e0b35b6130bbee19582"
+        },
+        {
+          "src": "assets/img/fieldwork/picnic-2.jpg",
+          "caption": "A fieldwork bento lunch",
+          "source": "03 Sasagamine/Photos/Sasagamine_2026-10-06_133.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "fed68d1eadd13a94c70d46f2ded6847bf5c865a96d5591bd218c9c089046dd76",
+          "assetSHA256": "9ffe46f24dd52094dbe24bc1fa90743718ead4996c721d8d0c92481a15aace2e"
+        },
+        {
+          "src": "assets/img/fieldwork/picnic-3.jpg",
+          "caption": "The grazing meadow",
+          "source": "03 Sasagamine/Photos/Sasagamine_2026-10-06_161.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "7568204556657a8925be65468daba49b5d3fcee3aeaec5c5e3bc24c9a8543db6",
+          "assetSHA256": "9302c0b333fe4106c834285e16846ac580563c7de86d7a7ca84ef0c3bf0407bb"
+        },
+        {
+          "src": "assets/img/fieldwork/picnic-4.jpg",
+          "caption": "Time for a picnic",
+          "source": "03 Sasagamine/Photos/Sasagamine_2026-10-06_134.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "1430d8aaaa7f05d7531c57e44211883cabd9ba0e3ac1b70d0686ebda4e108f88",
+          "assetSHA256": "e76638122ebf9f5ef7f38f7e4605ebe781246323c0bdb76001e526c03617d75c"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/picnic/1.mp4",
+          "poster": "assets/clips/picnic/1.jpg",
+          "duration": 5,
+          "caption": "Sasagamine highland picnic · film 1",
+          "source": "03 Sasagamine/Videos/Sasagamine_2026-10-06_174.mp4",
+          "start": 5,
+          "sourceSHA256": "b3162a9cefd9ff6cf1f75000d0ab46248ae68f8cedb1d7d29c8af60ae942ae91",
+          "assetSHA256": "0be91ba54508b47e0187bb0bd23e53f7c45fb03e778baba955f2eb9714627208",
+          "posterFrame": 1.5,
+          "posterSHA256": "b4b58a03c35b24a7bff73c0ef12d96af1ad7fc75725daafba8b424d82f401238"
+        },
+        {
+          "src": "assets/clips/picnic/2.mp4",
+          "poster": "assets/clips/picnic/2.jpg",
+          "duration": 5,
+          "caption": "Sasagamine highland picnic · film 2",
+          "source": "03 Sasagamine/Videos/Sasagamine_2026-10-06_181.mp4",
+          "start": 0.4,
+          "sourceSHA256": "1b0d0a94275f340639a88e71f1cc60e97471799cec5ca2fcedc4416a550ed28d",
+          "assetSHA256": "1b1c5568b29e7892925b71aa317a37170b39a16813fa3edfd3c8e019a45a091b",
+          "posterFrame": 1.5,
+          "posterSHA256": "0563f44b1bdcb9f2bee3c3ba525ffc5399fc98ebbec0156b358e399ab0f8eee6"
+        }
+      ]
+    },
+    "naena": {
+      "name": "Naena Falls walk",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/naena-1.jpg",
+          "caption": "The falls from the valley",
+          "source": "04 Naena Falls/Photos/NaenaFalls_2026-10-06_014.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "3a41fd2eda5f0c6655a8a720d0d1f89cf94e3553d470de4f28448e3cfbc663f7",
+          "assetSHA256": "721460ff24381ab312a05cec212aca1d0a76846657daf1a5b7fea4a29b492818"
+        },
+        {
+          "src": "assets/img/fieldwork/naena-2.jpg",
+          "caption": "Water against the rock face",
+          "source": "04 Naena Falls/Photos/NaenaFalls_2026-10-06_027.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "327b8a739da63f8335e94edb5f93324997e6268fa5075b352a911da955841d46",
+          "assetSHA256": "90e119472172bb649362bfe45a26bdf4dcd2a50d4b7a49e7b749b8fd45b27e02"
+        },
+        {
+          "src": "assets/img/fieldwork/naena-3.jpg",
+          "caption": "Along the river approach",
+          "source": "04 Naena Falls/Photos/NaenaFalls_2026-10-06_057.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "e6a8b8e6eb4b53e82565dbbccd042f7f5f2df033e3083c029a77be73e2ce7670",
+          "assetSHA256": "0d9a204477224f44c4832213b8d6b1a7b0b391337bc5d24d43bbc09b0c4e2a18"
+        },
+        {
+          "src": "assets/img/fieldwork/naena-4.jpg",
+          "caption": "The wider valley",
+          "source": "04 Naena Falls/Photos/NaenaFalls_2026-10-06_060.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "bbf19a08619ae35a1a92fdbea9910660ad4bb7280240cee4269ae84614b0ffdb",
+          "assetSHA256": "e51d7143ad5ac3f88aec2587d41755533bbfc993f41704d04dd2ae76dbb95207"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/naena/1.mp4",
+          "poster": "assets/clips/naena/1.jpg",
+          "duration": 5,
+          "caption": "Naena Falls walk · film 1",
+          "source": "04 Naena Falls/Videos/NaenaFalls_2026-10-06_111.mov",
+          "start": 4,
+          "sourceSHA256": "fd8341d73467fe2f08bfeecb9dcc7aaa7f8d3fbbaf4637a20ceabc99de16fd13",
+          "assetSHA256": "dd8a17a9e0e23e5fc82e0da4acbaa01f48a3a3e2e6541238b814912641ff3a38",
+          "posterFrame": 1.5,
+          "posterSHA256": "1dda30fe9a125f878f7f5e1aba49e056130646d70d78bcfde0676d8c45b69341"
+        },
+        {
+          "src": "assets/clips/naena/2.mp4",
+          "poster": "assets/clips/naena/2.jpg",
+          "duration": 5,
+          "caption": "Naena Falls walk · film 2",
+          "source": "04 Naena Falls/Videos/NaenaFalls_2026-10-06_116.mp4",
+          "start": 3,
+          "sourceSHA256": "6be6fe99af883089e37e9f9c9e4ca5bf5aadd45b8576fc5b1c2416c5aacb2474",
+          "assetSHA256": "9b13a606033dc596a2f7ee9b7c2f2a34747021ec5c810aa9c193d33a12eaa046",
+          "posterFrame": 1.5,
+          "posterSHA256": "34d32606edb8598d7b67b9c759f460d36eea5f16346dfb9874d0d25471c3f078"
+        }
+      ]
+    },
+    "ebike": {
+      "name": "E-bike through the rice fields",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/ebike-1.jpg",
+          "caption": "Along the farm roads",
+          "source": "05 E-Bike/Photos/EBike_2026-10-07_023.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "2909173d7da5e2a6d4fe0666a22197a04db761db70cb40552746b614005472da",
+          "assetSHA256": "5a9cd71d35f7d613b5838d85b51e76f707e5856faed337df7492f6741ad6fea6"
+        },
+        {
+          "src": "assets/img/fieldwork/ebike-2.jpg",
+          "caption": "Rice fields under a wide sky",
+          "source": "05 E-Bike/Photos/EBike_2026-10-07_026.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "5cb569bf1cda736842af474f6e0171e61e5cf21d6dd16ee94055d67d3b6ac702",
+          "assetSHA256": "b87fe1f9004b714b6728566bec454f51844423844b38eefc79df8549a347309f"
+        },
+        {
+          "src": "assets/img/fieldwork/ebike-3.jpg",
+          "caption": "A pause beside the fields",
+          "source": "05 E-Bike/Photos/EBike_2026-10-07_029.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "782610a3fe7fce0369fa9207bd630a7d022922c32f62990f0a2bb8a4d77505fd",
+          "assetSHA256": "651d2ce93aa900d57ce5b3e84e4a6636675010065030237e36c1f6d2c6d8c193"
+        },
+        {
+          "src": "assets/img/fieldwork/ebike-4.jpg",
+          "caption": "A stop along the route",
+          "source": "05 E-Bike/Photos/EBike_2026-10-07_043.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "285a45df3829b83a894fdc0161704d6fe3d9daf310b39b1f59ccaff82cb140da",
+          "assetSHA256": "49f64692c49f82acd1f19ea2a6f7ca4121faf62bd712109e9225383c7af053ac"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/ebike/1.mp4",
+          "poster": "assets/clips/ebike/1.jpg",
+          "duration": 5,
+          "caption": "E-bike through the rice fields · film 1",
+          "source": "05 E-Bike/Videos/EBike_2026-10-07_162.mov",
+          "start": 5,
+          "sourceSHA256": "842c369e7ac41388af9ecccf66889439f99841a5970a4bcaeba94f0c997d88ea",
+          "assetSHA256": "b05aa3292e2e6715b317c360ba08f3f9fc669a1dda4671e7743cd88a2127efcc",
+          "posterFrame": 1.5,
+          "posterSHA256": "6a8147414da00e0845fd571f696c922c1464119946c19e78d66a92344b055716"
+        },
+        {
+          "src": "assets/clips/ebike/2.mp4",
+          "poster": "assets/clips/ebike/2.jpg",
+          "duration": 5,
+          "caption": "E-bike through the rice fields · film 2",
+          "source": "05 E-Bike/Videos/EBike_2026-10-07_186.mp4",
+          "start": 0.4,
+          "sourceSHA256": "92e478a0fb9690fd43513c7b6817d9be1e2b3116eb9cb2ca29d532a8afabeb22",
+          "assetSHA256": "6bf02f6b63020f10ba444ffffea13943a4781a62f1a57f48c51af1a490734127",
+          "posterFrame": 1.5,
+          "posterSHA256": "2ed223795eb44690033abc66937c6a3f965d0342879c5271286169c1f92ee981"
+        }
+      ]
+    },
+    "sup": {
+      "name": "Stand-up paddling",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/sup-1.jpg",
+          "caption": "Paddling on Lake Nojiri",
+          "source": "06 SUP-Kayak/Photos/SUP-Kayak_2026-10-07_005.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "cab5b4fd1567a37fdc6fa1042414bb9d406d1dd2fc0eae8f45daed19fba2a411",
+          "assetSHA256": "5c7c8c84a39db97e0bb3744f095ff8b08d2a0c7f097ad8d89971704be3a42904"
+        },
+        {
+          "src": "assets/img/fieldwork/sup-2.jpg",
+          "caption": "On the open water",
+          "source": "06 SUP-Kayak/Photos/SUP-Kayak_2026-10-07_015.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "aa7dbd8f52e3d5c8f811d1678b11c0de07f824bc5eec49185e3ed076f33b024d",
+          "assetSHA256": "4428159fdc60d4bee2e0d8c05af7281ab698945780b7e72a4441ca3e641c3706"
+        },
+        {
+          "src": "assets/img/fieldwork/sup-3.jpg",
+          "caption": "Finding your balance",
+          "source": "06 SUP-Kayak/Photos/SUP-Kayak_2026-10-07_053.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "37e4725aae0f90e27b1f3ce8a16ff9cd75d958d8aaf3b028e88d22a97c548621",
+          "assetSHA256": "3412ce005197b4fc26b0bebe79701ce0c1d6236ffc0d2640cc7b453be5ca1345"
+        },
+        {
+          "src": "assets/img/fieldwork/sup-4.jpg",
+          "caption": "Back at the lakeshore",
+          "source": "06 SUP-Kayak/Photos/SUP-Kayak_2026-10-07_019.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "3b15394fe129b62d377c7924a08de3430c9d86f5f9d8ed33b6b2db90bcff6758",
+          "assetSHA256": "18c61e333b5223db4c057e6a63048ba2764f5699852c04cd270fe0ba1a9c888f"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/sup/1.mp4",
+          "poster": "assets/clips/sup/1.jpg",
+          "duration": 5,
+          "caption": "Stand-up paddling · film 1",
+          "source": "06 SUP-Kayak/Videos/SUP-Kayak_2026-10-07_094.mov",
+          "start": 0.3,
+          "sourceSHA256": "9a8642b1081f991702e5fd5cbe191e299988050c1fb99a353eacc935e81c0151",
+          "assetSHA256": "6873ec2ade05e33990d1a513331054df9016ec90bec716cf0ad08717fe818ddf",
+          "posterFrame": 1.5,
+          "posterSHA256": "eed342ebcfaa4a46060aac1ec088269f8e5f00c996b6d7f6c17dcdf07de936e8"
+        },
+        {
+          "src": "assets/clips/sup/2.mp4",
+          "poster": "assets/clips/sup/2.jpg",
+          "duration": 5,
+          "caption": "Stand-up paddling · film 2",
+          "source": "06 SUP-Kayak/Videos/SUP-Kayak_2026-10-07_086.mov",
+          "start": 0.4,
+          "sourceSHA256": "8a1f33010749c03f0b1fd3d051588814a258f8d0772e9a1accac56cf67a6c74d",
+          "assetSHA256": "2cddedadef13f3b3e4460d587a9ed1d2e1cc3ef3fc00dce21e4efde3680061c7",
+          "posterFrame": 1.5,
+          "posterSHA256": "1a76851e0e9ff6c457f51d4560a94a7746759c606b43b76ed5f979c924c049ca"
+        }
+      ]
+    },
+    "kayak": {
+      "name": "Kayaking",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/kayak-1.jpg",
+          "caption": "Kayaks on Lake Nojiri",
+          "source": "06 SUP-Kayak/Photos/SUP-Kayak_2026-10-07_024.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "bcedbd430df71935f96e46d70dd2b6a7af72038fdfa2c3c7a068f4cd3e7ea7d3",
+          "assetSHA256": "85d101b4f5bf8ac45872b3dab20509d15a35892303edab40bc9b9dd7d54a8850"
+        },
+        {
+          "src": "assets/img/fieldwork/kayak-2.jpg",
+          "caption": "The view from a kayak",
+          "source": "06 SUP-Kayak/Photos/SUP-Kayak_2026-10-07_032.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "7d9f1b5199babe8e42ca72f7276e50f03e1b070de72030e2d94f5176f533f554",
+          "assetSHA256": "978c427c6fe67f47ad911d507a6ee5b93a158dd8a1b1c16a13598011c7f62f49"
+        },
+        {
+          "src": "assets/img/fieldwork/kayak-3.jpg",
+          "caption": "Paddling together",
+          "source": "06 SUP-Kayak/Videos/SUP-Kayak_2026-10-07_079.mp4",
+          "sourceFrame": 9,
+          "sourceSHA256": "8e1326cb6baeed8307cea27cf670b95ef07acc620091063b15d168896c9162cf",
+          "assetSHA256": "659c4d55a82044a8b078b4c0c0859bb6fb36720e9d72ba5643e52060498194eb"
+        },
+        {
+          "src": "assets/img/fieldwork/kayak-4.jpg",
+          "caption": "Paddling across the water",
+          "source": "06 SUP-Kayak/Photos/SUP-Kayak_2026-10-07_046.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "840d7e6d31b5d6beb6617103482b742c7f9bd67e53d5e7fea699569eccc47dfb",
+          "assetSHA256": "f42073a8918f0232ef30eca6bcdbff1aa51ed6d018b6198afdd0d68464b0b39e"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/kayak/1.mp4",
+          "poster": "assets/clips/kayak/1.jpg",
+          "duration": 5,
+          "caption": "Kayaking · film 1",
+          "source": "06 SUP-Kayak/Videos/SUP-Kayak_2026-10-07_079.mp4",
+          "start": 0.8,
+          "sourceSHA256": "8e1326cb6baeed8307cea27cf670b95ef07acc620091063b15d168896c9162cf",
+          "assetSHA256": "60f899776f484918e0feddd665af6d6fb0a55abb31e57bd5a55835eebb39d708",
+          "posterFrame": 1.5,
+          "posterSHA256": "953323f4be07d1bc139144aacea4e4544acf7734ab6e3610d8b63a511956dede"
+        },
+        {
+          "src": "assets/clips/kayak/2.mp4",
+          "poster": "assets/clips/kayak/2.jpg",
+          "duration": 5,
+          "caption": "Kayaking · film 2",
+          "source": "06 SUP-Kayak/Videos/SUP-Kayak_2026-10-07_091.mov",
+          "start": 7,
+          "sourceSHA256": "b31ab2d66d76ac124a99fe20b968400134e7a6ba080a1321721b6a1b1e68b1a9",
+          "assetSHA256": "4df02aa5f6736331291d60b828214ddd5a17a2bd0b0aebd6ff28799cb8e6c9e4",
+          "posterFrame": 1.5,
+          "posterSHA256": "3e98399af8329d8d8443fb8a5c90d4ad3cdf2a40279455fbaa3392ede7bf645c"
+        }
+      ]
+    },
+    "imori": {
+      "name": "Visitor Center & Imori-ike pond",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/imori-1.jpg",
+          "caption": "Imori-ike in October",
+          "source": "07 Visitor Center/Photos/VisitorCenter_2026-10-08_005.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "33e825aede23faeb381112f43994a63c238b1263b05e2fed52668b12a1479c64",
+          "assetSHA256": "ac9ea3f3aa5ded1bd069b189b318969843e195c10d636000be1dca02e41dd138"
+        },
+        {
+          "src": "assets/img/fieldwork/imori-2.jpg",
+          "caption": "Mountain reflections",
+          "source": "07 Visitor Center/Photos/VisitorCenter_2026-10-08_004.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "c7237286fed1764738f9e2d68a4bccca6c7f00ee3d6a07aa1369304f0d8ded37",
+          "assetSHA256": "d6aec0d4d882199445bf8e1649d83d2a4d39c71227abef0f17b09306be651aac"
+        },
+        {
+          "src": "assets/img/fieldwork/imori-3.jpg",
+          "caption": "Beside the pond",
+          "source": "07 Visitor Center/Photos/VisitorCenter_2026-10-08_012.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "8fce050efa0e6c83867afff4d1c1740ea49431bce83fe13be3cd00a18a85fb76",
+          "assetSHA256": "f62d5a2a4a12c87bcc8b457af79f40ca8658b496124fc4b31f47e8cda9336f94"
+        },
+        {
+          "src": "assets/img/fieldwork/imori-4.jpg",
+          "caption": "A view from the visitor centre",
+          "source": "07 Visitor Center/Photos/VisitorCenter_2026-10-08_068.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "26ebf01c73f6be32ce95dc9391100a3ee8280036f7c9fcb24f0e7f45103120b0",
+          "assetSHA256": "67ec7d346944f87bb37b64ea04faa2d321cb9f013388e420e30142fa79fe4389"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/imori/1.mp4",
+          "poster": "assets/clips/imori/1.jpg",
+          "duration": 5,
+          "caption": "Visitor Center & Imori-ike pond · film 1",
+          "source": "07 Visitor Center/Videos/VisitorCenter_2026-10-08_003.mov",
+          "start": 1,
+          "sourceSHA256": "7de35ecefe9ba919c346ce496c84bbd6abc3c1962bfb561106ba22af13b9181a",
+          "assetSHA256": "ab65ef93eb0411a20d7f733c3203f83c5eb26ec291d7f2eaf7427916e7a152aa",
+          "posterFrame": 1.5,
+          "posterSHA256": "846b957a668691309902d3abcd8b93b91439e6433d756dc417265c0de166ff87"
+        },
+        {
+          "src": "assets/clips/imori/2.mp4",
+          "poster": "assets/clips/imori/2.jpg",
+          "duration": 5,
+          "caption": "Visitor Center & Imori-ike pond · film 2",
+          "source": "07 Visitor Center/Videos/VisitorCenter_2026-10-08_079.mov",
+          "start": 3,
+          "sourceSHA256": "4c7f103e970ce5c3e79b9502591decbc421b00e71c973209eb52eba220383f7f",
+          "assetSHA256": "1f3204dd6fb6aa74cba63c9ddce79994a0c5ac3acc3d46937a10141c797f7ce1",
+          "posterFrame": 1.5,
+          "posterSHA256": "8382930ec9886a8b3bfa6f24c12e4f8462b6bfde8d1a34662553541de6bc1ade"
+        }
+      ]
+    },
+    "daruma": {
+      "name": "Daruma painting",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/daruma-1.jpg",
+          "caption": "The finished dolls",
+          "source": "08 Daruma/Photos/Daruma_2026-10-08_022.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "cb4d3b3120acf3302ef77f6a63c056c17457a5cd326ee7de3c8101d330795768",
+          "assetSHA256": "f9a6dc79d28d6f748db0ae6ed33d7794e13e0cf506ae078045d8fd3428991a03"
+        },
+        {
+          "src": "assets/img/fieldwork/daruma-2.jpg",
+          "caption": "Painting together",
+          "source": "08 Daruma/Photos/Daruma_2026-10-08_008.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "b7c322db05b2929badb5498c848b0be17d3900f8ad590d0daebc9c08384ca9d8",
+          "assetSHA256": "4cb8210000c1cb846b69ba5aa7b41be5639bbbda8a5d613262eceb3e9c429b94"
+        },
+        {
+          "src": "assets/img/fieldwork/daruma-3.jpg",
+          "caption": "Choose a blank daruma",
+          "source": "08 Daruma/Photos/Daruma_2026-10-08_005.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "f8420d495213237ca2540257661a1c6a28de1236532484a27894fe9dc88bc729",
+          "assetSHA256": "471215505febd5fc2db84236995b65ed7460d114cec5ebf76c9f1eaf05f6cdee"
+        },
+        {
+          "src": "assets/img/fieldwork/daruma-4.jpg",
+          "caption": "A personal design",
+          "source": "08 Daruma/Photos/Daruma_2026-10-08_011.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "b1d330b1001951be8e19da77e4c686ac23c89b4c678719a361e9dbe290b4d403",
+          "assetSHA256": "51ca8186b50a2c611870fc0ef00c9e469577a994caa3d083e481b6e1c70db076"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/daruma/1.mp4",
+          "poster": "assets/clips/daruma/1.jpg",
+          "duration": 5,
+          "caption": "Daruma painting · film 1",
+          "source": "08 Daruma/Videos/Daruma_2026-10-08_035.mp4",
+          "start": 0.5,
+          "sourceSHA256": "a00aa46adcd4f149d995a9c6a6e3a49b481a5595e16c12da5f41bd03514614b7",
+          "assetSHA256": "8b07d8f0fab42933efb28fa8f794b0fe2e2392d5b41e72b2f1cad9e58968775d",
+          "posterFrame": 1.5,
+          "posterSHA256": "4d2f18d0c23a6a97de679edcb4ee70b998ac980eaa4bf1b9e4afbc91669b6a1c"
+        },
+        {
+          "src": "assets/clips/daruma/2.mp4",
+          "poster": "assets/clips/daruma/2.jpg",
+          "duration": 5,
+          "caption": "Daruma painting · film 2",
+          "source": "08 Daruma/Videos/Daruma_2026-10-08_036.mp4",
+          "start": 32,
+          "sourceSHA256": "33e9a8dca24ceddd62981686e96a42c79b4b61bccee14969e912d4f526d0f686",
+          "assetSHA256": "72852d38f38037ff1b4eee050741fe137b9bd0635d73dfea1b7f2985fa7b8a41",
+          "posterFrame": 1.5,
+          "posterSHA256": "83f3015059c7fa34db0130cc80a1c1f1ddd155524d186c86bd4d62efdb5008fb"
+        }
+      ]
+    },
+    "winery": {
+      "name": "St. Cousair Winery & orchard",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/winery-1.jpg",
+          "caption": "Grapes on the vine",
+          "source": "09 Winery/Photos/Winery_2026-10-08_018.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "ebc4c2a4dc8e7f9c32a46152768ca856fb492900b347969a0dc3ad18d414e7bf",
+          "assetSHA256": "69f78448c8f2fd6688315cb829c0fe988b9dfb2e3a22889bca60a67cc268c040"
+        },
+        {
+          "src": "assets/img/fieldwork/winery-2.jpg",
+          "caption": "The view from St. Cousair",
+          "source": "09 Winery/Photos/Winery_2026-10-08_041.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "bc0e7a2dd1356c0061b70673af1ba689dccde0aa73a5fe16e3611572a3c40093",
+          "assetSHA256": "1de1ba4d85024ad8fb4974271cdbad93619830c5893c9abc79d9d2593fbc53ad"
+        },
+        {
+          "src": "assets/img/fieldwork/winery-3.jpg",
+          "caption": "The chapel path",
+          "source": "09 Winery/Photos/Winery_2026-10-08_040.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "e289c4174b835f880b15cf4adc23ee3d04244da58b8bd5acba0174d66370f598",
+          "assetSHA256": "36a0df52dcbd33bb21f9d0d418bb5860c4df7bcbae6a078faee88827715a2346"
+        },
+        {
+          "src": "assets/img/fieldwork/winery-4.jpg",
+          "caption": "A fieldwork tasting",
+          "source": "09 Winery/Photos/Winery_2026-10-08_061.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "80e650630c8cdfa4496289336d9666b60a4b1c2bf82caec20a78ebbb78dcb314",
+          "assetSHA256": "b348f32b84f2806f835659ecb23e71a5808b2f4e88c7591a9a3a639ab7bada63"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/winery/1.mp4",
+          "poster": "assets/clips/winery/1.jpg",
+          "duration": 5,
+          "caption": "St. Cousair Winery & orchard · film 1",
+          "source": "09 Winery/Videos/Winery_2026-10-08_168.mp4",
+          "start": 2,
+          "sourceSHA256": "58937dc16ba38fee8a8d3fa44f98c43b4fb2c6a2c09bef7d554cf901bd89d1f8",
+          "assetSHA256": "06f625d4504b7858ba0c90727af70a35e8fdf540ef38d918ef949a159ce26dc9",
+          "posterFrame": 1.5,
+          "posterSHA256": "d4c3ee611d7337d593028acebbf0742d54541f1fca77a5d6a447c048af755147"
+        },
+        {
+          "src": "assets/clips/winery/2.mp4",
+          "poster": "assets/clips/winery/2.jpg",
+          "duration": 5,
+          "caption": "St. Cousair Winery & orchard · film 2",
+          "source": "09 Winery/Videos/Winery_2026-10-08_170.mp4",
+          "start": 4,
+          "sourceSHA256": "dd66db57ff715a2e996356fee035720088678b8dc1b10dbf4d3cd6ea7dda66d3",
+          "assetSHA256": "90a0a4d3038624af7ac4afb4773a72b4edf7ce1cb4723304a318afb82551b566",
+          "posterFrame": 1.5,
+          "posterSHA256": "f769d6bc14b27d7b9750795e171e2a8e51af711a258877f732c7aa6982f9a76d"
+        }
+      ]
+    },
+    "soba": {
+      "name": "Soba making with lunch",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/soba-1.jpg",
+          "caption": "Working the buckwheat dough",
+          "source": "10 Soba/Chosen/Soba_2026-10-09_004.mov",
+          "sourceFrame": 3,
+          "sourceSHA256": "21ce63b428a7da0a2e3eee880f8ad3f19a04044401b8b9635ab6a6a0ef720042",
+          "assetSHA256": "03fffc0b7ea4d5cc0c17368acfd5c607bac02706c6d2d1acbb46e58acc5bdd73"
+        },
+        {
+          "src": "assets/img/fieldwork/soba-2.jpg",
+          "caption": "Rolling out the soba",
+          "source": "10 Soba/Chosen/Soba_2026-10-09_036.mov",
+          "sourceFrame": 6,
+          "sourceSHA256": "4a7df4bc23307a03887bc6c1b7438a78790f91f112eb201447dbc19892919d46",
+          "assetSHA256": "42136cfddcc979da799558aabd84fe44568971a3983b3590b132336410e02c43"
+        },
+        {
+          "src": "assets/img/fieldwork/soba-3.jpg",
+          "caption": "Learning by hand",
+          "source": "10 Soba/Photos/Soba_2026-10-09_005.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "8c58c6e80227a97c6b99639b2ddcbff7b4de1b7b4d06c13d6e6c89c1760a8514",
+          "assetSHA256": "bf49727e6f64904284b4eae9a52f1c616fa7acac041aadc23f8c37f066a16c5f"
+        },
+        {
+          "src": "assets/img/fieldwork/soba-4.jpg",
+          "caption": "Lunch after the workshop",
+          "source": "10 Soba/Photos/Soba_2026-10-09_015.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "9d5744e8650bc27208f8217198a9019eeed4210991ff0f93b629971f33abee5d",
+          "assetSHA256": "c8555b4adcdc4a11be75670b52f79ea23cf4212b1f37bdc6fb25f83c37051812"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/soba/1.mp4",
+          "poster": "assets/clips/soba/1.jpg",
+          "duration": 5,
+          "caption": "Soba making with lunch · film 1",
+          "source": "10 Soba/Chosen/Soba_2026-10-09_004.mov",
+          "start": 0.7,
+          "sourceSHA256": "21ce63b428a7da0a2e3eee880f8ad3f19a04044401b8b9635ab6a6a0ef720042",
+          "assetSHA256": "70ca66fc621955a5b10727f2e5d6d924a0f007c01694c8e580a7da4003182ea9",
+          "posterFrame": 1.5,
+          "posterSHA256": "de2b1566b3f53f3a711d10eea856c059f65b617e64827a581620504738625a03"
+        },
+        {
+          "src": "assets/clips/soba/2.mp4",
+          "poster": "assets/clips/soba/2.jpg",
+          "duration": 5,
+          "caption": "Soba making with lunch · film 2",
+          "source": "10 Soba/Chosen/Soba_2026-10-09_036.mov",
+          "start": 4,
+          "sourceSHA256": "4a7df4bc23307a03887bc6c1b7438a78790f91f112eb201447dbc19892919d46",
+          "assetSHA256": "e8bd5f3450449328c487f63704acb9837395f5d6307d548048812fec267a694d",
+          "posterFrame": 1.5,
+          "posterSHA256": "06c649aefb60d076db0a2f67678f72e1c41866dfa652c3791ebc8c8730eb051b"
+        }
+      ]
+    },
+    "culture": {
+      "name": "Local culture tour",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/culture-1.jpg",
+          "caption": "A pause along the cultural route",
+          "source": "12 Culture Tour/Photos/CultureTour_2026-10-09_014.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "b0ef8b816d95a36105f8b9cd3cfb61e836719616a3833b231ddb1821f14a6861",
+          "assetSHA256": "c6deeb4c6aaa5bfe01ac4659c897a2fa5a6eb77da91cc3ee8fbd74fae052764f"
+        },
+        {
+          "src": "assets/img/fieldwork/culture-2.jpg",
+          "caption": "The river crossing",
+          "source": "12 Culture Tour/Photos/CultureTour_2026-10-09_005.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "11e5dd488e9cf7e2b285845a66d7690e994492b27393a79731f475db857e3530",
+          "assetSHA256": "8e9e068f541d16fd59a8bf7624dab023e503b648bced64d6d7633618c257f98d"
+        },
+        {
+          "src": "assets/img/fieldwork/culture-3.jpg",
+          "caption": "A cedar-lined approach",
+          "source": "12 Culture Tour/Chosen/CultureTour_2026-10-09_094.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "2fe30559bc7aa24c3995ca3d0d1961eabee5ef232ea11a45837bd94f528def27",
+          "assetSHA256": "6c4a77a0ce6205d91819bbe0e13180708c92d4ea5db0abd16a31b271b2af4ee3"
+        },
+        {
+          "src": "assets/img/fieldwork/culture-4.jpg",
+          "caption": "Details along the cultural route",
+          "source": "12 Culture Tour/Chosen/CultureTour_2026-10-09_058.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "c44ddce6272f87d6ab5383e315e8292d92358219e98ec0822e2c4516c6dc4898",
+          "assetSHA256": "f8807ef08e1ea06ccbcee00e6d90d0c2ac48676ed453c32dc43c9c13ed9b7f6f"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/culture/1.mp4",
+          "poster": "assets/clips/culture/1.jpg",
+          "duration": 5,
+          "caption": "Local culture tour · film 1",
+          "source": "12 Culture Tour/Videos/CultureTour_2026-10-09_215.mov",
+          "start": 1,
+          "sourceSHA256": "9b8398870f438860989197b25b6b04a24730a627ff8f7e1bc7ae8ac4e4d7783b",
+          "assetSHA256": "cb1fc0a80a0d3aa01f2679d4e3a30b1c38c7cfe52c3a5841cca800df926d4596",
+          "posterFrame": 1.5,
+          "posterSHA256": "9db133c3a7105fe8a3801054d9c82b63582d7ce3f8429ce1d9150e6bbb68b598"
+        },
+        {
+          "src": "assets/clips/culture/2.mp4",
+          "poster": "assets/clips/culture/2.jpg",
+          "duration": 5,
+          "caption": "Local culture tour · film 2",
+          "source": "12 Culture Tour/Videos/CultureTour_2026-10-09_121.mp4",
+          "start": 0.8,
+          "sourceSHA256": "2d9fa89b407b7bce4453f95b194f0c577f1edb3cc4aeadb0e7e541ceb91e92fc",
+          "assetSHA256": "b59c5b8b0a4b346beeb0cd27d9968d18a019a67b1c76f733a0cb3c43df9b0b44",
+          "posterFrame": 1.5,
+          "posterSHA256": "a3dd846fad7dce56aecae047f314ea5d9f2232f3039b5b691a58b6ff85578e36"
+        }
+      ]
+    },
+    "apple": {
+      "name": "Apple School",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/apple-1.jpg",
+          "caption": "An apple dessert",
+          "source": "11 Apple School/Photos/AppleSchool_2026-10-08_004.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "2faf8b17b743146d5628855d5157fa2bf73ed579d1dd3775e7b3caa1c7ba1c06",
+          "assetSHA256": "8605ae928ac32cdc14f50293d155ba0f4d92947b9b9ea7b134bf45bcebad1916"
+        },
+        {
+          "src": "assets/img/fieldwork/apple-2.jpg",
+          "caption": "Inside the shop",
+          "source": "11 Apple School/Chosen/AppleSchool_2026-10-08_008.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "8e3a499cf8cebf916d4dd2042d54b13a73ec21c4448b4f1ae8fb4cdca731191f",
+          "assetSHA256": "f70844394908b02bda9179e5120dc2bcf05b1b9d8ad6b471b538694737670b06"
+        },
+        {
+          "src": "assets/img/fieldwork/apple-3.jpg",
+          "caption": "Apple products",
+          "source": "11 Apple School/Chosen/AppleSchool_2026-10-08_011.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "ac05890009433c651a2e2197027be8546b19740c20c71c568ef54dad98d4cc1b",
+          "assetSHA256": "d34451ae9f0c33185278a6270ea47c9434118fed40b08ee4d7457ba79ca3bdb9"
+        },
+        {
+          "src": "assets/img/fieldwork/apple-4.jpg",
+          "caption": "Learning about the place",
+          "source": "11 Apple School/Photos/AppleSchool_2026-10-08_007.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "82fd7986ea183e61fd5ee0ee611a76470fc62ec143aa74cb68a7724e2e3f1c67",
+          "assetSHA256": "5571c276134e7d75d919ed995d409b7d98c0dfe29f3218acb301f8a552d6a57a"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/apple/1.mp4",
+          "poster": "assets/clips/apple/1.jpg",
+          "duration": 5,
+          "caption": "Apple School · film 1",
+          "source": "11 Apple School/Videos/AppleSchool_2026-10-08_019.mov",
+          "start": 0.5,
+          "sourceSHA256": "a002d3bc2543a8169aa6a58a3861be408762620cb5c990666e48f8ecbe9d3210",
+          "assetSHA256": "b3856f8f9ffcf137e71014183a1fe053860137bd08f075c0c53aa1f94452b2f2",
+          "posterFrame": 1.5,
+          "posterSHA256": "1d613d742a8e1260d97463a1751c1202a77fb78243148415be3803325149d788"
+        },
+        {
+          "src": "assets/clips/apple/2.mp4",
+          "poster": "assets/clips/apple/2.jpg",
+          "duration": 5,
+          "caption": "Apple School · film 2",
+          "source": "11 Apple School/Videos/AppleSchool_2026-10-08_024.mp4",
+          "start": 1,
+          "sourceSHA256": "a0c51543adbd4aa1a75df58228a179749b66e112f167e8032f258878156edc5f",
+          "assetSHA256": "147a4a968d191af8c5ba6746c33c0a2909d71b5426c2b843e6fb74b66b9d8d80",
+          "posterFrame": 1.5,
+          "posterSHA256": "066649379a3784a23bebe96d5ed3f992ddaf9a8763d8ec9702e37adb9e0739ca"
+        }
+      ]
+    },
+    "coffee": {
+      "name": "Myoko Coffee",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/coffee-1.jpg",
+          "caption": "The Myoko Coffee counter",
+          "source": "01 Myoko Coffee/Chosen Footage/MyokoCoffee_2026-10-08_009.mp4",
+          "sourceFrame": 3,
+          "sourceSHA256": "fadc4f777b43ffe8a360f83583b7729a08142873d388b9afb83112492d796df5",
+          "assetSHA256": "439d8ddcaa3fb98afce2476cbc948bd801e50dee652c91e0fffbabe8c914234b"
+        },
+        {
+          "src": "assets/img/fieldwork/coffee-2.jpg",
+          "caption": "A café moment",
+          "source": "01 Myoko Coffee/Chosen Footage/MyokoCoffee_2026-10-08_010.mp4",
+          "sourceFrame": 3,
+          "sourceSHA256": "c97af5a98c8f95ac18c4848ac4926b576618ffc2b969f2ebf172099fcda75500",
+          "assetSHA256": "c5ce7b449f5e65fb969ea590f2ac3e1a736b952d27c2d0a77b8a23819ffaf576"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/coffee/1.mp4",
+          "poster": "assets/clips/coffee/1.jpg",
+          "duration": 5,
+          "caption": "Myoko Coffee · film 1",
+          "source": "01 Myoko Coffee/Chosen Footage/MyokoCoffee_2026-10-08_009.mp4",
+          "start": 1,
+          "sourceSHA256": "fadc4f777b43ffe8a360f83583b7729a08142873d388b9afb83112492d796df5",
+          "assetSHA256": "5739a160720f9b722cdaa596567adc297e41ce6039f05a356d13ae1812c8a228",
+          "posterFrame": 1.5,
+          "posterSHA256": "68cf90c0476f1d85d13f0edb04e21aba8320a33598484ca20ffb528bba6912eb"
+        },
+        {
+          "src": "assets/clips/coffee/2.mp4",
+          "poster": "assets/clips/coffee/2.jpg",
+          "duration": 4.5,
+          "caption": "Myoko Coffee · film 2",
+          "source": "01 Myoko Coffee/Chosen Footage/MyokoCoffee_2026-10-08_010.mp4",
+          "start": 0.2,
+          "sourceSHA256": "c97af5a98c8f95ac18c4848ac4926b576618ffc2b969f2ebf172099fcda75500",
+          "assetSHA256": "68aaebc5fd35b37427f758b5610a49bbd6ece455ef09c834064ec335665c406d",
+          "posterFrame": 1.5,
+          "posterSHA256": "91cadc9e339b3f0a0534499b667ceee9339bbefa98b0bbb14efb80d1a4c7fca6"
+        }
+      ]
+    },
+    "sake": {
+      "name": "Sake tasting",
+      "credit": "Team fieldwork · October 2026",
+      "photos": [
+        {
+          "src": "assets/img/fieldwork/sake-1.jpg",
+          "caption": "Rice on display",
+          "source": "13 Sake/Chosen/Sake_2026-10-09_002.jpg",
+          "sourceFrame": null,
+          "sourceSHA256": "fcac99adb8ca8bc21e582533cee272e3fba9c21998a224a9ca8ca45994f16ef6",
+          "assetSHA256": "dda2e24baf79093992dded626583e4df0bc318229d97846ff125ab99882d1070"
+        },
+        {
+          "src": "assets/img/fieldwork/sake-2.jpg",
+          "caption": "Small tasting glasses",
+          "source": "13 Sake/Chosen/Sake_2026-10-09_003.mov",
+          "sourceFrame": 4,
+          "sourceSHA256": "e128161538ce973b4083910751f4de1b5e3f50f0f99556c9ff031eebc371f61c",
+          "assetSHA256": "5478db985fa47dc507ae5cd732b3e8b77e2b99e91e6c69f80e85aa8539b8f052"
+        },
+        {
+          "src": "assets/img/fieldwork/sake-3.jpg",
+          "caption": "Introducing the sake",
+          "source": "13 Sake/Chosen/Sake_2026-10-09_013.mp4",
+          "sourceFrame": 20,
+          "sourceSHA256": "e527996180dffc4b37adf0674d9ff3df0ed308fe696f92c1b006ab61ded2ae68",
+          "assetSHA256": "64f06b6091c5e76130e3d52fdf6ed6b15e94d1c9dc10083ee12d511e6bc5c6cf"
+        }
+      ],
+      "videos": [
+        {
+          "src": "assets/clips/sake/1.mp4",
+          "poster": "assets/clips/sake/1.jpg",
+          "duration": 5,
+          "caption": "Sake tasting · film 1",
+          "source": "13 Sake/Chosen/Sake_2026-10-09_003.mov",
+          "start": 0.3,
+          "sourceSHA256": "e128161538ce973b4083910751f4de1b5e3f50f0f99556c9ff031eebc371f61c",
+          "assetSHA256": "003c88eae5c290442d82904f02127683f388bb6be3c248b5ebe9f8e4e4ae169f",
+          "posterFrame": 1.5,
+          "posterSHA256": "236f637c4046daa8e75ad131a63d1286373a131b1bd131edf69dd701bb419d8f"
+        },
+        {
+          "src": "assets/clips/sake/2.mp4",
+          "poster": "assets/clips/sake/2.jpg",
+          "duration": 5,
+          "caption": "Sake tasting · film 2",
+          "source": "13 Sake/Chosen/Sake_2026-10-09_013.mp4",
+          "start": 19,
+          "sourceSHA256": "e527996180dffc4b37adf0674d9ff3df0ed308fe696f92c1b006ab61ded2ae68",
+          "assetSHA256": "2b95d80fb59ce4014cb3bbd09938b7de2eea35c736bc441d3e2e25cadf9a7e68",
+          "posterFrame": 1.5,
+          "posterSHA256": "037116adde2ba4016fc023b4d9847d37c645bb6c0c803243d95fe807f25c99d1"
+        }
+      ]
+    }
+  }
+}
