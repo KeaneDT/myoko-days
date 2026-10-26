@@ -83,3 +83,7 @@ dialog.example-modal .example-controls{position:static;padding-top:8px}
 dialog.example-modal #exampleTitle{min-height:28px}dialog.example-modal[open]{animation:guideOpen 260ms cubic-bezier(.22,1,.36,1) both}@keyframes guideOpen{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:600px){dialog.example-modal #exampleTitle{min-height:55px}}
 @media(prefers-reduced-motion:reduce){dialog.example-modal[open]{animation:none}}
+/* Quiet map chrome: transparency applies to the backing, not to icon contrast. */
+.studio .dio__ctl,.studio .dio-key:not([open]){background:rgba(244,243,239,.46);border-color:rgba(46,59,53,.20);box-shadow:0 2px 8px rgba(25,28,26,.08);backdrop-filter:none;-webkit-backdrop-filter:none}
+.studio .dio__ctl:hover,.studio .dio__ctl:focus-within,.studio .dio-key:not([open]):hover,.studio .dio-key:not([open]):focus-within{background:rgba(244,243,239,.84)}
+.studio .dio__ctl button:hover{background:rgba(255,255,255,.28)}.studio .dio-key[open]{background:rgba(244,243,239,.96)}

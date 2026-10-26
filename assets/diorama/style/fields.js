@@ -22,6 +22,24 @@ MyokoStyle.part("fields", function (ctx) {
   }
   function good(x, z) { const g = grade(x, z); return g === 2 || (g === 1 && nz(x, z) > -0.05); }
   const TILE = 2600, GAP = 16;
+  // The rendered terrain is coarser than the source height texture. Its triangles
+  // can sit above an interpolated corner sample, especially on phone quality.
+  // Bound every terrain cell touched by the plot; a linear triangle cannot rise
+  // above its highest vertex. This is intentionally conservative at the edges.
+  function terrainCeiling(corners) {
+    const grid = ctx.terrainGrid;
+    if (!grid) return -Infinity;
+    const { positions: p, cols, rows } = grid;
+    const dx = p[0] - p[cols * 3], dz = p[5] - p[2];
+    const xs = corners.map(c => c[0]), zs = corners.map(c => c[1]);
+    const r0 = Math.max(0, Math.floor((p[0] - Math.max(...xs)) / dx));
+    const r1 = Math.min(rows - 1, Math.ceil((p[0] - Math.min(...xs)) / dx));
+    const c0 = Math.max(0, Math.floor((Math.min(...zs) - p[2]) / dz));
+    const c1 = Math.min(cols - 1, Math.ceil((Math.max(...zs) - p[2]) / dz));
+    let high = -Infinity;
+    for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) high = Math.max(high, p[(r * cols + c) * 3 + 1]);
+    return high;
+  }
   const plots = [];
   for (let tx = -SN / 2; tx < SN / 2; tx += TILE) for (let tz = -SE / 2; tz < SE / 2; tz += TILE) {
     const cx = tx + TILE / 2, cz = tz + TILE / 2;
@@ -39,11 +57,13 @@ MyokoStyle.part("fields", function (ctx) {
         const x = cx + lu * ca - lv * sa, z = cz + lu * sa + lv * ca;
         const hw = (wRow - GAP) / 2, hd = (dCol - GAP) / 2;
         const corners = [[hw, hd], [-hw, hd], [hw, -hd], [-hw, -hd]].map(([a, b]) => [x + a * ca - b * sa, z + a * sa + b * ca]);
-        // inside the tile only (tiles with different angles never overlap), on good ground, clear of the models
+        // Check the ROTATED world corners against the owning world tile. Local
+        // coordinates alone let adjacent rotated grids overlap and shimmer.
         if (Math.abs(lu) + wRow / 2 <= TILE / 2 && Math.abs(lv) + dCol / 2 <= TILE / 2 && rnd() > 0.02 &&
+            corners.every(([a, b]) => a >= tx + GAP / 2 && a <= tx + TILE - GAP / 2 && b >= tz + GAP / 2 && b <= tz + TILE - GAP / 2) &&
             good(x, z) && corners.every(([a, b]) => good(a, b)) && clearOfModels(x, z)) {
           const hs = corners.map(([a, b]) => ctx.heightAt(a, b)).concat([ctx.heightAt(x, z)]);
-          const top = (Math.max(...hs) + 3.2) * E, bottom = (Math.min(...hs) - 4) * E;   // v17.15: the top rides above the highest corner, so the ground never pokes through it (that shimmered as you zoomed)
+          const top = Math.max(Math.max(...hs) * E, terrainCeiling(corners)) + 3.2 * E, bottom = (Math.min(...hs) - 4) * E;
           plots.push({ x, z, w: wRow - GAP, d: dCol - GAP, ang, top, bottom });
         }
         v += dCol;

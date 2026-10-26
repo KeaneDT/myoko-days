@@ -142,8 +142,8 @@ MD.map = (function () {
   }
   const loadBase = async () => {
     if (!window.THREE) await loadScript(THREE_URL);
-    if (!window.MyokoScene) await loadScript(BASE + "kit/scene.js?v=21.1");
-    await Promise.all(MyokoScene.STYLE_ORDER.map(p => loadScript(BASE + "style/" + p + ".js?v=20.0").catch(() => null)));
+    if (!window.MyokoScene) await loadScript(BASE + "kit/scene.js?v=1.3.2");
+    await Promise.all(MyokoScene.STYLE_ORDER.map(p => loadScript(BASE + "style/" + p + ".js?v=1.3.2").catch(() => null)));
     if (location.protocol === "file:") await loadScript(BASE + "data/bundle.js").catch(() => null);
   };
   let basePromise = null;

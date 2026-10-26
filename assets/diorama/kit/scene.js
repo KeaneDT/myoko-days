@@ -417,6 +417,7 @@ float pPixel(vec3 wp) { return max(length(fwidth(wp.xz)) * 0.7071, 1e-3); }
       const ctx = {
         THREE: T, kit: K ? K.api : null, PALETTE: PAL, shared, glsl, tex, layout: L, heightAt, exaggeration: EXAG,
         span: { eastWest: SE, northSouth: SN }, metresPerTexel: SE / W, quality: phone ? "lo" : "hi",
+        terrainGrid: { positions: pos, cols: GW, rows: GH },
         camera, renderer, terrain, lines, houses: houses && houses.group, models: tokens.map(t => t.g),
         sun: sun.clone(), worldToUV: (x, z) => uvOf(x, z), sample
       };

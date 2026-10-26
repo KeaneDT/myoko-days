@@ -11,7 +11,14 @@ const document={createElement:()=>({getContext:()=>({createRadialGradient:()=>({
 const c={THREE:T,console,document};c.window=c;vm.createContext(c);
 for(const f of ['kit/kit.js','kit/grazers.js','kit/critters.js'])vm.runInContext(fs.readFileSync(path.join(root,'assets/diorama',f),'utf8'),c);
 let factory;c.MyokoStyle={part:(name,fn)=>factory=fn};vm.runInContext(fs.readFileSync(path.join(root,'assets/diorama/style/fields.js'),'utf8'),c);
-const fields=factory({THREE:T,kit:c.MyokoKit.api,layout:L,span:{northSouth:SN,eastWest:SE},exaggeration:L.exaggeration,heightAt,sample,tex:{tone:{}},shared:{},glsl:{uniforms:'',palette:'',paint:''},PALETTE:c.MyokoKit.PALETTE});
+function buildFields(step=2){
+ const p=images.height,W=p.width,H=p.height,cols=Math.floor((W-1)/step)+1,rows=Math.floor((H-1)/step)+1,positions=new Float32Array(rows*cols*3);
+ for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const i=(r*cols+c)*3;positions[i]=SN/2-(r*step+.5)/H*SN;positions[i+1]=heightAt(positions[i],(c*step+.5)/W*SE-SE/2)*L.exaggeration;positions[i+2]=(c*step+.5)/W*SE-SE/2;}
+ const terrainGrid={positions,cols,rows};
+ const fields=factory({THREE:T,kit:c.MyokoKit.api,layout:L,span:{northSouth:SN,eastWest:SE},exaggeration:L.exaggeration,heightAt,sample,terrainGrid,tex:{tone:{}},shared:{},glsl:{uniforms:'',palette:'',paint:''},PALETTE:c.MyokoKit.PALETTE});
+ return {fields,terrainGrid};
+}
+const {fields}=buildFields();
 const plots=fields.plots||(()=>{const out=[],m=new T.Matrix4(),p=new T.Vector3(),q=new T.Quaternion(),s=new T.Vector3(),e=new T.Euler();for(let i=0;i<fields.object.count;i++){fields.object.getMatrixAt(i,m);m.decompose(p,q,s);e.setFromQuaternion(q);out.push({x:p.x,z:p.z,w:s.x,d:s.z,ang:-e.y});}return out;})();
-module.exports={T,L,heightAt,sample,c,plots};
+module.exports={T,L,heightAt,sample,c,plots,buildFields};
 if(require.main===module){fs.writeFileSync(path.join(__dirname,'field-footprints.json'),JSON.stringify({plots,houses:L.houses.items}));console.log(plots.length,'actual rice plots;',L.houses.items.length,'houses');}

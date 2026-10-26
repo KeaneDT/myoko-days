@@ -8,7 +8,7 @@ Created for the SMU sustainability communication project with Patience Capital G
 
 **GitHub Pages · browser-based experience · no account or booking backend**
 
-**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.3.1)**
+**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.3.2)**
 
 ![The live Myoko Days 3D map, rendered in the browser](docs/images/map-overview.png)
 
@@ -29,6 +29,10 @@ On the first visit to **Build**, a short demonstration opens in the centre of th
 The site has no accounts: a versioned localStorage flag remembers that the example was shown in this browser, with sessionStorage and in-memory fallbacks when storage is unavailable. There are no tracking cookies or cross-device identity checks. Clearing site data, private browsing or another browser can show it again. Reduced-motion preferences use manually advanced still frames.
 
 The landscape keeps one planning dock: Places, activity details and Your days share the same space. Search stays visible; filters and day controls appear when needed. Adding shows a proposed day and block for confirmation, followed by inline **View day / Undo** feedback. On phones the dock expands without introducing another floating map panel. Area questions jump to useful sections; Review uses natural-height day rows instead of stretching them to match the cost checklist.
+
+Rice plots are checked in world coordinates after rotation so neighbouring field tiles do not overlap. Each plot clears the coarsest rendered terrain beneath its whole footprint on desktop and phone quality, avoiding depth shimmer from terrain poking through. The field regression checks every nearby plot pair and clips the actual terrain triangles against every plot. Map controls use translucent backgrounds while preserving solid icons and stronger hover/focus states.
+
+![Rice fields around the activity miniatures, with translucent controls](docs/images/field-detail.png)
 
 ## Three ways to feel Myoko
 
