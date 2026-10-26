@@ -8,7 +8,7 @@
   S.zoneFilter = S.zoneFilter || "";
   S.coachSeen = (() => { try { return localStorage.getItem("md_coach12") === "1"; } catch (e) { return false; } })();
 
-  const ui = { drawer: false, settings: false, menu: null, active: false, dirty: true, lastTotal: null, placing: null, receipt: null, filterOpen: false };
+  const ui = { drawer: false, settings: false, menu: null, active: false, dirty: true, lastTotal: null, placing: null, filterOpen: false };
   const SLOT = { am: "Morning", pm: "Afternoon" };
   const JA = ["一", "二", "三", "四", "五", "六", "七"];
   const narrowQ = matchMedia("(max-width: 860px)");
@@ -183,7 +183,7 @@
     box.innerHTML = `<header class="drawer__head"><div class="drawer__t"><h2>Places <span class="drawer__n">${list.length}</span></h2><p class="drawer__hint">${hint}</p></div>
         <input id="q" type="search" placeholder="Search places" value="${esc(S.query)}" autocomplete="off" aria-label="Search places">
         <button type="button" class="quiet-filter" data-filter-toggle aria-expanded="${ui.filterOpen}">Filters${S.catFilter.length || S.fitsOnly || S.showExtras ? " · on" : ""}</button>${ui.filterOpen ? `<div class="quiet-filter-options">${typeDropdown("drawer")}${tg2}</div>` : ""}<button type="button" class="drawer__x" data-drawer-close aria-label="Hide the list">×</button></header>
-      ${strip}${S.sel.size || ui.receipt ? "" : intro()}
+      ${strip}${S.sel.size ? "" : intro()}
       <ul class="drawer__list">${list.length ? body : `<li class="drawer__empty"><b>Nothing matches.</b><p>Try another type, or <button type="button" class="linkbtn" data-clearfilters>clear the filters</button>.</p></li>`}</ul>`;
     const ul = box.querySelector(".drawer__list"); if (ul) ul.scrollTop = prevTop;
     if (keepQ) { const q = $("#q"); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
@@ -208,12 +208,17 @@
     const opts=candidates.map(c=>{const v=c.day+':'+c.slot, rr=P.direct(S,a.id,c);return `<option value="${v}"${chosen&&v===chosen.day+':'+chosen.slot?' selected':''}>Day ${c.day+1} · ${A.dayShort(c.day)} · ${P.isLong(a)?'Full day':SLOT[c.slot]||'Short stop'}${rr.ok?'':' · occupied'}</option>`;}).join('');
     return `<div class="quiet-placement"><label for="placeDestination">Add to a day</label>${opts?`<select id="placeDestination">${opts}</select><button type="button" class="btn" data-confirm-add="${a.id}">Confirm activity ${ARROW}</button>`:`<p>No free block is available.</p><button type="button" class="btn" data-resolve="${a.id}">Choose another arrangement</button>`}<button type="button" class="linkbtn" data-placement-back>Cancel</button></div>`;
   }
-  function renderReceipt(plan, meta) {
-    if(meta.added){ui.receipt={id:meta.added,before:meta.before};ui.placing=null;ui.proposed=null;}
-    if(ui.receipt&&!S.sel.has(ui.receipt.id))ui.receipt=null;
-    const box=$('#buildReceipt'),r=ui.receipt;
-    box.hidden=!r;
-    if(r){const pl=P.slotOf(plan,r.id);box.innerHTML=`<span><b>${esc(D.byId[r.id].name)}</b>${pl?'Added to '+esc(whereOf(D.byId[r.id],pl)):'Choose a block to finish adding'}</span><div><button type="button" data-receipt-view>View day</button>${r.before?'<button type="button" data-receipt-undo>Undo</button>':''}<button type="button" data-receipt-close aria-label="Dismiss confirmation">×</button></div>`;}
+  function notifyAddition(plan, meta) {
+    if(!meta.added)return;
+    ui.placing=null;ui.proposed=null;
+    const id=meta.added,pl=P.slotOf(plan,id),before=meta.before;
+    A.toast(`${D.byId[id].name} · ${pl?'Added to '+whereOf(D.byId[id],pl):'Choose a block to finish adding'}`, {
+      undo:before?()=>A.restore(before):undefined,
+      act:{label:'View day',fn:()=>{
+        S.focus=null;ui.drawer=false;render();
+        $('#dockDays [data-flip="'+id+'"]')?.scrollIntoView({block:'center',behavior:A.smooth});
+      }}
+    });
   }
   const REQ = { zip: "Safety briefing language, age and weight limits apply.", sup: "Swimming ability is required; equipment and the safety briefing are provided.", kayak: "Water confidence is required; equipment and the safety briefing are provided.", ebike: "Riding ability and route conditions matter; the briefing and equipment are provided." };
   function blockedUI(a, r) {
@@ -271,7 +276,7 @@
     const plan = P.schedule(S);
     flipRender(() => { renderHead(); renderTabs(plan); renderSettings(); renderDays(plan); renderFoot(plan); });
     document.body.classList.toggle("drawer-open", ui.drawer);
-    renderFilters(); renderDrawer(plan); renderDetail(); renderReceipt(plan,meta);
+    renderFilters(); renderDrawer(plan); renderDetail(); notifyAddition(plan,meta);
     const focusPanel=!!S.focus, example=false;
     $('#dock').classList.toggle('has-detail',focusPanel);
     $('#dock').classList.toggle('has-example',example);
@@ -358,9 +363,6 @@
     if(t.closest('[data-expand-panel]')){const expanded=$('#studio').classList.toggle('is-expanded');const b=t.closest('[data-expand-panel]');b.textContent=expanded?'Show more map ↓':'Expand panel ↑';b.setAttribute('aria-expanded',String(expanded));return;}
     if(t.closest('[data-example-open]')){MD.mapExample.open();return;}
     if(t.closest('[data-filter-toggle]')){ui.filterOpen=!ui.filterOpen;render();return;}
-    if(t.closest('[data-receipt-close]')){ui.receipt=null;render();return;}
-    if(t.closest('[data-receipt-undo]')){const b=ui.receipt?.before;ui.receipt=null;if(b)A.restore(b);return;}
-    if(t.closest('[data-receipt-view]')){const id=ui.receipt?.id;S.focus=null;ui.drawer=false;render();const row=id&&$('#dockDays [data-flip="'+id+'"]');row?.scrollIntoView({block:'center',behavior:A.smooth});return;}
     const prep=t.closest('[data-prepare]');if(prep){const id=prep.dataset.prepare;if(S.focus!==id)openDetail(id);ui.placing=id;ui.proposed=null;render();$('#placeDestination')?.focus({preventScroll:true});return;}
     if(t.closest('[data-placement-back]')){ui.placing=null;ui.proposed=null;render();return;}
     const confirm=t.closest('[data-confirm-add]');if(confirm){A.addPlace(confirm.dataset.confirmAdd,{target:ui.proposed});return;}
