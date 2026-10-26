@@ -5,8 +5,9 @@ const memory=()=>{const data=new Map();return {getItem:k=>data.get(k)??null,setI
 const blocked={getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}};
 function launch(local=memory(),session=memory(),reduce=false){
   let shows=0,timers=0;
-  const button={isConnected:true,focus(){}};
-  const box={hidden:true,innerHTML:'',contains:()=>false,addEventListener(){},querySelector:s=>s==='[data-example-model]'?null:button,showModal(){shows++;},close(){}};
+  const node=()=>({isConnected:true,textContent:'',innerHTML:'',focus(){},setAttribute(){},removeAttribute(){},toggleAttribute(){},classList:{add(){},remove(){},toggle(){}},getAnimations:()=>[],animate(){}});
+  const button=node(),nodes=new Map();
+  const box={hidden:true,innerHTML:'',contains:()=>false,addEventListener(){},querySelector:s=>s==='[data-example-model]'?null:s==='.example-head'&&!box.innerHTML?null:(nodes.has(s)?nodes.get(s):(nodes.set(s,node()),nodes.get(s))),querySelectorAll:()=>[node(),node(),node(),node()],showModal(){shows++;},close(){}};
   const trip={sel:['imori'],placements:{imori:{day:0,slot:'pm'}},date:'2027-09-07'};
   const before=JSON.stringify(trip);
   const MD={svg:()=>'<svg></svg>',app:{esc:s=>s,D:{byId:{daruma:{name:'Daruma Painting',img:'daruma'}}},S:trip,reduceMotion:reduce},studio:{ui:{active:false}},map:{isReady:()=>false}};

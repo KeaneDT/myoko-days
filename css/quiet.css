@@ -60,3 +60,26 @@ dialog.example-modal .example-head{position:sticky;top:-14px;background:var(--pa
 .quiet-intro{padding:9px 18px 10px;column-gap:16px}.quiet-intro b{font-size:16px;line-height:1.3}.quiet-intro p{font-size:12px;line-height:1.4;margin:2px 0 3px}.quiet-intro button{font-size:11px;min-height:26px}.quiet-intro__path span{width:30px;height:32px}.quiet-intro__path svg{width:28px;height:28px}
 dialog.example-modal h3{font-size:21px;line-height:1.3;margin:6px 0}dialog.example-modal>p{font-size:12px;line-height:1.45;margin:5px 0}dialog.example-modal .example-stepper{margin:6px 0}dialog.example-modal .example-controls button{font-size:12px}dialog.example-modal .example-stage--real,dialog.example-modal .example-canvas{min-height:210px}dialog.example-modal .example-stage{margin:8px 0}
 @media(max-width:860px){.quiet-intro{padding:7px 14px 8px;column-gap:10px}.quiet-intro b{font-size:15px}.quiet-intro p{font-size:11px;line-height:1.4}.quiet-intro button{font-size:11px;min-height:26px}.quiet-intro__path span{width:25px;height:28px}.quiet-intro__path svg{width:25px;height:25px}}
+
+/* Centered guide with a steady stage and restrained, uninterrupted motion. */
+dialog.example-modal{inset:0;margin:auto;transform:none;height:fit-content;max-height:calc(100dvh - 32px)}
+dialog.example-modal::backdrop{background:rgba(0,0,0,.72)}
+dialog.example-modal .example-stage--real{height:286px;min-height:286px;display:flex;align-items:center}
+dialog.example-modal .example-canvas{width:100%;min-height:0;height:100%;display:flex;align-items:center;justify-content:center}
+dialog.example-modal .example-canvas>*{width:100%;box-sizing:border-box}
+dialog.example-modal .example-caption{min-height:35px}
+dialog.example-modal .example-stepper button{transition:border-color 300ms ease,color 300ms ease}
+dialog.example-modal .example-controls{position:static;padding-top:8px}
+.is-playing .demo-cursor{animation:demoPointClean 4.2s cubic-bezier(.4,0,.2,1) both}
+.is-playing .example-real-pin{animation:demoSelect 4.2s cubic-bezier(.4,0,.2,1) both}
+.is-playing .example-choice-list b{animation:demoPick 4.2s cubic-bezier(.4,0,.2,1) both}
+.is-playing .example-planned-block{animation:demoArrival 650ms cubic-bezier(.22,1,.36,1) both}
+.is-paused .demo-cursor,.is-paused .example-real-pin,.is-paused .example-choice-list b,.is-paused .example-planned-block{animation-play-state:paused}
+@keyframes demoPointClean{0%,8%{opacity:0;transform:translate(22px,16px)}30%,58%{opacity:1;transform:translate(0,0)}65%{opacity:1;transform:translate(0,0) scale(.94)}74%,100%{opacity:1;transform:translate(0,0)}}
+@media(max-width:600px){dialog.example-modal{inset:0;margin:auto;max-height:calc(100dvh - 20px)}dialog.example-modal .example-stage--real{height:270px;min-height:270px}dialog.example-modal .example-caption{min-height:36px}}
+@media(max-height:580px){dialog.example-modal{inset:0;margin:auto;max-height:calc(100dvh - 16px)}dialog.example-modal .example-stage--real{height:230px;min-height:230px}}
+@media(prefers-reduced-motion:reduce){dialog.example-modal .example-stepper button{transition:none}.is-playing .demo-cursor,.is-playing .example-real-pin,.is-playing .example-choice-list b,.is-playing .example-planned-block{animation:none!important}}
+
+dialog.example-modal #exampleTitle{min-height:28px}dialog.example-modal[open]{animation:guideOpen 260ms cubic-bezier(.22,1,.36,1) both}@keyframes guideOpen{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){dialog.example-modal #exampleTitle{min-height:55px}}
+@media(prefers-reduced-motion:reduce){dialog.example-modal[open]{animation:none}}

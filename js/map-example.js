@@ -55,15 +55,36 @@
     MyokoKit.setViewport(w,h,Math.min(devicePixelRatio||1,2));renderer.render(scene,camera);u.uRes.value.copy(res);u.uPx.value=px;
     slot.classList.add('is-ready');
   }
-  function stop(){clearTimeout(timer);timer=null;}
-  function schedule(){stop();if(playing)timer=setTimeout(()=>{if(step<3){step++;draw();schedule();}else{playing=false;draw();}},3800);}
+  const DWELL=4200;
+  let remaining=DWELL,started=0,renderedStep=-1;
+  function stop(preserve=false){if(preserve&&timer!==null)remaining=Math.max(0,remaining-(Date.now()-started));clearTimeout(timer);timer=null;}
+  function schedule(){stop();if(playing){started=Date.now();timer=setTimeout(()=>{timer=null;remaining=DWELL;if(step<3){step++;draw();schedule();}else{playing=false;draw();}},remaining);}}
   function draw(){
-    const focused=box.contains(document.activeElement)?document.activeElement:null,key=focused?.hasAttribute('data-example-play')?'[data-example-play]':focused?.hasAttribute('data-example-close')?'[data-example-close]':null;
-    box.innerHTML=`<div class="example-head"><p class="label">How to plan · a quick example</p><button type="button" data-example-close aria-label="Close example">×</button></div><div class="example-stepper" aria-label="Example steps">${['Explore','Details','Choose day','Your day'].map((s,i)=>`<button type="button" data-example-step="${i}"${i===step?' aria-current="step"':''}>${i+1} · ${s}</button>`).join('')}</div><h3 id="exampleTitle">${titles[step]}</h3><div class="example-stage example-stage--real ${playing?'is-playing':''}"><div class="example-canvas" aria-hidden="true">${sceneHTML()}</div></div><p role="status">${copy[step]}</p><p class="example-note">Example only. Your actual dates and activities stay unchanged.</p><div class="example-controls"><button type="button" data-example-play>${playing?'Pause':step===3?'Replay':'Play example'}</button><button type="button" class="linkbtn" ${step===3?'data-example-close':'data-example-next'}>${step===3?'Try it on my trip →':'Next →'}</button></div>`;
-    drawModel();if(key)box.querySelector(key)?.focus({preventScroll:true});
+    if(!box.querySelector('.example-head')){
+      box.innerHTML=`<div class="example-head"><p class="label">How to plan · a quick example</p><button type="button" data-example-close aria-label="Close example">×</button></div><div class="example-stepper" aria-label="Example steps">${['Explore','Details','Choose day','Your day'].map((s,i)=>`<button type="button" data-example-step="${i}">${i+1} · ${s}</button>`).join('')}</div><h3 id="exampleTitle"></h3><div class="example-stage example-stage--real"><div class="example-canvas" aria-hidden="true"></div></div><p class="example-caption" role="status"></p><p class="example-note">Example only. Your actual dates and activities stay unchanged.</p><div class="example-controls"><button type="button" data-example-play>Play example</button><button type="button" class="linkbtn" data-example-next>Next →</button></div>`;
+      renderedStep=-1;
+    }
+    const stage=box.querySelector('.example-stage'),canvas=box.querySelector('.example-canvas');
+    if(renderedStep!==step){
+      canvas.getAnimations?.().forEach(animation=>animation.cancel());
+      canvas.innerHTML=sceneHTML();
+      box.querySelector('#exampleTitle').textContent=titles[step];
+      box.querySelector('.example-caption').textContent=copy[step];
+      box.querySelectorAll('[data-example-step]').forEach((button,i)=>{if(i===step)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');});
+      stage.classList.toggle('is-playing',playing&&!A.reduceMotion);
+      drawModel();
+      if(!A.reduceMotion)canvas.animate?.([{opacity:0,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:460,easing:'cubic-bezier(.22,1,.36,1)',fill:'none'});
+      renderedStep=step;
+    }
+    if(playing&&!A.reduceMotion)stage.classList.add('is-playing');
+    stage.classList.toggle('is-paused',!playing);
+    box.querySelector('[data-example-play]').textContent=playing?'Pause':step===3?'Replay':'Play example';
+    const next=box.querySelector('.example-controls .linkbtn');
+    next.textContent=step===3?'Try it on my trip →':'Next →';
+    next.toggleAttribute('data-example-close',step===3);next.toggleAttribute('data-example-next',step!==3);
   }
   function open(){
-    if(opened)return;opener=document.activeElement;opened=true;step=0;playing=!A.reduceMotion;
+    if(opened)return;opener=document.activeElement;opened=true;step=0;remaining=DWELL;renderedStep=-1;playing=!A.reduceMotion;
     box.hidden=false;draw();box.showModal();remember();drawModel();schedule();box.querySelector('[data-example-close]').focus({preventScroll:true});
   }
   function close(render=true){
@@ -73,13 +94,13 @@
   box.addEventListener('click',e=>{
     if(e.target===box){const r=box.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom){close();return;}}
     if(e.target.closest('[data-example-close]')){close();return;}
-    if(e.target.closest('[data-example-play]')){if(step===3&&!playing)step=0;playing=!playing;draw();schedule();return;}
-    const b=e.target.closest('[data-example-step]');if(b){step=Number(b.dataset.exampleStep);playing=false;stop();draw();return;}
-    if(e.target.closest('[data-example-next]')){step=Math.min(3,step+1);playing=false;stop();draw();}
+    if(e.target.closest('[data-example-play]')){if(playing){stop(true);playing=false;draw();}else{if(step===3){step=0;remaining=DWELL;}playing=true;draw();schedule();}return;}
+    const b=e.target.closest('[data-example-step]');if(b){step=Number(b.dataset.exampleStep);playing=false;stop();remaining=DWELL;draw();return;}
+    if(e.target.closest('[data-example-next]')){step=Math.min(3,step+1);playing=false;stop();remaining=DWELL;draw();}
   });
   box.addEventListener('cancel',e=>{e.preventDefault();close();});
   document.addEventListener('keydown',e=>{if(opened&&e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();close();}},true);
-  document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();playing=false;if(opened)draw();}});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){stop(true);playing=false;if(opened)draw();}});
   new ResizeObserver(()=>{if(opened)drawModel();}).observe(box);
   function maybeOpen(){if(MD.studio?.ui.active&&!hasSeen())open();}
   MD.mapExample={open,close,maybeOpen,active:()=>opened};

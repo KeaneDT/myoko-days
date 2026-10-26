@@ -8,7 +8,7 @@ Created for the SMU sustainability communication project with Patience Capital G
 
 **GitHub Pages · browser-based experience · no account or booking backend**
 
-**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.3.0)**
+**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.3.1)**
 
 ![The live Myoko Days 3D map, rendered in the browser](docs/images/map-overview.png)
 
@@ -24,7 +24,7 @@ Trip state stays in the current browser's localStorage. The prototype makes no r
 
 ![First-visit planning demonstration above the map](docs/images/planning-demo.png)
 
-On the first visit to **Build**, a short demonstration opens near the top of the page after the map is ready. It uses the production Daruma Painting miniature, real activity data and the same add-to-day sequence as the planner. It never edits the visitor’s trip or moves the map camera. Close at any time with the X, Escape or the backdrop; **How to plan** replays it later. The demonstration pauses at its final step instead of dismissing itself.
+On the first visit to **Build**, a short demonstration opens in the centre of the page after the map is ready. It uses the production Daruma Painting miniature, real activity data and the same add-to-day sequence as the planner. It never edits the visitor’s trip or moves the map camera. Close at any time with the X, Escape or the backdrop; **How to plan** replays it later. The demonstration pauses at its final step instead of dismissing itself. A dark backdrop focuses attention on the centred dialog. A fixed-height stage, gently eased step transitions and persistent controls avoid layout jumps; Pause freezes both the animation and its remaining playback time.
 
 The site has no accounts: a versioned localStorage flag remembers that the example was shown in this browser, with sessionStorage and in-memory fallbacks when storage is unavailable. There are no tracking cookies or cross-device identity checks. Clearing site data, private browsing or another browser can show it again. Reduced-motion preferences use manually advanced still frames.
 
