@@ -424,7 +424,7 @@ MD.map = (function () {
       r.stopToks.forEach(st => { if (!st.el) return; st.el.hidden = r.hide; st.el.classList.toggle("is-dimmed", r.dimmed); st.el.classList.toggle("is-in", inTrip); });
     });
     { const ko = rootEl.querySelector(".dio-key__over"); if (ko) ko.hidden = !anyOver; }
-    const stayKey = (state && state.stay && D.bases[state.stay]) ? state.stay : "madarao";
+    const stayKey = (state && state.stay && D.bases[state.stay]) ? state.stay : null;
     propTags.forEach(pt => { pt.tok = scene.tokens.find(t => t.a.id === D.bases[pt.k].token) || null; const on = pt.k === stayKey; pt.on = on; pt.el.classList.toggle("is-base", on); pt.el.classList.remove("is-hot"); pt.el.textContent = "Base · " + D.bases[pt.k].name; });
     baseTok = (propTags.find(pt => pt.k === stayKey) || {}).tok || null;
     paintRings(); positionOverlay();

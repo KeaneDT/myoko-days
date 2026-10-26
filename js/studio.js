@@ -104,7 +104,7 @@
       <svg class="dk-trip__art" viewBox="0 0 240 120" aria-hidden="true" focusable="false"><path d="M0 120 L48 62 L72 86 L120 22 L166 80 L190 56 L240 120Z" fill="rgba(196,162,94,.16)"/><path d="M0 120 L40 82 L66 100 L120 44 L170 104 L204 78 L240 120Z" fill="rgba(196,162,94,.12)"/><circle cx="196" cy="26" r="11" fill="none" stroke="rgba(196,162,94,.55)" stroke-width="1.2"/></svg>
       <div class="dk-trip__top"><p class="dk-trip__eyebrow"><span class="hanko" lang="ja" aria-hidden="true">旅</span>Your trip</p><button type="button" class="dk-help" data-example-open aria-label="Watch a planning example">How to plan</button><button type="button" class="dk-edit" id="tripEdit" aria-expanded="${ui.settings}" aria-controls="tripSet">${ui.settings ? "Done" : "Edit trip"}</button></div>
       <h2 class="dk-trip__dates">${esc(rangeLabel())}</h2>
-      <p class="dk-trip__meta">${esc(wd(a0))} to ${esc(wd(a1))} · ${S.days - 1} night${S.days - 1 === 1 ? "" : "s"} · ${esc(S.stay === "own" ? "Staying elsewhere" : D.bases[S.stay].name)}</p>
+      <p class="dk-trip__meta">${esc(wd(a0))} to ${esc(wd(a1))} · ${S.days - 1} night${S.days - 1 === 1 ? "" : "s"} · ${esc(S.stay === "own" ? "Staying elsewhere" : MD.stay.OPTIONS[S.stay].name)}</p>
     </div>`;
   }
   function renderSettings() {
@@ -112,11 +112,11 @@
     $("#dock").classList.toggle("is-settings", ui.settings);
     if (!ui.settings) { box.innerHTML = ""; return; }
     const seg = (key, list, cur) => `<div class="seg" role="group">${list.map(([v, l]) => `<button type="button" data-set="${key}" data-v="${v}" aria-pressed="${String(cur) === String(v)}">${esc(l)}</button>`).join("")}</div>`;
-    box.innerHTML = `<div class="ts"><div class="ts__row ts__row--col ts__row--date"><span id="ts-date-l">First day</span>${A.dateControl("ts-date", S.date)}</div><p class="ts__echo">${esc(A.dayLong(0))} to ${esc(A.dayLong(S.days - 1))}</p>
-      <div class="ts__row"><span>Length</span>${seg("days", [3, 4, 5, 6, 7].map(n => [n, n]), S.days)}</div>
+    box.innerHTML = `<div class="ts"><div class="ts__row ts__row--col ts__row--date"><span id="ts-date-l">Arrival & departure</span>${A.dateControl("ts-date", S.date)}</div><p class="ts__echo">${esc(A.dayLong(0))} to ${esc(A.dayLong(S.days - 1))}</p>
+      <div class="ts__row"><span>Group</span><span>${S.party} travellers · ${S.rooms} rooms <a href="#plan">Edit group & currency</a></span></div>
       <p class="small">Manual additions stay where you choose. Only a drop on Auto-arrange can rearrange activities or extend the trip.</p>
       <div class="ts__row"><span>Walking</span>${seg("walk", [[3, "Flat & short"], [4, "Some hills"], [5, "Active"]], S.walk)}</div>
-      <div class="ts__row ts__row--col"><span>Where you stay</span><div class="ts__stay" role="group" aria-label="Where you stay">${MD.stay.ORDER.map(k => `<button type="button" class="ts__stayb" data-stayset="${k}" aria-pressed="${S.stay === k}"><b>${esc(MD.stay.OPTIONS[k].pcg ? MD.stay.OPTIONS[k].name : "Somewhere else")}</b><small>${esc(MD.stay.OPTIONS[k].line)}</small></button>`).join("")}</div></div>
+      <div class="ts__row ts__row--col"><span>Where you stay</span><div class="ts__stay" role="group" aria-label="Where you stay">${MD.stay.ORDER.map(k => `<button type="button" class="ts__stayb" data-stayset="${k}" aria-pressed="${S.stay === k}"><b>${esc(MD.stay.OPTIONS[k].name)}</b><small>${esc(MD.stay.OPTIONS[k].line)}</small></button>`).join("")}</div></div>
       <div class="ts__row ts__row--col"><span>Start again from</span><div class="ts__starts">${["restore", "discover", "active"].map(k => `<button type="button" class="linkbtn" data-restart="${k}">${esc(D.courses[k].name)}</button>`).join("")}<button type="button" class="linkbtn" data-restart="blank">Start a new trip</button></div></div></div>`;
   }
   function renderFoot(plan) {
@@ -125,7 +125,7 @@
     const prevAll = ui.lastTotal == null ? all : ui.lastTotal;
     $("#dockFoot").innerHTML = `<div class="dk-total"><span class="label">Per person</span><b id="dkTotal">${A.sgd(all)}</b><small>${sq.stay ? `Activities ${A.sgd(t.yen)} · Stay ${A.sgd(sq.perPerson)}` : `${yen(t.yen)} · ${ids.length} ${ids.length === 1 ? "activity" : "activities"}`}</small></div><button type="button" class="btn" id="toBook">Review trip ${ARROW}</button>
       <p class="dk-ride" title="Public transport in the valley is limited, so the plan assumes a chartered van on days with something on. This is a group cost for the whole van, not per person."><span class="dk-ride__t"><svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 5h11l3 4v5H3z M3 10h14 M6.5 16.2a1.4 1.4 0 1 0 .01 0 M13.5 16.2a1.4 1.4 0 1 0 .01 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Van · ${g.rideDays} day${g.rideDays === 1 ? "" : "s"}</span><b>${yen(g.total)}</b><small class="dk-ride__n">whole group</small></p>
-      <p class="dk-scope">${sq.stay ? "Activities and stay, per person. The van is a group cost; rail is extra." : "Activities, per person. The van is a group cost; rail and stay are extra."}</p>`;
+      <p class="dk-scope" title="${esc(MD.currency.note())}">${sq.stay ? "Activities and stay, per person. The van is a group cost; rail is extra." : "Activities, per person. The van is a group cost; rail and stay are extra."}</p>`;
     A.countUp($("#dkTotal"), prevAll, all); ui.lastTotal = all;
     $("#daysN") && ($("#daysN").textContent = "");
   }
@@ -197,8 +197,10 @@
     return r.ok?{kind:'ok',r}:{kind:'blocked',r};
   }
 
+  let introClosed=false;try{introClosed=localStorage.getItem("md_map_intro_closed")==="1";}catch(e){}
   function intro() {
-    return `<div class="quiet-intro"><div class="quiet-intro__path" aria-hidden="true"><span><svg viewBox="0 0 32 32"><path d="M22 13c0 5-6 11-6 11S10 18 10 13a6 6 0 1 1 12 0Z"/><circle cx="16" cy="13" r="2"/><path d="m9 21-4 2v6l11-3 11 3v-6l-4-2"/></svg></span><i><svg viewBox="0 0 24 16"><path d="M2 8h19m-5-5 5 5-5 5"/></svg></i><span><svg viewBox="0 0 32 32"><rect x="4" y="5" width="21" height="22" rx="2"/><path d="M4 18h15M8 14l4-5 6 7M9 22h7"/><circle cx="21" cy="22" r="7" class="quiet-icon-paper"/><path d="M21 18v8m-4-4h8"/></svg></span><i><svg viewBox="0 0 24 16"><path d="M2 8h19m-5-5 5 5-5 5"/></svg></i><span><svg viewBox="0 0 32 32"><rect x="5" y="7" width="23" height="21" rx="2"/><path d="M5 13h23M11 4v6m11-6v6m-11 10 4 4 7-7"/></svg></span></div><b>What would you like to do?</b><p>Choose a place on the map, or browse below.</p><button type="button" class="linkbtn" data-example-open>▷ Watch an example</button></div>`;
+    if(introClosed)return "";
+    return `<div class="quiet-intro"><div class="quiet-intro__path" aria-hidden="true"><span><svg viewBox="0 0 32 32"><path d="M22 13c0 5-6 11-6 11S10 18 10 13a6 6 0 1 1 12 0Z"/><circle cx="16" cy="13" r="2"/><path d="m9 21-4 2v6l11-3 11 3v-6l-4-2"/></svg></span><i><svg viewBox="0 0 24 16"><path d="M2 8h19m-5-5 5 5-5 5"/></svg></i><span><svg viewBox="0 0 32 32"><rect x="4" y="5" width="21" height="22" rx="2"/><path d="M4 18h15M8 14l4-5 6 7M9 22h7"/><circle cx="21" cy="22" r="7" class="quiet-icon-paper"/><path d="M21 18v8m-4-4h8"/></svg></span><i><svg viewBox="0 0 24 16"><path d="M2 8h19m-5-5 5 5-5 5"/></svg></i><span><svg viewBox="0 0 32 32"><rect x="5" y="7" width="23" height="21" rx="2"/><path d="M5 13h23M11 4v6m11-6v6m-11 10 4 4 7-7"/></svg></span></div><b>Find a place. Make it a day.</b><button type="button" class="linkbtn" data-example-open>▷ See how</button><button type="button" class="quiet-intro__close" data-intro-close aria-label="Dismiss planning hint">×</button></div>`;
   }
   function placementUI(a, r) {
     if(ui.placing !== a.id)return `<button type="button" class="btn pc__add" data-prepare="${a.id}">Add to my trip ${ARROW}</button>`;
@@ -361,6 +363,7 @@
     if (!ui.active) return;
     const t = e.target;
     if(t.closest('[data-expand-panel]')){const expanded=$('#studio').classList.toggle('is-expanded');const b=t.closest('[data-expand-panel]');b.textContent=expanded?'Show more map ↓':'Expand panel ↑';b.setAttribute('aria-expanded',String(expanded));return;}
+    if(t.closest('[data-intro-close]')){introClosed=true;try{localStorage.setItem("md_map_intro_closed","1");}catch(e){}render();return;}
     if(t.closest('[data-example-open]')){MD.mapExample.open();return;}
     if(t.closest('[data-filter-toggle]')){ui.filterOpen=!ui.filterOpen;render();return;}
     const prep=t.closest('[data-prepare]');if(prep){const id=prep.dataset.prepare;if(S.focus!==id)openDetail(id);ui.placing=id;ui.proposed=null;render();$('#placeDestination')?.focus({preventScroll:true});return;}

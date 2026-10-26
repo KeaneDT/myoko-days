@@ -469,7 +469,7 @@ MD.planner = (() => {
     s.sel.forEach(id => { const a = D.byId[id]; if (!a) return; if (a.price == null) tbc++; else yen += a.price; if (a.lunch) lunch++; ef = Math.max(ef, a.ef); });
     return { yen, tbc, lunch, ef };
   }
-  const recommended = s => s.walk >= 5 ? 'active' : s.who === 'friends' ? 'discover' : 'restore';
+  const recommended = s => s.walk >= 5 ? 'active' : !Number.isInteger(s.party)&&s.who === 'friends' ? 'discover' : 'restore';
 
 
   return { RULES, direct, availability, caution, slotWhy, candidates, explain, totals, schedule, dayIndex, slotOf, recommended, add, preview, place, move, swap, fit, arrange, suggest, suggestPlan, zoneKm, dateAt, validDate, isLong, isAddon };

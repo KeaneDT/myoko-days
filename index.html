@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="css/v12.css?v=16.2">
 <link rel="stylesheet" href="css/v16.css?v=17.11">
 <link rel="stylesheet" href="css/ux.css?v=1.2.0">
-<link rel="stylesheet" href="css/quiet.css?v=1.3.2">
+<link rel="stylesheet" href="css/quiet.css?v=1.4.1">
 <script>document.documentElement.classList.add("js");</script>
 </head>
 <body class="on-home">
@@ -217,10 +217,10 @@
       </div>
     </header>
     <div class="wrap sect sect--tight">
-      <aside class="plan-price-note"><p><b>Prices vary with your dates.</b> Friday–Saturday nights and peak dates usually cost more. Compare nightly estimates below.</p><details><summary>How estimates work</summary><p>Holiday weekends, Obon and peak autumn foliage dates can be higher. Calendar rates are estimated per room per night; activities are priced per person. Your stay total adds each night’s rate. These are planning estimates, not live quotes.</p></details></aside>
+      <aside class="plan-price-note"><p><b>Prices vary with your dates.</b> Weekends and peak dates usually cost more.</p><details><summary>How estimates work</summary><p>Holiday weekends, Obon and peak autumn foliage dates can be higher. Calendar rates are estimated per room per night; activities are priced per person. Your stay total adds each night’s rate. These are planning estimates, not live quotes.</p></details></aside>
       <div class="questions" id="questions"></div>
       <div class="rec" id="planRec" aria-live="polite" hidden></div>
-      <div class="plan__pick"><div><h2>Choose your starting point.</h2><p>Start with Restore, Discover or Move, then make it your own.</p></div><a href="#build" id="blankStart" class="btn btn--ghost">Choose my own activities <span class="arrow" aria-hidden="true"></span></a></div>
+      <div class="quick-path"><div><p class="label">A quicker way</p><h2 id="quickHeading">Start with an idea.</h2><p id="quickExplanation"></p></div><button type="button" class="btn" id="quickItinerary" data-quick-course="restore">Preview itinerary</button><div class="quick-preview" id="quickPreview"></div></div><div class="plan__pick"><div><h2>Choose your starting point.</h2><p>Compare Restore, Discover and Move, or choose activities yourself on the map.</p></div><a href="#build" id="blankStart" class="btn btn--ghost">Choose my own activities <span class="arrow" aria-hidden="true"></span></a></div>
       <div class="shapes" id="planCourses"></div>
 
     </div>
@@ -264,21 +264,21 @@
       <div><h4>Plan</h4><ul><li><a href="#plan">01 · Plan a trip</a></li><li><a href="#build">02 · Build on the map</a></li><li><a href="#book">03 · Review your trip</a></li></ul></div>
       <div><h4>Read</h4><ul><li><a href="#about">The area</a></li><li><a href="#courses">Three ways to feel Myoko</a></li></ul></div>
     </div>
-    <p class="foot__small">Prices are per person and include tax, subject to availability. Stay rates are per room per night and change with the dates. The map is a hand-built 3D diorama of the real terrain, painted in the style of a 1920s bird’s-eye map: illustrated and not to scale. To fit the board, the two wide plains are shortened by about a third, and rivers, peaks and trees are drawn larger than life. Morning and afternoon blocks are planning allowances, not operator opening times. Distances between areas are straight-line figures from map coordinates.</p>
+    <p class="foot__small">Activity prices are per person; accommodation is per room per night. Prices are estimates. The illustrated map is not to scale.</p>
   </div>
 </footer>
 
 <dialog id="mapExample" class="map-example example-modal" aria-labelledby="exampleTitle" hidden></dialog>
 <dialog id="filmDialog" class="film-dialog" aria-label="Myoko film"><div class="fd__stage" id="fdStage"><video id="fullFilm" playsinline preload="metadata" poster="assets/video/hero-poster.jpg?v=17.7"><source src="assets/video/hero.mp4?v=17.7" type="video/mp4">Your browser cannot play this film.</video><button type="button" id="filmClose" class="film-close" aria-label="Close film"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button><div class="fd__bar" id="fdBar"><button type="button" id="fdPlay" class="fd__play" aria-label="Pause"><svg class="i-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="i-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button><input id="fdSeek" class="fd__seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek"><span class="fd__time" id="fdTime">0:00 / 0:00</span></div></div><p class="fd__note">Use the written activity details for availability and times.</p></dialog>
 <script src="js/assumptions.js?v=17.0"></script>
-<script src="js/stay.js?v=16.2"></script>
+<script src="js/stay.js?v=1.4.1"></script>
 <script src="js/data.js?v=16.5"></script>
 <script src="js/planner.js?v=1.2.0"></script>
 <script src="js/vignettes.js"></script>
-<script src="js/map.js?v=1.3.2"></script>
+<script src="js/map.js?v=1.4.0"></script>
 <script src="js/media-data.js?v=13.1"></script><script src="js/media.js?v=1.2.0"></script>
 <script src="js/focus-data.js?v=13.1"></script><script src="js/focus.js?v=11.0"></script>
-<script src="js/calendar.js?v=1.2.0"></script>
-<script src="js/app.js?v=1.3.2"></script><script src="js/studio.js?v=1.3.3"></script><script src="js/map-example.js?v=1.3.2"></script><script src="js/tiles.js?v=13.1"></script><script src="js/filmplayer.js?v=12.5d"></script>
+<script src="js/calendar.js?v=1.4.1"></script>
+<script src="js/setup.js?v=1.4.0"></script><script src="js/currency.js?v=1.4.0"></script><script src="js/app.js?v=1.4.1"></script><script src="js/studio.js?v=1.4.1"></script><script src="js/map-example.js?v=1.4.1"></script><script src="js/tiles.js?v=13.1"></script><script src="js/filmplayer.js?v=12.5d"></script>
 </body>
 </html>

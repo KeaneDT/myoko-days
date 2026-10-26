@@ -18,7 +18,7 @@ MD.stay = (function () {
       blurb: "A 38-room MGallery resort at the foot of Mt Myoko, with onsen, restaurants and a lounge bar.", place: "Sekigawa, Myoko Kogen" },
     sixsenses: { key: "sixsenses", name: "Six Senses Myoko", line: "Luxury retreat", tier: 3, pcg: true, zone: "MK",
       blurb: "Private-onsen suites, a spa and Kengo Kuma design, set in the Suginohara resort.", place: "Suginohara, Myoko Kogen" },
-    own: { key: "own", name: "Somewhere else", line: "Activities only", tier: 0, pcg: false, zone: "MK",
+    own: { key: "own", name: "Already booked elsewhere", line: "Activities only", tier: 0, pcg: false, zone: "MK",
       blurb: "Stay wherever suits you. Your days start from Myoko-Kogen Station.", place: "Myoko-Kogen Station" }
   };
   const ORDER = ["madarao", "lime", "sixsenses", "own"];
@@ -85,7 +85,7 @@ MD.stay = (function () {
   const roomsFor = party => Math.max(1, Math.ceil(party / A.perRoom));
   /* nights = days - 1 ; the first night is the first day's date */
   function quote(S) {
-    const o = OPTIONS[S.stay] || OPTIONS.own, party = partyOf(S.who), rooms = roomsFor(party), n = Math.max(0, S.days - 1);
+    const o = OPTIONS[S.stay] || OPTIONS.own, party = Number.isInteger(S.party)&&S.party>=1&&S.party<=9?S.party:partyOf(S.who), rooms = Number.isInteger(S.rooms)?Math.max(roomsFor(party),Math.min(party,S.rooms)):roomsFor(party), n = Math.max(0, S.days - 1);
     if (!o.pcg || isNaN(parse(S.date))) return { option: o, stay: false, party, rooms, nights: [], perRoom: 0, total: 0, perPerson: 0, avgRoom: 0 };
     const nights = []; for (let i = 0; i < n; i++) nights.push(nightRate(o.key, addDays(S.date, i)));
     const perRoom = nights.reduce((a, x) => a + x.rate, 0), total = perRoom * rooms;
