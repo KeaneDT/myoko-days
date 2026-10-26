@@ -137,8 +137,8 @@
     if(!r.ok){requestPlacement(id,t,r.why);return r;}
     S.sel.add(id); S.placements = r.placements; S.days = r.days || S.days; S.removed = [];
     S.focusNew = id;
-    changed({ added: id, moved: (r.moved || []).map(m => m.id) });
-    toast(sentence(r, a), { undo: () => restore(before) });
+    changed({ added: id, moved: (r.moved || []).map(m => m.id), before });
+    if (!(currentView === "build" && MD.studio)) toast(sentence(r, a), { undo: () => restore(before) });
     return r;
   }
   function requestPlacement(id,target,why){
@@ -169,7 +169,7 @@
       if(e.target===dlg||e.target.closest('[data-placement-cancel]')){dlg.close();return;}
       if(e.target.closest('[data-placement-remove]')){dlg.close();removePlace(id);return;}
       const b=e.target.closest('[data-placement-choice]');if(!b)return;const c=choices[Number(b.dataset.placementChoice)],before=snap();
-      c.removed.forEach(key=>S.sel.delete(key));S.sel.add(id);S.placements=c.r.placements;S.days=c.r.days||S.days;dlg.close();changed({added:id,moved:[id]});toast(c.label,{undo:()=>restore(before)});
+      c.removed.forEach(key=>S.sel.delete(key));S.sel.add(id);S.placements=c.r.placements;S.days=c.r.days||S.days;dlg.close();changed({added:id,moved:[id],before});if(currentView!=="build")toast(c.label,{undo:()=>restore(before)});
     };
     if(!dlg.open)dlg.showModal();
   }
@@ -359,6 +359,7 @@
       <div class="stay-cards" role="group" aria-label="Where will you stay?">${stayCards()}</div><div class="stay-detail" id="stayDetail" aria-live="polite">${stayDetail()}</div></div>`;
   }
   function renderPlan() {
+    const ownLink=$("#blankStart");if(ownLink)ownLink.firstChild.textContent=S.sel.size?"Continue planning my trip ":"Choose my own activities ";
     const q = (n, title, name, list, cur) => `<div class="q"><span class="q__n">0${n}</span><span class="q__t">${title}</span><div class="opts" role="group" aria-label="${esc(title)}">${list.map(([v, l]) => `<button type="button" class="opt" data-q="${name}" data-v="${v}" aria-pressed="${String(cur) === String(v)}">${esc(l)}</button>`).join("")}</div></div>`;
     const range = P.validDate(S.date) ? `${dayLong(0)} to ${dayLong(S.days - 1)}` : "";
     $("#questions").innerHTML =
@@ -425,9 +426,10 @@
       return `<article class="bday2" id="day-${d.i + 1}"><header class="bday2__h"><span class="bday2__n" lang="ja" aria-hidden="true">${KANJI[d.i] || d.i + 1}</span><div><p class="bday2__k">Day ${d.i + 1} · ${esc(dayShort(d.i))}</p><h3>${dayTitle(d)}</h3></div>${gd.needs && gd.hops ? `<span class="bday2__km" title="Straight-line distance, base to base">${gd.km ? "~" + gd.km + " km" : "In the area"}</span>` : ""}</header>
         <div class="bday2__body">${d.items.length ? `<ul class="bday2__list">${d.items.map(a => `<li>${bImg(a, "bday2__img")}<div class="bday2__b"><span class="bday2__t">${slotTitle(d, a) || "All day"}${a.zone ? " · " + esc(D.zones[a.zone].short) : ""}</span><strong>${esc(a.name)}</strong><span class="bday2__m">${dots(a.ef)}<i>${EF[a.ef] || ""}</i><i>${priceTxt(a)}</i>${a.lunch ? "<i>Lunch included</i>" : ""}</span></div></li>`).join("")}</ul>` : `<p class="bday2__e">${d.edge ? "Leave time for travel." : "Leave time for rest, or something unplanned."}</p>`}
         ${d.extras.length ? `<p class="bday2__x"><b>Also:</b> ${d.extras.map(a => esc(a.name)).join(", ")}</p>` : ""}
+        <details class="bday2__details"${!d.items.length && !d.extras.length ? " hidden" : ""}><summary>Day details</summary>
         ${gd.needs && gd.route.length > 1 ? `<p class="bday2__ride"><svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 5h11l3 4v5H3z M3 10h14 M6.5 16.2a1.4 1.4 0 1 0 .01 0 M13.5 16.2a1.4 1.4 0 1 0 .01 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>Charter van: ${gd.route.map(z => esc(D.zones[z].short)).join(" → ")}</span></p>` : ""}
-        ${note ? `<p class="bday2__note">${esc(note)}</p>` : ""}
-        </div></article>`;
+        ${note ? `<p class="bday2__note">${esc(note)}</p>` : `<p>No additional travel notes.</p>`}
+        </details></div></article>`;
     }).join("");
     const row = (name, sub, val, cls) => `<div class="lrow${cls ? " lrow--" + cls : ""}"><div class="lrow__n">${name}${sub ? `<small>${sub}</small>` : ""}</div><div class="lrow__v">${val}</div></div>`;
     const actRows = plan.days.flatMap(d => d.items.map(a => row(esc(a.name), where2(d, a), priceTxt(a)))).join("") + plan.days.flatMap(d => d.extras.map(a => row(esc(a.name), `Also · Day ${d.i + 1}`, priceTxt(a)))).join("");
@@ -531,7 +533,8 @@
       toast("Started from " + D.courses[c.dataset.course].name + (note.length ? ", " + note.join(", ") : ""), { undo: () => restore(before) });
       return;
     }
-    if (t.closest("#blankStart")) { startBlank(); changed({ restart: true }); return; }
+    if (t.closest("#blankStart")) { S.focus = null; S.target = null; changed({ restart: true }); return; }
+    const aj=t.closest('[data-area-jump]');if(aj){e.preventDefault();const el=document.getElementById(aj.dataset.areaJump);if(el){el.scrollIntoView({behavior:smooth,block:'start'});el.focus({preventScroll:true});}return;}
   }
   document.addEventListener("click", onClick);
   document.addEventListener("change", e => {

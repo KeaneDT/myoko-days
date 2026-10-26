@@ -8,7 +8,7 @@ Created for the SMU sustainability communication project with Patience Capital G
 
 **GitHub Pages · browser-based experience · no account or booking backend**
 
-**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.2.0)**
+**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.3.0)**
 
 ![The live Myoko Days 3D map, rendered in the browser](docs/images/map-overview.png)
 
@@ -19,6 +19,16 @@ Created for the SMU sustainability communication project with Patience Capital G
 **Plan** sets dates, party size, walking preference and accommodation. Start from Restore, Discover or Move, or create an empty itinerary. **Build** connects exploration to decisions: inspect a miniature, read its activity, view fieldwork media, choose a day, then arrange morning and afternoon blocks. **Review** gathers the days, planning costs, written-plan download and trip film into one place.
 
 Trip state stays in the current browser's localStorage. The prototype makes no reservations, accepts no payments and sends no booking enquiries.
+
+## Learn by seeing a place become a day
+
+![First-visit planning demonstration above the map](docs/images/planning-demo.png)
+
+On the first visit to **Build**, a short demonstration opens near the top of the page after the map is ready. It uses the production Daruma Painting miniature, real activity data and the same add-to-day sequence as the planner. It never edits the visitor’s trip or moves the map camera. Close at any time with the X, Escape or the backdrop; **How to plan** replays it later. The demonstration pauses at its final step instead of dismissing itself.
+
+The site has no accounts: a versioned localStorage flag remembers that the example was shown in this browser, with sessionStorage and in-memory fallbacks when storage is unavailable. There are no tracking cookies or cross-device identity checks. Clearing site data, private browsing or another browser can show it again. Reduced-motion preferences use manually advanced still frames.
+
+The landscape keeps one planning dock: Places, activity details and Your days share the same space. Search stays visible; filters and day controls appear when needed. Adding shows a proposed day and block for confirmation, followed by inline **View day / Undo** feedback. On phones the dock expands without introducing another floating map panel. Area questions jump to useful sections; Review uses natural-height day rows instead of stretching them to match the cost checklist.
 
 ## Three ways to feel Myoko
 

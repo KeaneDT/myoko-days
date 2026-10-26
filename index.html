@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="css/v12.css?v=16.2">
 <link rel="stylesheet" href="css/v16.css?v=17.11">
 <link rel="stylesheet" href="css/ux.css?v=1.2.0">
+<link rel="stylesheet" href="css/quiet.css?v=1.3.0">
 <script>document.documentElement.classList.add("js");</script>
 </head>
 <body class="on-home">
@@ -156,14 +157,15 @@
     </header>
     <div class="pageband" data-reveal="img"><img id="aboutImg" src="assets/img/valley-wide.jpg" alt="Wide view over the Myoko valley" loading="lazy" decoding="async"></div>
     <div class="wrap">
-      <section class="arow">
+      <nav class="area-jumps" aria-label="Find an answer"><a href="#about" data-area-jump="area-season">When should I visit?</a><a href="#about" data-area-jump="area-travel">How do I get there?</a><a href="#about" data-area-jump="area-essentials">What should I know?</a><a href="#about" data-area-jump="area-questions">Can I tailor my trip?</a></nav>
+      <section class="arow" id="area-season" tabindex="-1">
         <div data-reveal><p class="label"><span class="label__n">A</span>When</p><h2>Choose your season.</h2></div>
         <div class="arow__body" data-reveal>
           <p>You can plan from July to October. Each activity lists the months it runs.</p>
           <div class="season-notes"><p><b>July–August</b> · Long light evenings, lake days and cool mornings in the highlands.</p><p><b>September–October</b> · Rice harvest, clear air and the first colour on the mountains.</p></div>
         </div>
       </section>
-      <section class="arow">
+      <section class="arow" id="area-travel" tabindex="-1">
         <div data-reveal><p class="label"><span class="label__n">B</span>Getting there</p><h2>Two ways in by rail.</h2></div>
         <div class="arow__body" data-reveal>
           <ol class="timeline">
@@ -174,7 +176,7 @@
           </ol>
         </div>
       </section>
-      <section class="arow">
+      <section class="arow" id="area-essentials" tabindex="-1">
         <div data-reveal><p class="label"><span class="label__n">C</span>Good to know</p><h2>Before you go.</h2></div>
         <div class="arow__body cols2" data-reveal>
           <div><h3>Planning essentials</h3>
@@ -191,10 +193,10 @@
             </ul></div>
         </div>
       </section>
-      <section class="arow">
+      <section class="arow" id="area-questions" tabindex="-1">
         <div data-reveal><p class="label"><span class="label__n">D</span>Questions</p><h2>Asked often.</h2></div>
         <div class="arow__body faq" data-reveal>
-          <details><summary>How do the days arrange themselves?</summary><p>Half-day activities take a morning or afternoon; full-day outings reserve both. Manual additions never move other choices silently. If a block is full, choose where to move an activity or what to remove. Drag a place onto Best Day when you want automatic sorting.</p></details>
+          <details><summary>How do the days arrange themselves?</summary><p>Half-day activities take a morning or afternoon; full-day outings reserve both. Manual additions never move other choices silently. If a block is full, choose where to move an activity or what to remove. Drag a place onto Auto-arrange when you want automatic sorting.</p></details>
           <details><summary>Can I change my saved plan?</summary><p>Yes. Open Build and move or remove activities explicitly. Your choices stay in place until you decide otherwise.</p></details>
           <details><summary>Is it suitable for older parents?</summary><p>Choose "Flat and short" walking when you plan. Activities above that effort level will not be added unless you raise the setting. The setting is a guide to effort, not an accessibility guarantee.</p></details>
                     <details><summary>What if it rains?</summary><p>Keep some free time in your days. Anything that cannot run in bad weather can be moved to another morning or afternoon.</p></details>
@@ -215,12 +217,12 @@
       </div>
     </header>
     <div class="wrap sect sect--tight">
-      <aside class="plan-price-note"><b>A note on prices</b><p>Friday and Saturday nights usually cost more than Sunday–Thursday. Holiday weekends, Obon and peak autumn foliage dates can also be higher. Compare the calendar and nearby dates before choosing. Calendar prices are estimated per room per night; activity prices are per person. Your stay total uses each night’s rate.</p></aside>
+      <aside class="plan-price-note"><p><b>Prices vary with your dates.</b> Friday–Saturday nights and peak dates usually cost more. Compare nightly estimates below.</p><details><summary>How estimates work</summary><p>Holiday weekends, Obon and peak autumn foliage dates can be higher. Calendar rates are estimated per room per night; activities are priced per person. Your stay total adds each night’s rate. These are planning estimates, not live quotes.</p></details></aside>
       <div class="questions" id="questions"></div>
       <div class="rec" id="planRec" aria-live="polite" hidden></div>
-      <div class="plan__pick"><h2>Choose your rhythm.</h2><p>Restore, Discover or Move: three starting itineraries shaped around your dates. Add or change activities on the map.</p></div>
+      <div class="plan__pick"><div><h2>Choose your starting point.</h2><p>Start with Restore, Discover or Move, then make it your own.</p></div><a href="#build" id="blankStart" class="btn btn--ghost">Choose my own activities <span class="arrow" aria-hidden="true"></span></a></div>
       <div class="shapes" id="planCourses"></div>
-      <div class="plan__blank"><p>Prefer to choose everything yourself?</p><a href="#build" id="blankStart" class="btn btn--ghost">Open an empty map <span class="arrow" aria-hidden="true"></span></a></div>
+
     </div>
   </section>
 
@@ -231,13 +233,16 @@
       <section class="studio__map" id="mapWrap" aria-label="Map of Myoko activities">
         <div id="map" class="map" aria-label="Interactive illustrated map of Myoko-area activities. Every activity is also in the Places list."></div>
         <div class="mapfilters" id="mapFilters" role="toolbar" aria-label="Show places by type"></div>
-        <article class="pcard" id="detail" hidden aria-label="Activity details"></article>
+
       </section>
-      <aside class="dock" id="dock" aria-label="Your trip">
+      <aside class="dock" id="dock" aria-label="Your trip"><button type="button" class="dock__resize" data-expand-panel aria-expanded="false">Expand panel ↑</button>
         <aside class="drawer" id="drawer" aria-label="All places" inert></aside>
         <header class="dock__head" id="dockHead"></header>
         <div class="dtabs" id="dockTabs" role="tablist" aria-label="Places or your days"></div>
         <div class="tripset" id="tripSet" hidden></div>
+        <div id="buildReceipt" class="build-receipt" role="status" hidden></div>
+        <article class="pcard" id="detail" hidden aria-label="Activity details"></article>
+
         <div class="dock__panel" id="dockDays" aria-live="polite"></div>
         <footer class="dock__foot" id="dockFoot"></footer>
       </aside>
@@ -264,6 +269,7 @@
   </div>
 </footer>
 
+<dialog id="mapExample" class="map-example example-modal" aria-labelledby="exampleTitle" hidden></dialog>
 <dialog id="filmDialog" class="film-dialog" aria-label="Myoko film"><div class="fd__stage" id="fdStage"><video id="fullFilm" playsinline preload="metadata" poster="assets/video/hero-poster.jpg?v=17.7"><source src="assets/video/hero.mp4?v=17.7" type="video/mp4">Your browser cannot play this film.</video><button type="button" id="filmClose" class="film-close" aria-label="Close film"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button><div class="fd__bar" id="fdBar"><button type="button" id="fdPlay" class="fd__play" aria-label="Pause"><svg class="i-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="i-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button><input id="fdSeek" class="fd__seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek"><span class="fd__time" id="fdTime">0:00 / 0:00</span></div></div><p class="fd__note">Use the written activity details for availability and times.</p></dialog>
 <script src="js/assumptions.js?v=17.0"></script>
 <script src="js/stay.js?v=16.2"></script>
@@ -274,6 +280,6 @@
 <script src="js/media-data.js?v=13.1"></script><script src="js/media.js?v=1.2.0"></script>
 <script src="js/focus-data.js?v=13.1"></script><script src="js/focus.js?v=11.0"></script>
 <script src="js/calendar.js?v=1.2.0"></script>
-<script src="js/app.js?v=1.2.0"></script><script src="js/studio.js?v=1.2.0"></script><script src="js/tiles.js?v=13.1"></script><script src="js/filmplayer.js?v=12.5d"></script>
+<script src="js/app.js?v=1.3.0"></script><script src="js/studio.js?v=1.3.0"></script><script src="js/map-example.js?v=1.3.0"></script><script src="js/tiles.js?v=13.1"></script><script src="js/filmplayer.js?v=12.5d"></script>
 </body>
 </html>
