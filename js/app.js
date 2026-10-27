@@ -550,7 +550,7 @@
       return;
     }
     if (t.closest("#blankStart")) { S.focus = null; S.target = null; changed({ restart: true }); return; }
-    const aj=t.closest('[data-area-jump]');if(aj){e.preventDefault();const el=document.getElementById(aj.dataset.areaJump);if(el){el.scrollIntoView({behavior:smooth,block:'start'});el.focus({preventScroll:true});}return;}
+    const aj=t.closest('[data-area-jump]');if(aj){e.preventDefault();const jump=()=>{const el=document.getElementById(aj.dataset.areaJump);if(el){el.scrollIntoView({behavior:smooth,block:'start'});el.focus({preventScroll:true});}};if(currentView!=='about'){location.hash='#about';requestAnimationFrame(()=>requestAnimationFrame(jump));}else jump();return;}
   }
   document.addEventListener("click", onClick);
   document.addEventListener("change", e => {
@@ -607,7 +607,7 @@
   let currentView = null, blankDefaults = false;   // blankDefaults: the visitor has not been through Plan yet
   function route() {
     const raw = (location.hash || "#home").slice(1);
-    const view = VIEWS.includes(raw) ? raw : "home";
+    const view = raw === "fieldnotes" ? "about" : VIEWS.includes(raw) ? raw : "home";
     const prev = currentView; currentView = view;
     if (view === "plan") { const tb = $("#toasts"); if (tb) tb.innerHTML = ""; if (blankDefaults) { blankDefaults = false; S.stay = "madarao"; S.days = 4; S.placements = {}; save(); } }   // arriving on Plan gives it its own starting answers
     VIEWS.forEach(x => { const el = $("#v-" + x); const on = x === view; el.hidden = !on; if (on) { el.classList.remove("view-in"); void el.offsetWidth; el.classList.add("view-in"); } });
@@ -624,6 +624,7 @@
     if (view === "book") renderBook();
     if (raw === "courses") requestAnimationFrame(() => { const c = $("#courses"); if (c) window.scrollTo({ top: c.getBoundingClientRect().top + window.scrollY - 40, behavior: smooth }); });
     else { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" })); }   // twice: #book is also the id of the Review section, so the browser's own anchor jump would otherwise hide the page head
+    if (raw === "fieldnotes") requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById("area-fieldnotes")?.scrollIntoView({block:"start",behavior:"instant"})));
     onScroll(); reveal();
     const main = $("#main"); if (main && view !== "home") main.focus({ preventScroll: true });
     if (view === "home" || view === "plan") (window.requestIdleCallback || (f => setTimeout(f, 1800)))(warmMap);

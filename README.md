@@ -34,6 +34,16 @@ Rice plots are checked in world coordinates after rotation so neighbouring field
 
 ![Rice fields around the activity miniatures, with translucent controls](docs/images/field-detail.png)
 
+## Field Notes — read the landscape
+
+![Embedded Field Notes journal in The area](docs/images/field-notes.png)
+
+The journal is embedded directly in **The area**. Two compact chapter tabs keep original paper illustrations beside short captions. **Snow & water** unfolds from winter snow through meltwater to rice fields; **Haneuma** reveals the Haneuma motif and its traditional connection to rice-planting preparations.
+
+Each chapter plays a short, paced sequence when visible, then stops. Pause, replay and manual observations remain available. Story progression pauses offscreen and when the browser is hidden; reduced-motion preferences start with a still scene. Place links open an accessible preview over the Area page, with Escape, backdrop and close controls. Only an explicit **Find on planning map** action leaves the journal; **Return to Field Notes** restores the selected chapter, reading position and focus. Browsing never adds activities to the itinerary.
+
+The former #fieldnotes link remains compatible but displays the Area page. Sources are available in a small disclosure. The spring Haneuma story is distinguished from July–October trip planning.
+
 ## Three ways to feel Myoko
 
 ![Restore, Discover and Move: three starting itineraries](docs/images/three-ways.png)

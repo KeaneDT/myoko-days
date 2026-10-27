@@ -1,10 +1,10 @@
 {
   "name": "myoko-days",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "private": true,
   "description": "Myoko Days green-season itinerary builder and illustrated mountain diorama",
   "scripts": {
-    "test": "node verification/verify-v10.cjs && node verification/verify-ux.cjs && node verification/verify-setup.cjs && node verification/verify-polish.cjs && node verification/verify-content-visibility.cjs && node verification/verify-onboarding.cjs && node verification/verify-fields.cjs && node verification/verify-critters.cjs && node verification/verify-grazers.cjs"
+    "test": "node verification/verify-v10.cjs && node verification/verify-ux.cjs && node verification/verify-setup.cjs && node verification/verify-polish.cjs && node verification/verify-journal.cjs && node verification/verify-content-visibility.cjs && node verification/verify-onboarding.cjs && node verification/verify-fields.cjs && node verification/verify-critters.cjs && node verification/verify-grazers.cjs"
   },
   "devDependencies": {
     "pngjs": "7.0.0"

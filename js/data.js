@@ -47,7 +47,7 @@ MD.data = (function () {
     { id: "rice", name: "Rice Harvest & Sasa-zushi", zone: "MK", ll: AS.meeting.rice.ll, geo: "tbc", art: [60, 60], cat: "food",
       u: 1, w: "am", ef: 4, price: 5000, lunch: true, months: [9, 10], host: "Myoko Connect", src: "mates",
       ph: "Rice drying on the bank at harvest",
-      desc: "Help bring in the rice, then wrap sasa-zushi in bamboo leaves. Harvest season only." },
+      desc: "Help bring in the rice, then prepare sasa-zushi with local toppings on bamboo leaves. Harvest season only." },
     { id: "zip", name: "Madarao Forest Zip Line", zone: "MD", ll: [138.2875, 36.84988], geo: "gps", art: [31.31, 90.26], cat: "sky",
       u: 1, w: "am", ef: 5, price: 4500, months: GS, host: "Ryusei Nakano", src: "ours",
       ph: "Zip line through mountain fog",
