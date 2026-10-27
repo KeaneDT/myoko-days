@@ -118,13 +118,13 @@ body.on-home .hd:not(.is-solid) .hd__nav i { color: var(--paper); opacity: .7; }
 main:focus { outline: none; }
 .view-in { animation: viewIn .5s var(--ease) both; }
 @keyframes viewIn { from { opacity: 0; } to { opacity: 1; } }
-.js [data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease); transition-delay: var(--d, 0s); }
+.js [data-reveal] { opacity: 1; transform: none; }
 .js [data-reveal].is-visible { opacity: 1; transform: none; }
 .js [data-reveal="img"] { transform: none; }
 .js [data-reveal="img"] img { transform: scale(1.07); transition: transform 1.3s var(--ease); }
 .js [data-reveal="img"].is-visible img { transform: none; }
-.rise { opacity: 0; transform: translateY(20px); animation: rise .9s var(--ease) forwards; animation-delay: var(--d, 0s); }
-@keyframes rise { to { opacity: 1; transform: none; } }
+.rise { opacity: 1; transform: none; animation: rise .9s var(--ease) forwards; animation-delay: var(--d, 0s); }
+@keyframes rise { from { opacity: .75; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 /* ─── Home: hero ───────────────────────────────── */
 .hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; color: var(--paper); background: var(--ink); }

@@ -1,0 +1,10 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
+const source=fs.readFileSync(path.join(__dirname,'../js/app.js'),'utf8');
+const registration=source.split('\n').find(line=>line.includes("window.addEventListener('md-currency'"));assert.ok(registration);
+const cards=[{dataset:{convert:'54000'},textContent:'SGD 450'},{dataset:{convert:'67000'},textContent:'SGD 558'}];
+const originalNodes=[...cards];let receive,redraws=0,planRenders=0,reviewRenders=0,changes=0;
+const context={currentView:'home',window:{addEventListener:(name,cb)=>{assert.equal(name,'md-currency');receive=cb;}},changed:()=>changes++,$$:selector=>{assert.equal(selector,'#homeCourses [data-convert]');return cards;},sgd:n=>'USD '+(n*.007).toFixed(0),renderHome:()=>{redraws++;},renderPlan:()=>planRenders++,renderBook:partial=>{assert.equal(partial,true);reviewRenders++;}};
+vm.createContext(context);vm.runInContext(registration,context);receive();
+assert.equal(redraws,0,'rate completion must not reconstruct reveal cards or host profiles');assert.equal(cards[0],originalNodes[0]);assert.equal(cards[1],originalNodes[1]);assert.equal(cards[0].textContent,'USD 378');assert.equal(cards[1].textContent,'USD 469');assert.equal(changes,1);
+context.currentView='plan';receive();assert.equal(planRenders,1);context.currentView='book';receive();assert.equal(reviewRenders,1);context.currentView='about';receive();assert.equal(redraws,0);
+console.log('PASS asynchronous currency updates preserve marketing DOM nodes and update only converted home prices; Plan/Review refresh contracts retained.');

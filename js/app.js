@@ -297,7 +297,7 @@
         <ul class="shape__list">${pv.ids.map(id => `<li>${esc(D.byId[id].name)}</li>`).join("")}</ul>
         <p class="shape__drop">${pv.ids.length} ${pv.ids.length === 1 ? "stop" : "stops"} across your days.</p>
         <div class="shape__foot">
-          <div class="shape__price"><small>Activities</small><b>${pv.yen ? yen(pv.yen) : "Free"}</b>${sq.stay ? `<span class="shape__with">With ${esc(sq.option.name)}: <span class="shape__with-n">${sgd(pv.yen + sq.perPerson)}</span> per person</span>` : ""}</div>
+          <div class="shape__price"><small>Activities</small><b>${pv.yen ? yen(pv.yen) : "Free"}</b>${sq.stay ? `<span class="shape__with">With ${esc(sq.option.name)}: <span class="shape__with-n" data-convert="${pv.yen + sq.perPerson}">${sgd(pv.yen + sq.perPerson)}</span> per person</span>` : ""}</div>
           <button type="button" class="link-arrow" data-course="${key}">Start this itinerary ${ARROW}</button>
         </div>
       </div></article>`;
@@ -629,7 +629,7 @@
     if (view === "home" || view === "plan") (window.requestIdleCallback || (f => setTimeout(f, 1800)))(warmMap);
   }
   window.addEventListener("hashchange", route);
-  window.addEventListener('md-currency',()=>{changed({currency:true});if(currentView==='plan')renderPlan();if(currentView==='book')renderBook(true);if(currentView==='home')renderHome();});
+  window.addEventListener('md-currency',()=>{changed({currency:true});if(currentView==='plan')renderPlan();if(currentView==='book')renderBook(true);if(currentView==='home')$$('#homeCourses [data-convert]').forEach(el=>{el.textContent=sgd(Number(el.dataset.convert));});});
 
   /* ---------- public surface for studio.js and the tests ---------- */
   MD.app = {

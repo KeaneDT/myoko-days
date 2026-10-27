@@ -8,7 +8,7 @@ Created for the SMU sustainability communication project with Patience Capital G
 
 **GitHub Pages · browser-based experience · no account or booking backend**
 
-**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.5.0)**
+**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.5.1)**
 
 ![The live Myoko Days 3D map, rendered in the browser](docs/images/map-overview.png)
 
@@ -248,3 +248,10 @@ Visual refinement: consistent hotel/calendar margins, restrained terrain icons, 
 Map-tooltip additions and the Places add buttons open the day/block chooser directly. All places is a working return control with accessible pointer and keyboard input. Distinct, natural-height day cards use one subdued note for travel, open time, full-day outings, transfers and walking/season cautions. Review represents unplanned blocks with light rules and gives all accommodation options the same icon/name/price alignment. Notifications are compact and sit close to the dock footer.
 
 The example cursor travels through coordinates measured from its actual controls, with visible selection and confirmation feedback. Pause/resume, step controls, reduced motion and trip isolation remain supported. Reference notes and duplicate instructions are absent from the visitor interface; detailed modelling information remains in ASSUMPTIONS.md.
+
+
+### Reliable content visibility
+
+Itinerary cards, local profiles and editorial sections are visible by default. Scroll animation only adds a subtle entrance; it never gates access to content. Completing a background exchange-rate request updates converted price text without reconstructing the home page. A regression check protects card/profile identity during these asynchronous updates.
+
+![All four local perspectives restored](docs/images/local-perspectives.png)

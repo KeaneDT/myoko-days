@@ -21,3 +21,7 @@ body.on-build .toasts,body.on-build.drawer-open .toasts{top:auto;bottom:82px;rig
 .bk-cards{align-items:start}.bk-cards>.panel{align-self:start;height:auto;min-height:0}.bk-cards .panel__act{margin-top:18px}.stay-review-grid button{height:140px;min-height:140px;grid-template-rows:18px minmax(42px,1fr) auto}.stay-review-grid b{font-size:17px;min-height:0}.stay-review-grid small{font-size:9px}.plan-price-note{border-bottom:0;margin-bottom:12px}
 @media(max-width:600px){.stay-review-grid button{height:132px;min-height:132px}.stay-review-grid b{font-size:16px}}
 .stay-card:hover{transform:none}
+/* Essential content stays visible even when observers or background requests fail. */
+.js [data-reveal]{opacity:1;transform:none;transition:none}.js [data-reveal].is-visible{opacity:1;transform:none;animation:content-arrive .55s var(--ease) both;animation-delay:var(--d,0s)}.js [data-reveal="img"] img{transform:none}
+@keyframes content-arrive{from{opacity:.75;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.js [data-reveal].is-visible{animation:none}}
