@@ -26,7 +26,7 @@
     if(step===2)return `<div class="example-placement-card"><div class="example-mini-heading">${photo()}<strong>${A.esc(a.name)}</strong></div><label>Add to a day</label><div class="example-real-select">Day 2 · Afternoon <span>⌄</span></div><div class="example-choice-list"><span>Day 1 · Afternoon</span><span>Day 2 · Morning</span><b>Day 2 · Afternoon <i>✓</i></b></div><div class="example-real-button">Confirm activity <span>→</span></div><span class="demo-cursor demo-cursor--confirm" aria-hidden="true">${cursor()}</span></div>`;
     return `<div class="example-result"><div class="example-result-receipt"><span>✓ Added to Day 2 afternoon</span><u>View day</u></div><div class="example-result-heading"><b>Day 2</b><span>MYOKO KOGEN</span></div><div class="example-open-block">Morning <span>Free to explore</span></div><div class="example-planned-block"><span>Afternoon</span><div class="example-model-slot example-model-slot--row" data-example-model></div><div><strong>${A.esc(a.name)}</strong><small>${A.priceTxt(a)}</small></div></div><div class="example-pin-result">${pin()}<b>2</b></div></div>`;
   }
-  function cursor(){return `<svg viewBox="0 0 24 28"><path d="m3 2 17 14-8 1-4 8-5-23Z" fill="#fbf8f0" stroke="#263c32" stroke-width="1.5"/></svg>`;}
+  function cursor(){return `<svg viewBox="0 0 24 28"><path d="M3 2v23l6-7 5 9 4-2-5-9h10Z" fill="#fbf8f0" stroke="#263c32" stroke-width="1.5"/></svg>`;}
   async function loadScript(src){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.head.appendChild(s);});}
   async function bootModel(){
     if(modelBoot)return modelBoot;
@@ -55,13 +55,28 @@
     MyokoKit.setViewport(w,h,Math.min(devicePixelRatio||1,2));renderer.render(scene,camera);u.uRes.value.copy(res);u.uPx.value=px;
     slot.classList.add('is-ready');
   }
+  let pointerAnimations=[];
+  function animatePointer(){
+    pointerAnimations.forEach(a=>a.cancel());pointerAnimations=[];
+    const pointer=box.querySelector('.demo-cursor');if(!pointer||A.reduceMotion||!opened)return;
+    const parent=pointer.parentElement,pr=parent.getBoundingClientRect();
+    const target=step===0?parent.querySelector('.example-real-pin'):parent.querySelector('.example-real-button');if(!target)return;
+    const point=el=>{const r=el.getBoundingClientRect();return{x:Math.max(8,Math.min(pr.width-24,r.left-pr.left+r.width*.72)),y:Math.max(8,Math.min(pr.height-30,r.top-pr.top+r.height*.5))};};
+    const to=point(target),choice=parent.querySelector('.example-choice-list b'),mid=choice?point(choice):to;
+    pointer.style.cssText='left:0;top:0;right:auto;bottom:auto;opacity:1';
+    const frame=(x,y,offset,scale=1,opacity=1)=>({transform:`translate3d(${x}px,${y}px,0) scale(${scale})`,opacity,offset});
+    const frames=choice?[frame(18,32,0,1,0),frame(18,32,.08),frame(mid.x,mid.y,.33),frame(mid.x,mid.y,.39,.88),frame(mid.x,mid.y,.46),frame(to.x,to.y,.70),frame(to.x,to.y,.77,.88),frame(to.x,to.y,.85),frame(to.x,to.y,1)]:[frame(18,30,0,1,0),frame(18,30,.08),frame(to.x*.55,Math.max(12,to.y-45),.28),frame(to.x,to.y,.50),frame(to.x,to.y,.59,.88),frame(to.x,to.y,.67),frame(to.x,to.y,1)];
+    const animation=pointer.animate?.(frames,{duration:DWELL,easing:'cubic-bezier(.25,.1,.25,1)',fill:'both'});if(animation)pointerAnimations.push(animation);
+    const feedback=target.animate?.([{offset:0,boxShadow:'0 0 0 0px #c2a56b00'},{offset:choice?.77:.59,boxShadow:'0 0 0 0px #c2a56b00'},{offset:choice?.84:.67,boxShadow:'0 0 0 6px #c2a56b55'},{offset:1,boxShadow:'0 0 0 10px #c2a56b00'}],{duration:DWELL,fill:'none'});if(feedback)pointerAnimations.push(feedback);
+    if(!playing)pointerAnimations.forEach(a=>a.pause());
+  }
   const DWELL=4200;
   let remaining=DWELL,started=0,renderedStep=-1;
   function stop(preserve=false){if(preserve&&timer!==null)remaining=Math.max(0,remaining-(Date.now()-started));clearTimeout(timer);timer=null;}
   function schedule(){stop();if(playing){started=Date.now();timer=setTimeout(()=>{timer=null;remaining=DWELL;if(step<3){step++;draw();schedule();}else{playing=false;draw();}},remaining);}}
   function draw(){
     if(!box.querySelector('.example-head')){
-      box.innerHTML=`<div class="example-head"><p class="label">How to plan · a quick example</p><button type="button" data-example-close aria-label="Close example">×</button></div><div class="example-stepper" aria-label="Example steps">${['Explore','Details','Choose day','Your day'].map((s,i)=>`<button type="button" data-example-step="${i}">${i+1} · ${s}</button>`).join('')}</div><h3 id="exampleTitle"></h3><div class="example-stage example-stage--real"><div class="example-canvas" aria-hidden="true"></div></div><p class="example-caption" role="status"></p><p class="example-note">Your itinerary stays unchanged.</p><div class="example-controls"><button type="button" data-example-play>Play example</button><button type="button" class="linkbtn" data-example-next>Next →</button></div>`;
+      box.innerHTML=`<div class="example-head"><p class="label">How to plan · a quick example</p><button type="button" data-example-close aria-label="Close example">×</button></div><div class="example-stepper" aria-label="Example steps">${['Explore','Details','Choose day','Your day'].map((s,i)=>`<button type="button" data-example-step="${i}">${i+1} · ${s}</button>`).join('')}</div><h3 id="exampleTitle"></h3><div class="example-stage example-stage--real"><div class="example-canvas" aria-hidden="true"></div></div><p class="example-caption" role="status"></p><div class="example-controls"><button type="button" data-example-play>Play example</button><button type="button" class="linkbtn" data-example-next>Next →</button></div>`;
       renderedStep=-1;
     }
     const stage=box.querySelector('.example-stage'),canvas=box.querySelector('.example-canvas');
@@ -75,9 +90,11 @@
       drawModel();
       if(!A.reduceMotion)canvas.animate?.([{opacity:0,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:460,easing:'cubic-bezier(.22,1,.36,1)',fill:'none'});
       renderedStep=step;
+      const pointerStep=step;if(typeof requestAnimationFrame==='function')requestAnimationFrame(()=>{if(opened&&step===pointerStep)animatePointer();});
     }
     if(playing&&!A.reduceMotion)stage.classList.add('is-playing');
     stage.classList.toggle('is-paused',!playing);
+    pointerAnimations.forEach(a=>playing?a.play():a.pause());
     box.querySelector('[data-example-play]').textContent=playing?'Pause':step===3?'Replay':'Play example';
     const next=box.querySelector('.example-controls .linkbtn');
     next.textContent=step===3?'Try it on my trip →':'Next →';
@@ -88,7 +105,7 @@
     box.hidden=false;draw();box.showModal();remember();drawModel();schedule();box.querySelector('[data-example-close]').focus({preventScroll:true});
   }
   function close(render=true){
-    if(!opened)return;stop();generation++;opened=false;playing=false;box.close();box.hidden=true;dock.classList.remove('has-example');
+    if(!opened)return;stop();pointerAnimations.forEach(a=>a.cancel());pointerAnimations=[];generation++;opened=false;playing=false;box.close();box.hidden=true;dock.classList.remove('has-example');
     if(render){if(opener?.isConnected&&opener!==document.body)opener.focus({preventScroll:true});else document.querySelector('[data-example-open]')?.focus({preventScroll:true});}
   }
   box.addEventListener('click',e=>{

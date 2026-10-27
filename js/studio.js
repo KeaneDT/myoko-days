@@ -64,10 +64,10 @@
     const a = d[slot], usable = slot === "am" ? d.canAM : d.canPM;
     const t = SLOT[slot];
     if(slot==='pm'&&a&&a===d.am)return `<div class="slot slot--continuation"><span class="slot__t">Afternoon</span><p>Reserved for ${esc(a.name)} · full-day outing</p></div>`;
-    if (!usable) return `<div class="slot slot--travel"><span class="slot__t">${t}</span><p class="slot__travel"><svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 5h11l3 4v5H3z M3 10h14 M6.5 16.2a1.4 1.4 0 1 0 .01 0 M13.5 16.2a1.4 1.4 0 1 0 .01 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>${d.edge === "arrival" ? "Travelling to Myoko. Nothing to add here." : "Travelling home. Nothing to add here."}</p></div>`;
-    const light = d.edge && !a ? `<span class="slot__light">${d.edge === "arrival" ? "Arriving by lunchtime? Choose something easy." : "Choose something easy, back in good time."}</span>` : "";
+    if (!usable) return `<div class="slot slot--travel"><span class="slot__t">${t}</span><span class="slot__travel-line" role="img" aria-label="Reserved for travel"></span></div>`;
+    const light = d.edge && !a ? `<span class="slot__light"></span>` : "";
     if (a) return `<div class="slot" data-drop="${d.i}" data-slot="${slot}"><span class="slot__t">${t}</span>${itemRow(a, d)}</div>`;
-    return `<div class="slot slot--empty" data-drop="${d.i}" data-slot="${slot}"><span class="slot__t">${t}</span><div class="slot__empty"><div class="slot__sugs">${suggestions(d, slot)}</div><div class="slot__row"><button type="button" class="linkbtn" data-browse="${d.i}:${slot}">Browse places</button>${light}</div></div></div>`;
+    return `<div class="slot slot--empty" data-drop="${d.i}" data-slot="${slot}"><span class="slot__t">${t}</span><div class="slot__empty"><div class="slot__row"><button type="button" class="linkbtn" data-browse="${d.i}:${slot}">Choose an activity</button>${light}</div></div></div>`;
   }
   function dayCard(d) {
     const tgt = S.target && S.target.day === d.i;
@@ -78,7 +78,7 @@
         ${tgt ? '<span class="dayc__tag">Adding here</span>' : ""}</header>
       ${slotRow(d, "am")}${slotRow(d, "pm")}
       ${d.extras.length ? `<div class="extras" data-dropextra="${d.i}"><span class="slot__t">Also</span><div class="extras__list">${d.extras.map(a => `<span class="chip2" data-flip="${a.id}" data-hover="${a.id}"><button type="button" data-focus="${a.id}">${esc(a.name)}</button><button type="button" data-remove="${a.id}" aria-label="Remove ${esc(a.name)}">×</button></span>`).join("")}</div></div>` : ""}
-      ${note && d.items.length ? `<p class="dayc__note">${esc(note)}</p>` : ""}</section>`;
+      ${note ? `<p class="dayc__note">${esc(note)}</p>` : ""}</section>`;
   }
   function renderDays(plan) {
     SUG = P.suggestPlan(S, 1);
@@ -87,7 +87,7 @@
     const empty = !S.sel.size ? `<div class="starter"><p><b>Your days are empty.</b> Add places from the Places tab, or start from a ready-made trip:</p><div class="starter__row"><button type="button" class="btn btn--sm" data-pane="places">Browse places</button>${["restore", "discover", "active"].map(k => `<button type="button" class="linkbtn" data-restart="${k}">${esc(D.courses[k].name)}</button>`).join("")}</div></div>` : "";
     const over = plan.overflow.length ? `<div class="attn"><b>${plan.overflow.length === 1 ? "One choice needs a block" : plan.overflow.length + " choices need a block"}.</b> ${plan.overflow.map(a => esc(a.name)).join(", ")}. ${plan.overflow.map(a=>`<button type="button" class="linkbtn" data-resolve="${a.id}">Move or remove ${esc(a.name)}</button>`).join(" ")}</div>` : "";
     box.innerHTML = tip + empty + over + plan.days.map(dayCard).join("") +
-      `<div class="dock__more">${S.days < A.MAX_DAYS ? '<button type="button" class="linkbtn" data-addday>Add a day +</button>' : ""}${S.days > A.MIN_DAYS ? '<button type="button" class="linkbtn" data-dropday>Remove last day</button>' : ""}${S.sel.size ? '<button type="button" class="linkbtn" data-clear>Clear all</button>' : ""}</div>`;
+      `<div class="dock__more">${S.days < A.MAX_DAYS ? '<button type="button" class="linkbtn" data-addday>Add a day</button>' : ""}${S.days > A.MIN_DAYS ? '<button type="button" class="linkbtn" data-dropday>Remove last day</button>' : ""}${S.sel.size ? '<button type="button" class="linkbtn" data-clear>Clear all</button>' : ""}</div>`;
     box.scrollTop = top;
   }
   function renderTabs(plan) {
@@ -102,7 +102,7 @@
     const a0 = P.dateAt(S, 0), a1 = P.dateAt(S, S.days - 1), wd = x => x ? x.toLocaleDateString("en-GB", { weekday: "long" }) : "";
     $("#dockHead").innerHTML = `<div class="dk-trip">
       <svg class="dk-trip__art" viewBox="0 0 240 120" aria-hidden="true" focusable="false"><path d="M0 120 L48 62 L72 86 L120 22 L166 80 L190 56 L240 120Z" fill="rgba(196,162,94,.16)"/><path d="M0 120 L40 82 L66 100 L120 44 L170 104 L204 78 L240 120Z" fill="rgba(196,162,94,.12)"/><circle cx="196" cy="26" r="11" fill="none" stroke="rgba(196,162,94,.55)" stroke-width="1.2"/></svg>
-      <div class="dk-trip__top"><p class="dk-trip__eyebrow"><span class="hanko" lang="ja" aria-hidden="true">旅</span>Your trip</p><button type="button" class="dk-help" data-example-open aria-label="Watch a planning example">How to plan</button><button type="button" class="dk-edit" id="tripEdit" aria-expanded="${ui.settings}" aria-controls="tripSet">${ui.settings ? "Done" : "Edit trip"}</button></div>
+      <div class="dk-trip__top"><p class="dk-trip__eyebrow"><span class="hanko" lang="ja" aria-hidden="true">旅</span>Your trip</p><div class="dk-guide">${guideIcons}<button type="button" class="dk-help" data-example-open aria-label="Watch a planning example">How to plan</button></div><button type="button" class="dk-edit" id="tripEdit" aria-expanded="${ui.settings}" aria-controls="tripSet">${ui.settings ? "Done" : "Edit trip"}</button></div>
       <h2 class="dk-trip__dates">${esc(rangeLabel())}</h2>
       <p class="dk-trip__meta">${esc(wd(a0))} to ${esc(wd(a1))} · ${S.days - 1} night${S.days - 1 === 1 ? "" : "s"} · ${esc(S.stay === "own" ? "Staying elsewhere" : MD.stay.OPTIONS[S.stay].name)}</p>
     </div>`;
@@ -125,7 +125,7 @@
     const prevAll = ui.lastTotal == null ? all : ui.lastTotal;
     $("#dockFoot").innerHTML = `<div class="dk-total"><span class="label">Per person</span><b id="dkTotal">${A.sgd(all)}</b><small>${sq.stay ? `Activities ${A.sgd(t.yen)} · Stay ${A.sgd(sq.perPerson)}` : `${yen(t.yen)} · ${ids.length} ${ids.length === 1 ? "activity" : "activities"}`}</small></div><button type="button" class="btn" id="toBook">Review trip ${ARROW}</button>
       <p class="dk-ride" title="Public transport in the valley is limited, so the plan assumes a chartered van on days with something on. This is a group cost for the whole van, not per person."><span class="dk-ride__t"><svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 5h11l3 4v5H3z M3 10h14 M6.5 16.2a1.4 1.4 0 1 0 .01 0 M13.5 16.2a1.4 1.4 0 1 0 .01 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Van · ${g.rideDays} day${g.rideDays === 1 ? "" : "s"}</span><b>${yen(g.total)}</b><small class="dk-ride__n">whole group</small></p>
-      <p class="dk-scope" title="${esc(MD.currency.note())}">${sq.stay ? "Activities and stay, per person. The van is a group cost; rail is extra." : "Activities, per person. The van is a group cost; rail and stay are extra."}</p>`;
+      <p class="dk-scope">${sq.stay ? "Activities and stay, per person. The van is a group cost; rail is extra." : "Activities, per person. The van is a group cost; rail and stay are extra."}</p>`;
     A.countUp($("#dkTotal"), prevAll, all); ui.lastTotal = all;
     $("#daysN") && ($("#daysN").textContent = "");
   }
@@ -183,7 +183,7 @@
     box.innerHTML = `<header class="drawer__head"><div class="drawer__t"><h2>Places <span class="drawer__n">${list.length}</span></h2><p class="drawer__hint">${hint}</p></div>
         <input id="q" type="search" placeholder="Search places" value="${esc(S.query)}" autocomplete="off" aria-label="Search places">
         <button type="button" class="quiet-filter" data-filter-toggle aria-expanded="${ui.filterOpen}">Filters${S.catFilter.length || S.fitsOnly || S.showExtras ? " · on" : ""}</button>${ui.filterOpen ? `<div class="quiet-filter-options">${typeDropdown("drawer")}${tg2}</div>` : ""}<button type="button" class="drawer__x" data-drawer-close aria-label="Hide the list">×</button></header>
-      ${strip}${S.sel.size ? "" : intro()}
+      ${strip}
       <ul class="drawer__list">${list.length ? body : `<li class="drawer__empty"><b>Nothing matches.</b><p>Try another type, or <button type="button" class="linkbtn" data-clearfilters>clear the filters</button>.</p></li>`}</ul>`;
     const ul = box.querySelector(".drawer__list"); if (ul) ul.scrollTop = prevTop;
     if (keepQ) { const q = $("#q"); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
@@ -197,11 +197,7 @@
     return r.ok?{kind:'ok',r}:{kind:'blocked',r};
   }
 
-  let introClosed=false;try{introClosed=localStorage.getItem("md_map_intro_closed")==="1";}catch(e){}
-  function intro() {
-    if(introClosed)return "";
-    return `<div class="quiet-intro"><div class="quiet-intro__path" aria-hidden="true"><span><svg viewBox="0 0 32 32"><path d="M22 13c0 5-6 11-6 11S10 18 10 13a6 6 0 1 1 12 0Z"/><circle cx="16" cy="13" r="2"/><path d="m9 21-4 2v6l11-3 11 3v-6l-4-2"/></svg></span><i><svg viewBox="0 0 24 16"><path d="M2 8h19m-5-5 5 5-5 5"/></svg></i><span><svg viewBox="0 0 32 32"><rect x="4" y="5" width="21" height="22" rx="2"/><path d="M4 18h15M8 14l4-5 6 7M9 22h7"/><circle cx="21" cy="22" r="7" class="quiet-icon-paper"/><path d="M21 18v8m-4-4h8"/></svg></span><i><svg viewBox="0 0 24 16"><path d="M2 8h19m-5-5 5 5-5 5"/></svg></i><span><svg viewBox="0 0 32 32"><rect x="5" y="7" width="23" height="21" rx="2"/><path d="M5 13h23M11 4v6m11-6v6m-11 10 4 4 7-7"/></svg></span></div><b>Find a place. Make it a day.</b><button type="button" class="linkbtn" data-example-open>▷ See how</button><button type="button" class="quiet-intro__close" data-intro-close aria-label="Dismiss planning hint">×</button></div>`;
-  }
+  const guideIcons=`<div class="dk-guide-icons" aria-hidden="true"><span><svg viewBox="0 0 32 32"><path d="M22 13c0 5-6 11-6 11S10 18 10 13a6 6 0 1 1 12 0Z"/><circle cx="16" cy="13" r="2"/><path d="m9 21-4 2v6l11-3 11 3v-6l-4-2"/></svg></span><i><svg viewBox="0 0 24 16"><path d="M2 8h19m-5-5 5 5-5 5"/></svg></i><span><svg viewBox="0 0 32 32"><rect x="4" y="5" width="21" height="22" rx="2"/><path d="M4 18h15M8 14l4-5 6 7M9 22h7"/><circle cx="21" cy="22" r="7" class="quiet-icon-paper"/><path d="M21 18v8m-4-4h8"/></svg></span><i><svg viewBox="0 0 24 16"><path d="M2 8h19m-5-5 5 5-5 5"/></svg></i><span><svg viewBox="0 0 32 32"><rect x="5" y="7" width="23" height="21" rx="2"/><path d="M5 13h23M11 4v6m11-6v6m-11 10 4 4 7-7"/></svg></span></div>`;
   function placementUI(a, r) {
     if(ui.placing !== a.id)return `<button type="button" class="btn pc__add" data-prepare="${a.id}">Add to my trip ${ARROW}</button>`;
     const candidates=P.isAddon(a)?Array.from({length:S.days},(_,day)=>({day,slot:'x'})):P.candidates(a,S);
@@ -238,7 +234,7 @@
   }
   function renderDetail() {
     const box = $("#detail"), a = S.focus && D.byId[S.focus];
-    box.hidden = !a;
+    box.hidden = !a;box.classList.toggle("is-placing",!!a&&ui.placing===a.id);
     $("#studio").classList.toggle("has-card", !!a);
     if (!a) { box.innerHTML = ""; return; }
     const st = addState(a), inT = st.kind === "in";
@@ -248,7 +244,7 @@
     if (inT) action = `<div class="pc__in"><span class="pc__seal" aria-hidden="true">${pl ? pl.day + 1 : "?"}</span><div><b>In your plan</b><span>${esc(whereOf(a, pl) || "Not placed yet")}</span></div></div><div class="pc__row"><button type="button" class="btn btn--ghost btn--sm" data-remove="${a.id}">Remove</button><button type="button" class="linkbtn" data-showrow="${a.id}">Show in your days</button></div>`;
     else action = placementUI(a, st.r);
 
-    box.innerHTML = `<div class="pc__closebar"><button type="button" class="detail-back" data-close>← Back to ${ui.drawer?"places":"your days"}</button><button type="button" class="pc__x" data-close aria-label="Close details">×</button></div><div class="pc__media">${picture(a, "pc__img")}${MD.mediaLibrary[a.id] ? `<button type="button" class="gallery-open" data-gallery="${a.id}">${MD.mediaLibrary[a.id].photos.length} photos · ${MD.mediaLibrary[a.id].videos.length} films <span aria-hidden="true">↗</span></button>` : (a.img ? '<span class="image-caption">Illustrative image</span>' : "")}</div>
+    box.innerHTML = `<div class="pc__closebar"><button type="button" class="detail-back" data-backplaces><span aria-hidden="true">←</span> All places</button><button type="button" class="pc__x" data-close aria-label="Close details">×</button></div><div class="pc__media">${picture(a, "pc__img")}${MD.mediaLibrary[a.id] ? `<button type="button" class="gallery-open" data-gallery="${a.id}">${MD.mediaLibrary[a.id].photos.length} photos · ${MD.mediaLibrary[a.id].videos.length} films <span aria-hidden="true">↗</span></button>` : (a.img ? '<span class="image-caption">Illustrative image</span>' : "")}</div>
       <div class="pc__body"><p class="label">${esc(D.zones[a.zone].short)} · ${esc(A.CATS[a.cat] || "")}${a.src === "desk" ? " · More in the area" : ""}</p><h3>${esc(a.name)}</h3>${a.stops && a.stops.length > 1 && ui.stop != null && a.stops[ui.stop] ? `<p class="pc__stop"><span>Stop ${ui.stop + 1} of ${a.stops.length}</span> ${esc(a.stops[ui.stop].name)}</p>` : ""}<p class="pc__desc">${esc(a.desc)}</p>${a.stops && a.stops.length > 1 ? `<ol class="stops stops--tour" aria-label="Stops, in order">${a.stops.map((st, i) => `<li${ui.stop === i ? ' class="is-here"' : ""}><button type="button" data-stop="${i}" data-stopof="${a.id}">${esc(st.name)}</button></li>`).join("")}</ol>` : ""}
         <p class="pc__line"><span>${P.isLong(a) ? "Full day" : A.lenTxt(a)}</span><span>${price}</span><span>${esc(D.effort[a.ef])}</span></p>
         ${P.isLong(a) ? `<p class="pc__long">A full-day outing reserves both morning and afternoon.</p>` : ""}
@@ -307,7 +303,7 @@
     requestAnimationFrame(() => {
       MD.map.init($("#map"), {
         onPin: (id, o) => openDetail(id, { stop: o && o.stop, focusCard: !!(document.activeElement && document.activeElement.matches && document.activeElement.matches(":focus-visible")) }),
-        onToggle: id => openDetail(id),
+        onToggle: id => S.sel.has(id)?A.removePlace(id):beginPlacement(id),
         onHover: id => hoverRow(id),
         onNotice: m => A.toast(m, { kind: "warn" }),
         onReady: () => { syncMap(); placeInsets(); MD.mapExample?.maybeOpen(); }
@@ -332,6 +328,12 @@
     else if (MD.map.isReady() && A.isPinned(a)) MD.map.focus(id);
     const row = $$("#dockDays [data-flip]").find(e => e.dataset.flip === id); if (row && !narrowQ.matches) row.scrollIntoView({ block: "nearest", behavior: A.smooth });
     if (o.focusCard) { const c = $("#detail .pc__x"); if (c) c.focus({ preventScroll: true }); }
+  }
+  function beginPlacement(id){
+    if(!D.byId[id])return;
+    openDetail(id);ui.placing=id;ui.proposed=null;render();
+    const menu=$('#detail .quiet-placement');if(menu)menu.scrollIntoView({block:'nearest',behavior:A.smooth});
+    $('#placeDestination')?.focus({preventScroll:true});
   }
   function closeDetail() { if (!S.focus) return; const id=S.focus;ui.placing=null; ui.proposed=null; S.focus = null; ui.stop = null; render();const b=document.querySelector(ui.drawer?'#drawer [data-focus="'+id+'"]':'#dockDays [data-focus="'+id+'"]');b?.focus({preventScroll:true}); if (MD.map.isReady()) { placeInsets(); } }
   function hoverRow(id) {
@@ -363,10 +365,11 @@
     if (!ui.active) return;
     const t = e.target;
     if(t.closest('[data-expand-panel]')){const expanded=$('#studio').classList.toggle('is-expanded');const b=t.closest('[data-expand-panel]');b.textContent=expanded?'Show more map ↓':'Expand panel ↑';b.setAttribute('aria-expanded',String(expanded));return;}
-    if(t.closest('[data-intro-close]')){introClosed=true;try{localStorage.setItem("md_map_intro_closed","1");}catch(e){}render();return;}
+
     if(t.closest('[data-example-open]')){MD.mapExample.open();return;}
     if(t.closest('[data-filter-toggle]')){ui.filterOpen=!ui.filterOpen;render();return;}
-    const prep=t.closest('[data-prepare]');if(prep){const id=prep.dataset.prepare;if(S.focus!==id)openDetail(id);ui.placing=id;ui.proposed=null;render();$('#placeDestination')?.focus({preventScroll:true});return;}
+    const prep=t.closest('[data-prepare]');if(prep){beginPlacement(prep.dataset.prepare);return;}
+    if(t.closest('[data-backplaces]')){ui.drawer=true;closeDetail();return;}
     if(t.closest('[data-placement-back]')){ui.placing=null;ui.proposed=null;render();return;}
     const confirm=t.closest('[data-confirm-add]');if(confirm){A.addPlace(confirm.dataset.confirmAdd,{target:ui.proposed});return;}
 

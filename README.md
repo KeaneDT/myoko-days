@@ -8,7 +8,7 @@ Created for the SMU sustainability communication project with Patience Capital G
 
 **GitHub Pages · browser-based experience · no account or booking backend**
 
-**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.4.0)**
+**[Explore the live site](https://keanedt.github.io/myoko-days/) · [Open Build](https://keanedt.github.io/myoko-days/#build) · [Mountain Residents release](https://github.com/KeaneDT/myoko-days/releases/tag/v1.5.0)**
 
 ![The live Myoko Days 3D map, rendered in the browser](docs/images/map-overview.png)
 
@@ -236,8 +236,15 @@ Project photographs, films, illustrations and original code are retained for thi
 
 Plan now asks for traveller and room counts, walking comfort, accommodation preference, and arrival/departure dates. Days and nights are derived from the range (3–7 days, July–October); dates that create scheduling or seasonal issues require confirmation and preserve every activity. Hotel changes preserve dates and placements. Independently booked accommodation is excluded from the total. Rooms assume up to two guests, and traveller prices use adult fares.
 
-A quick suggested-itinerary button goes straight to Review, while the custom map route remains available. Existing selections are reviewed rather than replaced by the quick action. Display currency supports JPY, SGD, USD, EUR, GBP, AUD and HKD via [Frankfurter](https://frankfurter.dev/); conversions are dated reference values with cached/offline handling. All source prices remain JPY. Preferences and rates stay in browser storage; no account is required.
+Restore, Discover and Move offer starting itineraries matched to the visitor’s settings. Build my own plan opens the map while preserving existing selections. Display currency supports JPY, SGD, USD, EUR, GBP, AUD and HKD via [Frankfurter](https://frankfurter.dev/); conversions are dated reference values with cached/offline handling. All source prices remain JPY. Preferences and rates stay in browser storage; no account is required.
 
 This remains a planning prototype. It does not reserve inventory or process payments. Reviewed translations, child-specific fares, detailed transport connections and integrated reservations remain future work. Low walking effort is not a wheelchair-accessibility guarantee.
 
-Visual refinement: consistent hotel/calendar margins, compact illustrated itinerary preview, terrain-based walking icons, reduced copy with optional price/access details, and a dismissible compact map hint. Decide later has been removed; old undecided saves migrate to independently booked accommodation without introducing a stay charge.
+Visual refinement: consistent hotel/calendar margins, restrained terrain icons, capitalised secondary labels and shorter copy. The redundant quick-plan row, temporary disclosures and map-introduction strip are removed. Three small planning symbols live above How to plan in the aligned dock header. Decide later has been removed; old undecided saves migrate to independently booked accommodation without introducing a stay charge.
+
+
+### A quieter Build workspace
+
+Map-tooltip additions and the Places add buttons open the day/block chooser directly. All places is a working return control with accessible pointer and keyboard input. Distinct, natural-height day cards use one subdued note for travel, open time, full-day outings, transfers and walking/season cautions. Review represents unplanned blocks with light rules and gives all accommodation options the same icon/name/price alignment. Notifications are compact and sit close to the dock footer.
+
+The example cursor travels through coordinates measured from its actual controls, with visible selection and confirmation feedback. Pause/resume, step controls, reduced motion and trip isolation remain supported. Reference notes and duplicate instructions are absent from the visitor interface; detailed modelling information remains in ASSUMPTIONS.md.

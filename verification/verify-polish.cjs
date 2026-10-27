@@ -1,0 +1,11 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const src=fs.readFileSync(require('node:path').join(__dirname,'../js/app.js'),'utf8');
+const code=src.slice(src.indexOf('  function dayNote(d) {'),src.indexOf('  const EF ='));
+const ctx={S:{walk:3},P:{caution:a=>a.caution||''}};vm.createContext(ctx);vm.runInContext(code,ctx);
+const activity={ef:2},base={i:1,edge:null,zones:['MK'],items:[],am:null,pm:null,long:false};
+assert.match(ctx.dayNote(base),/open day/i);assert.match(ctx.dayNote({...base,am:activity,items:[activity]}),/Afternoon left open/);assert.match(ctx.dayNote({...base,pm:activity,items:[activity]}),/Morning left open/);
+assert.match(ctx.dayNote({...base,long:true,am:activity,pm:activity,items:[activity]}),/full-day outing/i);
+assert.match(ctx.dayNote({...base,edge:'arrival'}),/journey to Myoko/);assert.match(ctx.dayNote({...base,edge:'departure'}),/journey home/);
+assert.match(ctx.dayNote({...base,zones:['MK','NJ'],am:activity,pm:activity,items:[activity]}),/travel between areas/);
+assert.match(ctx.dayNote({...base,items:[{ef:5,caution:'More walking than you chose; Outside the listed season on this day'}]}),/seasonal dates.*walking preference/);
+console.log('PASS daily notes for open blocks, full-day outings, transfers, travel edges and combined seasonal/walking cautions.');
