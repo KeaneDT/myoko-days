@@ -1,13 +1,15 @@
 /* The Area reads as a journal followed by four distinct planning sections. */
 #v-about {
   --area-text: #33463c;
-  --area-inset: clamp(20px, 3.5vw, 48px);
+  --area-inset: clamp(20px, 4.2vw, 76px);
 }
+
+#v-about .area-content { width: 100%; }
 
 #v-about .area-jumps {
   align-items: center;
   gap: 4px clamp(16px, 2.4vw, 32px) !important;
-  padding: 12px 0 18px;
+  padding: 12px var(--area-inset) 18px;
 }
 #v-about .area-jumps a:nth-child(n) {
   color: var(--area-text);
@@ -22,7 +24,7 @@
 }
 
 #v-about .fn {
-  margin: 0 0 16px;
+  margin: 0;
   padding: var(--area-inset);
   background: #e8eee5;
 }
@@ -56,7 +58,7 @@
 #v-about .arow {
   grid-template-columns: minmax(165px, 1fr) minmax(0, 2.55fr);
   gap: 18px clamp(24px, 4vw, 56px);
-  margin: 0 0 16px;
+  margin: 0;
   padding: var(--area-inset);
   background: var(--area-band);
   scroll-margin-top: 90px;
@@ -120,20 +122,72 @@
 }
 
 #v-about .area-fieldwork {
-  margin: 0 0 16px;
+  margin: 0;
   padding: var(--area-inset);
   background: #f2ede1;
   scroll-margin-top: 90px;
 }
 #v-about .area-fieldwork h2 { font-size: clamp(24px, 2.5vw, 34px); }
-#v-about .area-fieldwork .gallery {
+#v-about .area-hosts {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin: 24px 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  list-style: none;
+  margin: 20px 0 32px;
+  padding: 0;
 }
-#v-about .area-fieldwork .gallery figure { margin: 0; max-width: none; grid-column: auto; }
-#v-about .area-fieldwork .gallery img { width: 100%; aspect-ratio: 3 / 2; height: auto; object-fit: cover; }
-@media (max-width: 650px) {
-  #v-about .area-fieldwork .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+#v-about .area-hosts li {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 14px 16px;
+  border-top: 1px solid #b4aa95;
+  background: #faf8f0;
+}
+#v-about .area-hosts strong { font: 400 clamp(18px, 1.6vw, 24px)/1.25 var(--serif); }
+#v-about .area-hosts span { font: 400 13px/1.45 var(--sans); color: var(--area-text); }
+@media (max-width: 960px) {
+  #v-about .area-hosts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  #v-about .area-hosts { grid-template-columns: minmax(0, 1fr); }
+}
+#v-about .area-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 1.5vw, 24px);
+  margin-block: 12px 32px;
+}
+#v-about .area-photo {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  padding: 0;
+  background: #faf8f0;
+  color: var(--area-text);
+  text-align: left;
+}
+#v-about .area-photo img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+#v-about .area-photo > span {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 8px;
+  padding: 10px 12px;
+  font: 500 13px/1.45 var(--sans);
+}
+#v-about .area-photo:hover > span { text-decoration: underline; text-underline-offset: 3px; }
+#v-about .area-fieldwork__label { font: 500 13px/1.4 var(--sans); letter-spacing: .1em; text-transform: uppercase; }
+#v-about .fieldwork-journal { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 12px; }
+#v-about .fieldwork-journal button { min-width: 0; }
+#v-about .fieldwork-journal img { flex: 0 0 auto; width: clamp(54px, 6vw, 88px); }
+#v-about .fieldwork-journal span { font-size: clamp(16px, 1.65vw, 22px); }
+@media (max-width: 960px) {
+  #v-about .area-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #v-about .fieldwork-journal { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; }
+}
+@media (max-width: 620px) {
+  #v-about .area-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #v-about .fieldwork-journal { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  #v-about .fieldwork-journal button { min-height: 0; }
 }

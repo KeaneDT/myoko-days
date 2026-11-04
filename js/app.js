@@ -306,9 +306,30 @@
     $("#homeCourses").innerHTML = ["restore", "discover", "active"].map((k, i) => courseCard(k, i)).join("");
   }
   function renderArea() {
-    $("#areaHosts").innerHTML = D.hosts.map((h, i) => `<li class="host" data-reveal style="--d:${(i * 0.06).toFixed(2)}s"><span class="host__n">0${i + 1}</span><span class="host__name">${esc(h[0])}</span><span class="host__org">${esc(h[1])}</span><span class="host__role">${esc(h[2])}</span></li>`).join("");
-    $("#fieldworkJournal").innerHTML = ["coffee", "apple", "sake"].map(id => `<button type="button" data-gallery="${id}"><img src="${MD.mediaLibrary[id].photos[0].src}" alt="" loading="lazy"><span><small>From our fieldwork</small>${esc(MD.mediaLibrary[id].name)} <i aria-hidden="true">↗</i></span></button>`).join("");
-    $("#areaGallery").innerHTML = [["naena", 0, "Naena Falls"], ["winery", 0, "St Cousair vineyard"], ["sup", 0, "Lake Nojiri · paddling"], ["soba", 0, "Soba, made by hand"], ["daruma", 0, "Daruma painting"], ["ebike", 1, "Kurohime rice fields"]].map(([id, n, cap]) => `<figure><button type="button" data-gallery="${id}" aria-label="View ${esc(MD.mediaLibrary[id].name)} photos and films"><img src="${MD.mediaLibrary[id].photos[n].src}" alt="${esc(MD.mediaLibrary[id].photos[n].caption)}" loading="lazy" decoding="async"><figcaption>${esc(cap)}<span aria-hidden="true"> ↗</span></figcaption></button></figure>`).join("");
+    $("#areaHosts").innerHTML = D.hosts.map(([name, role, affiliation]) =>
+      `<li><strong>${esc(name)}</strong><span>${esc(role)}</span><span>${esc(affiliation)}</span></li>`
+    ).join("");
+    const fieldwork = ["coffee", "apple", "sake", "culture"];
+    $("#fieldworkJournal").innerHTML = fieldwork.map(id => {
+      const { name, photos } = MD.mediaLibrary[id];
+      const cover = photos[id === "culture" ? 2 : 0];
+      return `<button type="button" data-gallery="${id}"><img src="${esc(cover.src)}" alt="" loading="lazy" decoding="async"><span>${esc(name)} <i aria-hidden="true">↗</i></span></button>`;
+    }).join("");
+    const gallery = [
+      ["naena", 0, "Naena Falls"], ["imori", 1, "Imori-ike Pond"],
+      ["sup", 0, "Paddling on Lake Nojiri"], ["picnic", 0, "Sasagamine Highlands"],
+      ["ebike", 1, "Kurohime Rice Fields"], ["rice", 2, "Rice Harvest"],
+      ["winery", 0, "St Cousair Vineyard"], ["soba", 0, "Soba Made by Hand"],
+      ["daruma", 0, "Daruma Painting"], ["cruise", 2, "Lake Nojiri Island Shrine"],
+      ["forest", 2, "Forest Therapy Walk"], ["zip", 0, "Madarao Forest Zip Line"]
+    ];
+    $("#areaGallery").innerHTML = gallery.map(([id, n, caption]) => {
+      const item = MD.mediaLibrary[id], photo = item.photos[n];
+      return `<button type="button" class="area-photo" data-gallery="${id}" aria-label="View ${esc(item.name)} photos and films">
+        <img src="${esc(photo.src)}" alt="${esc(photo.caption)}" loading="lazy" decoding="async">
+        <span>${esc(caption)} <i aria-hidden="true">↗</i></span>
+      </button>`;
+    }).join("");
   }
 
   /* ---------- day-first date control: three selects, so 7/9 can never be read as 9 July, and no past or out-of-season date can be picked ---------- */
@@ -605,7 +626,7 @@
 
   /* ---------- router ---------- */
   const VIEWS = ["home", "about", "plan", "build", "book"];
-  const TITLES = { home: "Green season in the mountains", about: "The area", plan: "Plan your trip", build: "Build your trip", book: "Review your trip" };
+  const TITLES = { home: "Green season in the mountains", about: "About Myoko", plan: "Plan your trip", build: "Build your trip", book: "Review your trip" };
   let currentView = null, blankDefaults = false;   // blankDefaults: the visitor has not been through Plan yet
   function route() {
     const raw = (location.hash || "#home").slice(1);

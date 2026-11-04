@@ -60,3 +60,25 @@ body.on-build .toasts,body.on-build.drawer-open .toasts{top:auto;bottom:82px;rig
   #homeCourses button[data-course] { border-color: ButtonText; }
   #homeCourses button[data-course]:focus-visible { outline-color: Highlight; }
 }
+
+#v-home .home-next,
+#v-about .area-next {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-inline: 20px;
+}
+#v-home .home-next .btn,
+#v-about .area-next .btn {
+  min-inline-size: 12rem;
+  min-block-size: 48px;
+  justify-content: space-between;
+  padding-inline: 18px;
+}
+#v-home .home-next .btn--ghost,
+#v-about .area-next .btn--ghost { border-color: #8a9588; }
+#v-home .home-next .arrow,
+#v-about .area-next .arrow { width: 22px; }
+#v-about .area-next { padding-block: clamp(28px, 4vw, 56px); }
+#v-about .area-next a[href="#home"] .arrow { transform: rotate(180deg); }

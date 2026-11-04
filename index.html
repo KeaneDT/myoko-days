@@ -24,8 +24,8 @@
 <link rel="stylesheet" href="css/v12.css?v=16.2">
 <link rel="stylesheet" href="css/v16.css?v=17.11">
 <link rel="stylesheet" href="css/ux.css?v=1.2.0">
-<link rel="stylesheet" href="css/quiet.css?v=1.4.1"><link rel="stylesheet" href="css/polish.css?v=1.5.2">
-<link rel="stylesheet" href="css/fieldnotes.css?v=1.2.2"><link rel="stylesheet" href="css/area.css?v=1.1.0">
+<link rel="stylesheet" href="css/quiet.css?v=1.4.1"><link rel="stylesheet" href="css/polish.css?v=1.5.3">
+<link rel="stylesheet" href="css/fieldnotes.css?v=1.2.2"><link rel="stylesheet" href="css/area.css?v=1.2.1">
 <script>document.documentElement.classList.add("js");</script>
 </head>
 <body class="on-home">
@@ -36,7 +36,7 @@
 <header class="hd" id="siteHeader">
   <a class="brand" href="#home" aria-label="Myoko Days, home"><span class="seal seal--peaks" aria-hidden="true"><svg viewBox="0 0 48 32" fill="none"><path d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m9 18 4 3 3-4m7-5 4 4 4-4m6 6 2 3 2-3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M3 31h42" stroke="currentColor" stroke-width=".8"/></svg></span><span class="brand__name">Myoko Days</span></a>
   <nav class="hd__nav" aria-label="Main">
-    <a href="#about" data-nav="about">The area</a>
+    <a href="#about" data-nav="about">About Myoko</a>
     <span class="hd__sep" aria-hidden="true"></span>
     <a href="#plan" data-nav="plan"><i>01</i>Plan</a>
     <a href="#build" data-nav="build"><i>02</i>Build <span class="hd__count" id="navcount" data-n="0" title="Places in your trip"><b id="navn">0</b><em> places</em></span></a>
@@ -95,23 +95,28 @@
       </div>
     </section>
 
-    <div class="sect--tight center"><a class="link-arrow" href="#plan">Plan your trip <span class="arrow" aria-hidden="true"></span></a></div>
+    <div class="sect--tight home-next">
+      <a class="btn" href="#plan">Plan your trip <span class="arrow" aria-hidden="true"></span></a>
+      <a class="btn btn--ghost" href="#about">About Myoko <span class="arrow" aria-hidden="true"></span></a>
+    </div>
   </section>
 
   <!-- ═══════════════ THE AREA ═══════════════ -->
   <section class="view" id="v-about" hidden>
     <header class="pagehead">
-      <div><p class="label label--rule">The area</p><h1>Mountains, lakes, local life.</h1></div>
+      <div><p class="label label--rule">About Myoko</p><h1>Mountains, lakes, local life.</h1></div>
       <p class="lede">Myoko is a hot-spring and mountain area on the Niigata–Nagano border. Known for snow in winter, it has lakes, waterfalls, rice fields and onsen towns the rest of the year.</p>
     </header>
     <div class="pageband" data-reveal="img"><img id="aboutImg" src="assets/img/valley-wide.jpg" alt="Wide view over the Myoko valley" loading="lazy" decoding="async"></div>
-    <div class="wrap">
+    <div class="area-content">
       <nav class="area-jumps" aria-label="Find an answer"><a href="#about" data-area-jump="area-fieldnotes">Field Notes</a><a href="#about" data-area-jump="area-fieldwork">People and places</a><a href="#about" data-area-jump="area-season">When should I visit?</a><a href="#about" data-area-jump="area-travel">How do I get there?</a><a href="#about" data-area-jump="area-essentials">What should I know?</a><a href="#about" data-area-jump="area-questions">Can I tailor my trip?</a></nav>
       <section class="area-fieldwork" id="area-fieldwork" tabindex="-1" aria-labelledby="areaFieldworkTitle">
-        <h2 id="areaFieldworkTitle">The people and places of Myoko.</h2>
-        <ol class="hosts" id="areaHosts"></ol>
-        <div class="gallery" id="areaGallery"></div>
-        <div class="fieldwork-journal" id="fieldworkJournal" aria-label="More fieldwork galleries"></div>
+        <h2 id="areaFieldworkTitle">People who shaped these journeys.</h2>
+        <ul class="area-hosts" id="areaHosts"></ul>
+        <h3 class="area-fieldwork__label" id="areaPhotosTitle">Myoko in pictures</h3>
+        <div class="area-gallery" id="areaGallery" role="group" aria-labelledby="areaPhotosTitle"></div>
+        <h3 class="area-fieldwork__label" id="areaGalleryTitle">From our fieldwork</h3>
+        <div class="fieldwork-journal" id="fieldworkJournal" role="group" aria-labelledby="areaGalleryTitle"></div>
       </section>
       <section class="arow" id="area-season" tabindex="-1">
         <div data-reveal><p class="label"><span class="label__n">A</span>When</p><h2>Choose your season.</h2></div>
@@ -157,7 +162,10 @@
                     <details><summary>What if it rains?</summary><p>Keep some free time in your days. Anything that cannot run in bad weather can be moved to another morning or afternoon.</p></details>
         </div>
       </section>
-      <div class="sect--tight center"><a class="btn" href="#plan">Plan your trip <span class="arrow" aria-hidden="true"></span></a></div>
+      <div class="area-next">
+        <a class="btn btn--ghost" href="#home"><span class="arrow" aria-hidden="true"></span>Back to Home</a>
+        <a class="btn" href="#plan">Plan your trip <span class="arrow" aria-hidden="true"></span></a>
+      </div>
     </div>
   </section>
 
@@ -217,7 +225,7 @@
         <p class="foot__desc">A green-season itinerary builder for Myoko, made for Patience Capital Group.</p>
       </div>
       <div><h4>Plan</h4><ul><li><a href="#plan">01 · Plan a trip</a></li><li><a href="#build">02 · Build on the map</a></li><li><a href="#book">03 · Review your trip</a></li></ul></div>
-      <div><h4>Read</h4><ul><li><a href="#about">The area</a></li><li><a href="#about" data-area-jump="area-fieldnotes">Field Notes</a></li><li><a href="#courses">Three ways to feel Myoko</a></li></ul></div>
+      <div><h4>Read</h4><ul><li><a href="#about">About Myoko</a></li><li><a href="#about" data-area-jump="area-fieldnotes">Field Notes</a></li><li><a href="#courses">Three ways to feel Myoko</a></li></ul></div>
     </div>
     <p class="foot__small">Activity prices are per person; accommodation is per room per night. Prices are estimates. The illustrated map is not to scale.</p>
   </div>
@@ -235,6 +243,6 @@
 <script src="js/focus-data.js?v=13.1"></script><script src="js/focus.js?v=11.0"></script>
 <script src="js/calendar.js?v=1.5.0"></script>
 <script src="js/fieldnotes.js?v=1.3.0"></script>
-<script src="js/setup.js?v=1.4.0"></script><script src="js/currency.js?v=1.4.0"></script><script src="js/app.js?v=1.6.2"></script><script src="js/studio.js?v=1.5.0"></script><script src="js/map-example.js?v=1.5.0"></script><script src="js/tiles.js?v=13.1"></script><script src="js/filmplayer.js?v=12.5d"></script>
+<script src="js/setup.js?v=1.4.0"></script><script src="js/currency.js?v=1.4.0"></script><script src="js/app.js?v=1.6.3"></script><script src="js/studio.js?v=1.5.0"></script><script src="js/map-example.js?v=1.5.0"></script><script src="js/tiles.js?v=13.1"></script><script src="js/filmplayer.js?v=12.5d"></script>
 </body>
 </html>
