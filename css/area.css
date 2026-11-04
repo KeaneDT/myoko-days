@@ -15,6 +15,23 @@
 #v-about .pagehead h1,
 #v-about .pagehead .lede { color: #f9f6ee; }
 #v-about .pagehead .label { color: #e1e9df; }
+#v-about .pagehead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  padding-block: clamp(26px, 3.4vw, 52px);
+}
+#v-about .pagehead > div { gap: 12px; }
+#v-about .pagehead .lede { max-width: 62ch; }
+#v-about .pageband { height: clamp(210px, 25vw, 380px); }
+@media (min-width: 900px) {
+  #v-about .pagehead {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    align-items: end;
+    column-gap: clamp(32px, 5vw, 100px);
+  }
+}
+
 
 #v-about .area-jumps {
   align-items: stretch;
