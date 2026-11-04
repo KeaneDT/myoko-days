@@ -335,9 +335,18 @@ MD.planner = (() => {
     const free=choices.filter(c=>occupiedKeys(a,c).every(k=>!occ.has(k))).sort((x,y)=>unary(a,x,s,placed)-unary(a,y,s,placed));
     if(free.length){const {day,slot}=free[0],p={day,slot,locked:!!target};return{ok:true,placements:{...placed,...addons,[id]:p},placed:p,days:s.days,moved:[],caution:caution(a,s,day)};}
     const conflicts=[...new Set(choices.flatMap(c=>occupiedKeys(a,c).map(k=>occ.get(k))).filter(Boolean))];
-    return{ok:false,code:'conflict',why:choices.length?'There is not enough free time in the selected day or block. Nothing has moved.':target?.slot?slotWhy(a,s,target.day,target.slot)||'This activity needs a different day.':'This activity needs a different day or more time.',conflicts};
+    return{ok:false,code:'conflict',why:choices.length?'There is not enough free time in the selected day or block.':target?.slot?slotWhy(a,s,target.day,target.slot)||'This activity needs a different day.':'This activity needs a different day or more time.',conflicts};
   }
-  function place(s,id,day,slot){if(!s.sel.has(id))return{ok:false,why:'Choose an activity first'};return direct(s,id,{day,slot});}
+  function place(s, id, day, slot) {
+    if (!s.sel.has(id)) return { ok: false, why: 'Choose an activity first' };
+    const target = { day, slot };
+    const result = direct(s, id, target);
+    if (result.ok || !slot || result.conflicts?.length !== 1) return result;
+    const other = result.conflicts[0];
+    const placements = validPlacements(s);
+    if (!placements[id] || !placements[other]) return result;
+    return exchange(s, id, other, target, placements);
+  }
   function placeAddon(s, id, day) {
     const a = D.byId[id];
     if (!addonDayOk(a, s, day)) return { ok: false, why: availability(a, s, day) || (a.slot === 'eve' ? 'An evening is not spent after you leave' : 'That day is outside your trip') };
@@ -360,16 +369,34 @@ MD.planner = (() => {
     const taken = new Set(Object.keys(placedAll).filter(x => x !== id && placedAll[x].day === day).map(x => placedAll[x].slot));
     let last = { ok: false, why: 'No block suits this day' };
     for (const sl of [...SLOTS.filter(x => !taken.has(x)), ...SLOTS.filter(x => taken.has(x))]) {
-      const r = place(s, id, day, sl);
+      const r = direct(s, id, { day, slot: sl });
       if (r.ok) return r;
       last = r;
     }
     return last;
   }
   function swap(s, id, other) {
-    const p = validPlacements(s), x = p[id], y = p[other];
-    if (!x || !y) return { ok: false, why: 'Place both activities before swapping' };
-    return place(s, id, y.day, y.slot);
+    const placements = validPlacements(s);
+    if (id === other || !placements[id] || !placements[other]) {
+      return { ok: false, why: 'Place two different activities before swapping' };
+    }
+    return exchange(s, id, other, placements[other], placements);
+  }
+  function exchange(s, id, other, target, placements) {
+    const origin = placements[id];
+    const cleared = { ...s.placements };
+    delete cleared[id];
+    delete cleared[other];
+    const first = direct({ ...s, placements: cleared }, id, target);
+    if (!first.ok) return first;
+    const second = direct({ ...s, placements: first.placements }, other, origin);
+    if (!second.ok) return { ...second, why: `Can't swap with ${D.byId[other].name}: ${second.why}` };
+    return {
+      ...first,
+      placements: second.placements,
+      swapped: other,
+      moved: [{ id: other, from: placements[other], to: second.placed }]
+    };
   }
 
   /* ---------- arrange: fit everything chosen into the days (used for sample itineraries and setting changes) ---------- */
