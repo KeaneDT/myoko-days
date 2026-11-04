@@ -24,7 +24,7 @@
     if (a.getMonth() === b.getMonth()) return `${a.getDate()} – ${b.getDate()} ${b.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}`;
     return `${a.toLocaleDateString("en-GB", { day: "numeric", month: "short" })} – ${b.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}`;
   }
-  const matches = (a, skipCat) => (skipCat || !S.catFilter.length || S.catFilter.includes(a.cat)) && (!S.zoneFilter || a.zone === S.zoneFilter) && (!S.fitsOnly || !A.caution(a)) && (S.showExtras || a.src !== "desk") && queryOk(a);
+  const matches = (a, skipCat) => (skipCat || !S.catFilter.length || S.catFilter.includes(a.cat)) && (!S.zoneFilter || a.zone === S.zoneFilter) && (!S.fitsOnly || !A.caution(a)) && (S.showExtras || S.query.trim() || a.src !== "desk") && queryOk(a);
   function queryOk(a) { const q = S.query.trim().toLowerCase(); if (!q) return true; return (a.name + " " + a.desc + " " + D.zones[a.zone].name + " " + (A.CATS[a.cat] || "") + " " + a.host).toLowerCase().includes(q); }
   const iconOf = a => (MD.pinArt && MD.pinArt[a.id] && MD.pinArt[a.id].icon) || null;
   const picture = (a, cls) => { const t = A.thumb(a); return t ? `<img class="${cls}" src="${esc(t)}" alt="" loading="lazy" decoding="async">` : `<span class="${cls} ${cls}--ico" aria-hidden="true">${MD.svg(a.cat, 22)}</span>`; };
@@ -75,7 +75,7 @@
     return `<section class="dayc${tgt ? " is-target" : ""}${d.edge ? " dayc--edge" : ""}" data-day="${d.i}">
       <header class="dayc__head"><button type="button" class="dayc__pick" data-pickday="${d.i}" aria-pressed="${!!tgt}" title="${tgt ? "Adding here. Click to let Myoko Days choose" : "Add new places to this day"}"><span class="dayc__n"><b>Day ${d.i + 1}</b><i lang="ja" aria-hidden="true">${JA[d.i] || ""}日目</i></span><span class="dayc__date">${esc(A.dayShort(d.i))}</span></button>
         <span class="dayc__zone">${esc(zoneLine(d) || (d.edge ? (d.edge === "arrival" ? "Arrival" : "Departure") : "An open day"))}</span>
-        ${tgt ? '<span class="dayc__tag">Adding here</span>' : ""}</header>
+        ${tgt ? `<span class="dayc__tag">Adding to Day ${d.i+1}</span><button type="button" class="linkbtn" data-cleartarget>Best day</button>` : ""}</header>
       ${slotRow(d, "am")}${slotRow(d, "pm")}
       ${d.extras.length ? `<div class="extras" data-dropextra="${d.i}"><span class="slot__t">Also</span><div class="extras__list">${d.extras.map(a => `<span class="chip2" data-flip="${a.id}" data-hover="${a.id}"><button type="button" data-focus="${a.id}">${esc(a.name)}</button><button type="button" data-remove="${a.id}" aria-label="Remove ${esc(a.name)}">×</button></span>`).join("")}</div></div>` : ""}
       ${note ? `<p class="dayc__note">${esc(note)}</p>` : ""}</section>`;
@@ -87,13 +87,13 @@
     const empty = !S.sel.size ? `<div class="starter"><p><b>Your days are empty.</b> Add places from the Places tab, or start from a ready-made trip:</p><div class="starter__row"><button type="button" class="btn btn--sm" data-pane="places">Browse places</button>${["restore", "discover", "active"].map(k => `<button type="button" class="linkbtn" data-restart="${k}">${esc(D.courses[k].name)}</button>`).join("")}</div></div>` : "";
     const over = plan.overflow.length ? `<div class="attn"><b>${plan.overflow.length === 1 ? "One choice needs a block" : plan.overflow.length + " choices need a block"}.</b> ${plan.overflow.map(a => esc(a.name)).join(", ")}. ${plan.overflow.map(a=>`<button type="button" class="linkbtn" data-resolve="${a.id}">Move or remove ${esc(a.name)}</button>`).join(" ")}</div>` : "";
     box.innerHTML = tip + empty + over + plan.days.map(dayCard).join("") +
-      `<div class="dock__more">${S.days < A.MAX_DAYS ? '<button type="button" class="linkbtn" data-addday>Add a day</button>' : ""}${S.days > A.MIN_DAYS ? '<button type="button" class="linkbtn" data-dropday>Remove last day</button>' : ""}${S.sel.size ? '<button type="button" class="linkbtn" data-clear>Clear all</button>' : ""}</div>`;
+      `<div class="dock__more">${S.days < A.MAX_DAYS ? `<button type="button" class="linkbtn" data-addday${MD.setup.range(S.date,MD.stay.addDays(S.date,S.days),A.today()).error?' disabled':''}>Add a day</button>` : ""}${S.days > A.MIN_DAYS ? '<button type="button" class="linkbtn" data-dropday>Remove last day</button>' : ""}${S.sel.size ? '<button type="button" class="linkbtn" data-clear>Clear all</button>' : ""}<button type="button" class="linkbtn" data-undo-last${A.undoAvailable()?'':' disabled'}>Undo last change</button></div>`;
     box.scrollTop = top;
   }
   function renderTabs(plan) {
     const box = $("#dockTabs"); if (!box) return;
     const nIn = plan.days.reduce((n, d) => n + d.items.length + d.extras.length, 0) + plan.overflow.length;
-    const nPl = D.activities.filter(a => S.showExtras || a.src !== "desk").length;
+    const nPl = D.activities.filter(a => matches(a)).length;
     const bump = ui.lastIn != null && ui.lastIn !== nIn;
     ui.lastIn = nIn;
     box.innerHTML = `<button type="button" role="tab" id="tab-places" data-pane="places" aria-selected="${ui.drawer}" aria-controls="drawer">Places <b>${nPl}</b></button><button type="button" role="tab" id="tab-days" data-pane="days" aria-selected="${!ui.drawer}" aria-controls="dockDays">Your days <b${bump ? ' class="is-bump"' : ""}>${nIn}</b></button>`;
@@ -115,17 +115,17 @@
     box.innerHTML = `<div class="ts"><div class="ts__row ts__row--col ts__row--date"><span id="ts-date-l">Arrival & departure</span>${A.dateControl("ts-date", S.date)}</div><p class="ts__echo">${esc(A.dayLong(0))} to ${esc(A.dayLong(S.days - 1))}</p>
       <div class="ts__row"><span>Group</span><span>${S.party} travellers · ${S.rooms} rooms <a href="#plan">Edit group & currency</a></span></div>
       <p class="small">Manual additions stay where you choose. Only a drop on Auto-arrange can rearrange activities or extend the trip.</p>
-      <div class="ts__row"><span>Walking</span>${seg("walk", [[3, "Flat & short"], [4, "Some hills"], [5, "Active"]], S.walk)}</div>
+      <div class="ts__row"><span>Activity pace</span>${seg("walk", [[3, "Gentle"], [4, "Moderate"], [5, "Active"]], S.walk)}</div>
       <div class="ts__row ts__row--col"><span>Where you stay</span><div class="ts__stay" role="group" aria-label="Where you stay">${MD.stay.ORDER.map(k => `<button type="button" class="ts__stayb" data-stayset="${k}" aria-pressed="${S.stay === k}"><b>${esc(MD.stay.OPTIONS[k].name)}</b><small>${esc(MD.stay.OPTIONS[k].line)}</small></button>`).join("")}</div></div>
       <div class="ts__row ts__row--col"><span>Start again from</span><div class="ts__starts">${["restore", "discover", "active"].map(k => `<button type="button" class="linkbtn" data-restart="${k}">${esc(D.courses[k].name)}</button>`).join("")}<button type="button" class="linkbtn" data-restart="blank">Start a new trip</button></div></div></div>`;
   }
   function renderFoot(plan) {
     const ids = plan.days.flatMap(d => [...d.items, ...d.extras].map(a => a.id)), t = P.totals({ ...S, sel: new Set(ids) });
-    const g = A.getAround(plan), sq = MD.stay.quote(S), all = t.yen + sq.perPerson;
+    const g = A.getAround(plan), sq = MD.stay.quote(S), all = MD.costs.quote(S,plan).total;
     const prevAll = ui.lastTotal == null ? all : ui.lastTotal;
-    $("#dockFoot").innerHTML = `<div class="dk-total"><span class="label">Per person</span><b id="dkTotal">${A.sgd(all)}</b><small>${sq.stay ? `Activities ${A.sgd(t.yen)} · Stay ${A.sgd(sq.perPerson)}` : `${yen(t.yen)} · ${ids.length} ${ids.length === 1 ? "activity" : "activities"}`}</small></div><button type="button" class="btn" id="toBook">Review trip ${ARROW}</button>
+    $("#dockFoot").innerHTML = `<div class="dk-total"><span class="label">Estimated trip · per person</span><b id="dkTotal">${A.sgd(all)}</b><small>${sq.stay ? "Activities · Stay · Van" : "Activities · Van"}</small></div><button type="button" class="btn" id="toBook">Review trip ${ARROW}</button>
       <p class="dk-ride" title="Public transport in the valley is limited, so the plan assumes a chartered van on days with something on. This is a group cost for the whole van, not per person."><span class="dk-ride__t"><svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M3 5h11l3 4v5H3z M3 10h14 M6.5 16.2a1.4 1.4 0 1 0 .01 0 M13.5 16.2a1.4 1.4 0 1 0 .01 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Van · ${g.rideDays} day${g.rideDays === 1 ? "" : "s"}</span><b>${yen(g.total)}</b><small class="dk-ride__n">whole group</small></p>
-      <p class="dk-scope">${sq.stay ? "Activities and stay, per person. The van is a group cost; rail is extra." : "Activities, per person. The van is a group cost; rail and stay are extra."}</p>`;
+      <p class="dk-scope">Flat ¥30,000 / van / activity day · included above.</p>`;
     A.countUp($("#dkTotal"), prevAll, all); ui.lastTotal = all;
     $("#daysN") && ($("#daysN").textContent = "");
   }
@@ -178,7 +178,7 @@
     });
     const tgl = (k, on, label, tip) => `<button type="button" class="tchip tchip--tgl" data-tgl="${k}" aria-pressed="${on}" title="${esc(tip)}">${on ? "✓ " : ""}${esc(label)}</button>`;
     const hint = narrowQ.matches ? "Press + to add a place to your days." : "Press + to add a place, or drag a card onto a day.";
-    const tg2 = `<div class="drawer__tgls">${tgl("fits", S.fitsOnly, "Fits my dates", "Only show places that suit your dates and walking level")}${tgl("extra", S.showExtras, "Extra ideas", "A few more ideas nearby, without a 3D model")}</div>`;
+    const tg2 = `<div class="drawer__tgls">${tgl("fits", S.fitsOnly, "Matches my preferences", "Only show places that suit your dates and activity pace")}${tgl("extra", S.showExtras, "Extra ideas", "A few more ideas nearby, without a 3D model")}</div>`;
     const fine = `<li class="drawer__note" role="presentation">${narrowQ.matches ? tg2 : ""}<p><b>${narrowQ.matches ? "Press + to add a place." : "Press + to add a place, or drag a card onto a day above."}</b> Some places may involve more walking than you chose, or fall outside the listed season for your dates. You can still add them.</p></li>`;
     box.innerHTML = `<header class="drawer__head"><div class="drawer__t"><h2>Places <span class="drawer__n">${list.length}</span></h2><p class="drawer__hint">${hint}</p></div>
         <input id="q" type="search" placeholder="Search places" value="${esc(S.query)}" autocomplete="off" aria-label="Search places">
@@ -249,7 +249,7 @@
         <p class="pc__line"><span>${P.isLong(a) ? "Full day" : A.lenTxt(a)}</span><span>${price}</span><span>${esc(D.effort[a.ef])}</span></p>
         ${P.isLong(a) ? `<p class="pc__long">A full-day outing reserves both morning and afternoon.</p>` : ""}
         <div class="pc__action">${action}</div>
-        <details class="pc__more"><summary>Details &amp; checks</summary><p class="pc__season"><b>Season</b> ${A.runsTxt(a)}</p>${REQ[a.id] ? `<p class="detail__check">${REQ[a.id]}</p>` : ""}<p class="detail__check">Host: ${esc(a.host)}. Lunch: ${a.lunch ? "included" : "not included"}.</p></details></div>`;
+        <details class="pc__more"><summary>Details &amp; checks</summary><p class="pc__season"><b>Season</b> ${A.runsTxt(a)}</p>${REQ[a.id] ? `<p class="detail__check">${REQ[a.id]}</p>` : ""}<p class="detail__check">Time: ${esc(A.lenTxt(a))}. ${esc(D.effortNotes[a.id]||"")}</p><p class="detail__check">${a.id==="foodwalk"?"Meet at Arai Station.":a.id==="cruise"?"Board at Line Plaza pier.":"Meeting details: confirm with the host."}</p><p class="detail__check">Host: ${esc(a.host)}. Lunch: ${a.lunch ? "included" : "not included"}.</p></details></div>`;
   }
 
   /* ---------- drawing everything ---------- */
@@ -347,14 +347,15 @@
     const a = D.byId[id]; if (!a) return;
     if (fix === "walk") { A.changeSetting("walk", Math.max(3, a.ef)); A.addPlace(id); return; }
     if (fix === "dates") { ui.settings = true; render(); const d = $("#ts-date select"); if (d) d.focus(); return; }
-    if (fix === "extend") { S.days = Math.min(A.MAX_DAYS, S.days + 1); const r = A.addPlace(id); if (!r.ok) { S.days -= 1; } return; }
+    if (fix === "extend") { A.requestPlacement(id,null,"Choose a new arrangement"); return; }
     if (fix.startsWith("swap:")) {
       const out = fix.slice(5), before = A.snap();
-      S.sel.delete(out); delete S.placements[out];
-      const r = P.add(S, id, { lock: false });
+      const next={...S,sel:new Set([...S.sel].filter(key=>key!==out).concat(id)),placements:{...S.placements}};delete next.placements[out];
+      const r = P.add(next, id, { lock: false });
       if (!r.ok) { A.restore(before); A.toast(r.why, { kind: "warn" }); return; }
-      S.sel.add(id); S.placements = r.placements; S.days = r.days || S.days; S.focusNew = id;
-      A.changed({ added: id });
+      const apply=()=>{S.sel=next.sel;S.placements=r.placements;S.days=r.days||S.days;S.focusNew=id;A.changed({added:id,before});};
+      if(A.confirmChange({...next,placements:r.placements,days:r.days||S.days},apply,A.caution(a,r.placed?.day)))return;
+      apply();
       A.toast(`Swapped ${D.byId[out].name} for ${a.name}`, { undo: () => A.restore(before) });
     }
   }
@@ -426,7 +427,7 @@
     if (sr) { S.focus=null;ui.drawer=false;render(); const row = $$("#dockDays [data-flip]").find(x => x.dataset.flip === sr.dataset.showrow); if (row) { row.scrollIntoView({ block: "center", behavior: A.smooth }); row.classList.add("is-new"); setTimeout(() => row.classList.remove("is-new"), 1600); } return; }
     if (t.closest("[data-addday]")) { A.changeSetting("days", Math.min(A.MAX_DAYS, S.days + 1)); return; }
     if (t.closest("[data-dropday]")) { A.changeSetting("days", Math.max(A.MIN_DAYS, S.days - 1)); return; }
-    if (t.closest("[data-clear]")) { A.clearTrip(); return; }
+    if (t.closest("[data-clear]")) { A.confirmAction("Clear your itinerary?","Your activities will be removed.",()=>A.clearTrip(),"Clear itinerary"); return; }
     if (t.closest("[data-refit]")) { const before = A.snap(); A.reconcile(); A.changed(); A.toast("Fitted what could be fitted", { undo: () => A.restore(before) }); return; }
     if (t.closest("#toBook")) { location.hash = "#book"; return; }
   });

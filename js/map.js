@@ -30,7 +30,10 @@ MD.icons = {
 MD.svg = (name, size = 18) =>
   `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${MD.icons[name] || MD.icons.leaf}</svg>`;
 
-MD.map = (function () {
+let myokoMapAssets, myokoMapSerial = 0;
+MD.createMap = function (options = {}) {
+  const instanceId = ++myokoMapSerial;
+  let enabled = true, intersecting = true, previewPinned = false;
   "use strict";
   const D = MD.data;
   const BASE = "assets/diorama/";
@@ -56,7 +59,7 @@ MD.map = (function () {
 
   const loadScript = src => new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => rej(new Error("Couldn't load " + src)); document.head.appendChild(s); });
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  function priceShort(a) { return a.price ? "¥" + a.price.toLocaleString("en-US") : "Free"; }
+  function priceShort(a) { return a.price ? MD.currency.format(a.price) : "Free"; }
   function duration(a) {
     if (a.u === 2) return "Full day";
     if (a.u === 1) return a.w === "am" ? "Half day · Morning" : a.w === "pm" ? "Half day · Afternoon" : "Half day";
@@ -74,7 +77,7 @@ MD.map = (function () {
     overlayEl = document.createElement("div"); overlayEl.className = "imap-overlay";
     tipEl = document.createElement("div"); tipEl.className = "imap-tooltip"; tipEl.hidden = true;
     loadEl = document.createElement("div"); loadEl.className = "dio__load"; loadEl.setAttribute("role", "progressbar"); loadEl.setAttribute("aria-label", "Painting the map"); loadEl.setAttribute("aria-valuemin", "0"); loadEl.setAttribute("aria-valuemax", "100"); loadEl.setAttribute("aria-valuenow", "0");
-    loadEl.innerHTML = `<svg class="dio__peaks" viewBox="0 0 48 32" width="96" height="64" aria-hidden="true"><defs><clipPath id="peakFill"><rect class="dio__fillrect" x="0" y="32" width="48" height="32"/></clipPath></defs><path class="dio__peaks-bg" d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z"/><path class="dio__peaks-fill" clip-path="url(#peakFill)" d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z"/><path class="dio__peaks-line" d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z"/><path class="dio__peaks-snow" d="m9 18 4 3 3-4m7-5 4 4 4-4m6 6 2 3 2-3"/><path class="dio__peaks-base" d="M3 31h42"/></svg><span class="dio__loadtxt">Painting the map <b class="dio__pct">0%</b></span>`;
+    loadEl.innerHTML = `<svg class="dio__peaks" viewBox="0 0 48 32" width="96" height="64" aria-hidden="true"><defs><clipPath id="peakFill${instanceId}"><rect class="dio__fillrect" x="0" y="32" width="48" height="32"/></clipPath></defs><path class="dio__peaks-bg" d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z"/><path class="dio__peaks-fill" clip-path="url(#peakFill${instanceId})" d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z"/><path class="dio__peaks-line" d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z"/><path class="dio__peaks-snow" d="m9 18 4 3 3-4m7-5 4 4 4-4m6 6 2 3 2-3"/><path class="dio__peaks-base" d="M3 31h42"/></svg><span class="dio__loadtxt">Painting the map <b class="dio__pct">0%</b></span>`;
     const cart = document.createElement("div"); cart.className = "imap-cartouche"; cart.setAttribute("aria-hidden", "true");
     cart.innerHTML = `<span class="imap-cartouche__text">Myoko, illustrated · not to scale</span><span class="imap-cartouche__compass" title="North is to the right"><svg viewBox="0 0 30 14" width="28" height="13" fill="none" stroke="currentColor" stroke-width="1"><path d="M1 7h26"/><path d="M20 2l7 5-7 5z" fill="currentColor"/></svg>N</span>`;
     hintEl = document.createElement("div"); hintEl.className = "imap-hint is-gone"; hintEl.setAttribute("aria-hidden", "true");
@@ -89,7 +92,7 @@ MD.map = (function () {
     tipEl.addEventListener("click", e => {
       const b = e.target.closest("[data-tip-pin]"); if (!b) return;
       e.stopPropagation(); hideTip(true);
-      if (cb.onToggle) cb.onToggle(b.dataset.tipPin); else if (cb.onPin) cb.onPin(b.dataset.tipPin);
+      if (b.dataset.tipDetail && cb.onPin) cb.onPin(b.dataset.tipPin); else if (cb.onToggle) cb.onToggle(b.dataset.tipPin); else if (cb.onPin) cb.onPin(b.dataset.tipPin);
     });
     tipEl.addEventListener("pointerenter", () => clearTimeout(tipTimer));
     tipEl.addEventListener("pointerleave", () => hideTip());
@@ -99,6 +102,7 @@ MD.map = (function () {
       <p><i class="dio-key__disc dio-key__disc--in">2</i>Red: in your trip, numbered by day</p>
       <p class="dio-key__over" hidden><i class="dio-key__disc dio-key__disc--in">!</i>In your trip but not in a day yet</p>
       <p class="dio-key__n">Click a place for details. Scroll to zoom, drag to move.</p>`;
+    if(options.preview) key.hidden=true;
     stageEl.append(sceneEl, svgEl, overlayEl, tipEl, cart, key, hintEl, ctl, loadEl);
     // the wheel always zooms toward the cursor, over the canvas, pins, labels and all
     stageEl.addEventListener("wheel", e => {
@@ -140,12 +144,12 @@ MD.map = (function () {
     paintProgress(prog.shown);
     if (prog.shown < 1) prog.raf = requestAnimationFrame(tickProgress); else prog.t = 0;
   }
-  const loadBase = async () => {
+  const loadBase = () => myokoMapAssets || (myokoMapAssets = (async () => {
     if (!window.THREE) await loadScript(THREE_URL);
-    if (!window.MyokoScene) await loadScript(BASE + "kit/scene.js?v=1.3.2");
+    if (!window.MyokoScene) await loadScript(BASE + "kit/scene.js?v=1.3.3");
     await Promise.all(MyokoScene.STYLE_ORDER.map(p => loadScript(BASE + "style/" + p + ".js?v=1.3.2").catch(() => null)));
     if (location.protocol === "file:") await loadScript(BASE + "data/bundle.js").catch(() => null);
-  };
+  })().catch(error => {myokoMapAssets=null;throw error;}));
   let basePromise = null;
   // called when the app is idle: fetches the scripts (no drawing) so opening the map is quicker
   function prefetch() { if (basePromise || swapped) return; basePromise = loadBase().catch(() => null); }
@@ -179,7 +183,8 @@ MD.map = (function () {
     bindPointer();
     scene.on("move", positionOverlay);
     // pause while off-screen (list view, another page) or hidden
-    if ("IntersectionObserver" in window) new IntersectionObserver(es => es.forEach(en => scene.setActive(en.isIntersecting))).observe(rootEl);
+    if ("IntersectionObserver" in window) new IntersectionObserver(es => es.forEach(en => (intersecting=en.isIntersecting, scene.setActive(enabled && intersecting)))).observe(rootEl);
+    scene.setActive(enabled && intersecting);
     ready = true;
     resize(); if (!phoneHome(true)) scene.go(0, 0, START_ZOOM);
     if (lastState) update(lastState, lastPlan);
@@ -193,7 +198,7 @@ MD.map = (function () {
   // there is only one map: the 3D diorama. If it can't start (no WebGL), say so; every place is still in the Places list.
   function fallBack() {
     if (swapped) return; swapped = true;
-    if (loadEl) { loadEl.removeAttribute("role"); loadEl.innerHTML = '<span class="dio__loadtxt">The 3D map needs WebGL, which this browser has turned off. Every place is still in the Places list.</span>'; }
+    if (loadEl) { loadEl.removeAttribute("role"); loadEl.innerHTML = options.preview ? '<img class="explore-fallback" src="docs/images/map-overview.png" alt="Illustrated map of Myoko’s mountains, villages and lakes"><span class="dio__loadtxt">3D exploration is unavailable in this browser.</span>' : '<span class="dio__loadtxt">The 3D map needs WebGL, which this browser has turned off. Every place is still in the Places list.</span>'; }
   }
 
   /* ---------------------------------------------------------------- records */
@@ -328,8 +333,14 @@ MD.map = (function () {
     if (!rec) return;
     clearTimeout(tipTimer);
     const a = rec.a;
+    if(options.preview){
+      const photos=MD.mediaLibrary?.[a.id]?.photos || [];
+      tipStop=stop ? stop.i : -1;
+      tipEl.innerHTML=`<div class="imap-tooltip__title">${esc(stop ? stop.name : a.name)}</div>${photos.length ? `<div class="explore-photos" aria-label="${esc(a.name)} photos">${photos.map(p=>`<img src="${esc(p.src)}" alt="${esc(p.caption)}" loading="lazy">`).join('')}</div><button class="explore-gallery-link" type="button" data-gallery="${a.id}">View gallery <span aria-hidden="true">↗</span></button>` : a.img ? `<img class="explore-photo" src="assets/img/${esc(a.img)}.jpg" alt="${esc(a.ph || a.name)}">` : ''}`;
+      tipEl.hidden=false;tipRec=rec;positionTip();return;
+    }
     let act = "";
-    if (rec.state === "in") act = `<button type="button" class="imap-tooltip__act" data-tip-pin="${a.id}">${rec.day ? "In Day " + rec.day : "Not scheduled"} · Remove</button>`;
+    if (rec.state === "in") act = `<button type="button" class="imap-tooltip__act" data-tip-pin="${a.id}" data-tip-detail="true">${rec.day ? "In Day " + rec.day : "Not scheduled"} · View activity</button>`;
     else if (rec.state === "off") act = `<span class="imap-tooltip__reason">${esc(rec.offReason)}</span>`;
     else if (a.closed) act = `<span class="imap-tooltip__reason">${esc(a.closed)}</span>`;
     else act = `<button type="button" class="imap-tooltip__act imap-tooltip__act--add" data-tip-pin="${a.id}">Add to my days</button>`;
@@ -341,9 +352,11 @@ MD.map = (function () {
     tipEl.hidden = false; tipRec = rec; positionTip();
   }
   function hideTip(now) {
+    if(options.preview && previewPinned && !now)return;
+    if(now)previewPinned=false;
     clearTimeout(tipTimer);
     const go = () => { tipEl.hidden = true; tipRec = null; };
-    if (now) go(); else tipTimer = setTimeout(go, 260);
+    if (now) go(); else tipTimer = setTimeout(go, options.preview ? 650 : 260);
   }
   function positionTip() {
     if (!tipRec || tipEl.hidden) return;
@@ -589,12 +602,12 @@ MD.map = (function () {
   }
 
   return {
+    setActive(on) {enabled=!!on;if(scene)scene.setActive(enabled && intersecting);if(!enabled)hideTip(true);},
+    inspect(id) {if(byId[id]){showTip(byId[id]);previewPinned=true;}},
     init, update, focus, focusStop, showDay, overview, resize, setRoute, hover, setInsets, prefetch, pulse,
     setBase() {}, set3D() {},
     isReady: () => ready,
     instance: () => (scene ? { getZoom: () => scene.view.zoom, isFallback: () => false, isHD: () => true, scene } : null)
   };
-})();
-
-
-
+};
+MD.map = MD.createMap();

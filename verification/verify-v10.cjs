@@ -47,7 +47,7 @@ test('with growth off, a full trip returns options instead of blocking silently'
   if(blocked){assert.ok(blocked.why);assert.ok(Array.isArray(blocked.options));}
 });
 test('walking level and season never block adding; they only add a note (v12)',()=>{
-  const s=state([],{walk:3});const before=JSON.stringify(s.placements);const r=P.add(s,'sup',{});assert.equal(r.ok,true);assert.ok(/walking/i.test(r.caution),'a walking note');assert.equal(JSON.stringify(s.placements),before,'the input state is not mutated');
+  const s=state([],{walk:3});const before=JSON.stringify(s.placements);const r=P.add(s,'sup',{});assert.equal(r.ok,true);assert.ok(/preference/i.test(r.caution),'a walking note');assert.equal(JSON.stringify(s.placements),before,'the input state is not mutated');
   const w=state([],{date:'2027-06-10',month:6});const r2=P.add(w,'rice',{});assert.equal(r2.ok,true);assert.ok(/season/i.test(r2.caution),'a season note');
   const c={...D.byId.sup,closed:'Closed for the season'};assert.ok(P.availability(c,s),'a genuinely closed activity is still unavailable');
   assert.ok(!P.availability(D.byId.rice,w),'out of season is not a hard block');

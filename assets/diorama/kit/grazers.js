@@ -18,8 +18,11 @@ window.MyokoGrazers = (function () {
       knee.add(kit.cyl(width*.65,width*.48,lower,body,{y:-lower,segments:8}),foot);
       return {hip,knee,foot,upper,lower};
     }
+    const RESIDENT_SCALE=1.5;
+
     function horse(){
-      const root=new T.Group(),rig=new T.Group();root.name='haneuma-horse';root.add(rig);rig.scale.setScalar(110);
+      const scale=110*RESIDENT_SCALE;
+      const root=new T.Group(),rig=new T.Group();root.name='haneuma-horse';root.add(rig);rig.scale.setScalar(scale);
       const coat=kit.tone('sumi',.11),warm=kit.tone('sumi',.18),dark=kit.tone('sumi',-.06),nose=kit.tone('sumi',.24);
       const torso=new T.Group();rig.add(torso);
       torso.add(sphere(coat,0,1.66,0,1.45,.62,.52),sphere(warm,.87,1.67,0,.62,.69,.52),sphere(coat,-1.05,1.77,0,.65,.64,.55));
@@ -41,10 +44,11 @@ window.MyokoGrazers = (function () {
       for(let i=0;i<4;i++){const g=new T.Group();if(i)g.position.set(-.11,-.28,0);par.add(g);g.add(sphere(dark,-.06,-.20,0,.12-i*.018,.30,.11-i*.014));tailParts.push(g);par=g;}
       const legs=[leg(torso,.92,1.59,.38,.76,.70,.115,coat,dark),leg(torso,.92,1.59,-.38,.76,.70,.115,coat,dark),
         leg(torso,-1.04,1.62,.39,.79,.70,.14,coat,dark),leg(torso,-1.04,1.62,-.39,.79,.70,.14,coat,dark)];
-      return {root,rig,torso,neck,head,jaw,ears,tail,tailParts,legs,scale:110};
+      return {root,rig,torso,neck,head,jaw,ears,tail,tailParts,legs,scale};
     }
     function rabbit(){
-      const root=new T.Group(),rig=new T.Group();root.name='madarao-rabbit';root.add(rig);rig.scale.setScalar(90);
+      const scale=90*RESIDENT_SCALE;
+      const root=new T.Group(),rig=new T.Group();root.name='madarao-rabbit';root.add(rig);rig.scale.setScalar(scale);
       const fur=kit.tone('hinoki',-.38),light=kit.tone('tonoko',.12),dark=kit.tone('sumi',.02),inner=kit.tone('kuchiba',-.15);
       const torso=new T.Group();rig.add(torso);
       torso.add(sphere(fur,-.18,.57,0,.78,.51,.43),sphere(fur,-.56,.62,0,.51,.55,.44),sphere(light,.35,.48,0,.35,.35,.32),sphere(light,-1.01,.65,0,.22,.22,.20));
@@ -61,13 +65,13 @@ window.MyokoGrazers = (function () {
         const f=new T.Group();f.position.set(.44,.42,sd*.25);f.add(sphere(fur,0,-.16,0,.10,.24,.10),sphere(light,.10,-.36,0,.20,.085,.12));torso.add(f);front.push(f);
         const h=new T.Group();h.position.set(-.55,.42,sd*.32);h.add(sphere(fur,0,0,0,.31,.38,.24),sphere(light,.16,-.35,.015,.34,.09,.15));torso.add(h);hind.push(h);
       });
-      return {root,rig,torso,head,ears,front,hind,scale:90};
+      return {root,rig,torso,head,ears,front,hind,scale};
     }
     const schedules={horse:[['walk',12],['settle',2],['graze',15],['listen',6],['dash',4],['settle',3],['rest',8]],
       rabbit:[['rest',4],['graze',9],['listen',3],['hop',4.6],['rest',4],['hop',2.3],['graze',7]]};
     function stateAt(time,schedule){let t=time%schedule.reduce((n,s)=>n+s[1],0);for(const [state,duration]of schedule){if(t<duration)return{state,local:t,duration};t-=duration;}return{state:'rest',local:0,duration:1};}
-    const actors=[{key:'horse',home:{x:-4000,z:-13000,R:1050},radius:355,ax:380,az:250,rig:horse()},
-      {key:'rabbit',home:{x:-2400,z:12600,R:730},radius:150,ax:260,az:170,rig:rabbit()}];
+    const actors=[{key:'horse',home:{x:-4000,z:-13000,R:1050},radius:355*RESIDENT_SCALE,ax:380,az:250,rig:horse()},
+      {key:'rabbit',home:{x:-2400,z:12600,R:730},radius:150*RESIDENT_SCALE,ax:260,az:170,rig:rabbit()}];
     const shadowGeo=new T.CircleGeometry(1,24);shadowGeo.rotateX(-Math.PI/2);
     actors.forEach(a=>{a.time=0;a.distance=0;a.v=0;a.phase=0;a.lastHop=0;a.state='rest';
       a.shadow=new T.Mesh(shadowGeo,new T.MeshBasicMaterial({color:0x344136,transparent:true,opacity:.15,depthWrite:false}));a.shadow.renderOrder=1;
@@ -145,7 +149,7 @@ window.MyokoGrazers = (function () {
         if(!clear()){let low=joint.rotation.z,high=0;for(let i=0;i<10;i++){joint.rotation.z=(low+high)/2;joint.updateMatrixWorld(true);if(clear())high=joint.rotation.z;else low=joint.rotation.z;}joint.rotation.z=high;joint.updateMatrixWorld(true);}
       }
       a.shadow.visible=true;a.shadow.position.set(p.x,gy(p.x,p.z)+4,p.z);a.shadow.rotation.y=-hd;
-      a.shadow.scale.set(a.key==='horse'?210:90,1,a.key==='horse'?72:48);a.shadow.material.opacity=.15*(1-air/110);
+      a.shadow.scale.set((a.key==='horse'?210:90)*RESIDENT_SCALE,1,(a.key==='horse'?72:48)*RESIDENT_SCALE);a.shadow.material.opacity=.15*(1-air/110);
       if(a.key==='horse'&&a.haze){const u=a.haze,d=root.position.distanceTo(u.uCamPos.value)/Math.max(1,u.uViewDist.value);a.shadow.material.opacity*=1-.65*smooth((d-.65)/1.25);}
       root.userData.motion={state:a.state,x:a.x,z:a.z,air:a.air,distance:a.distance,routeScale:a.path.scale};
     }

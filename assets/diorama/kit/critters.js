@@ -90,7 +90,8 @@ window.MyokoCritters = (function () {
     }
 
     /* ================================================================ THE FOX */
-    const SF = 125;                                                    // model units to metres: a fox about 350 m long
+    const RESIDENT_SCALE = 1.5;
+    const SF = 125 * RESIDENT_SCALE;
     const FOX = { hipY: 0.72, up: 0.36, low: 0.34 };
     function makeFox() {
       const white = kit.tone("gofun", -0.03), cream = kit.tone("tonoko", 0.42), warm = kit.tone("kuchiba", 0.3), dark = kit.tone("sumi", 0.06), red = kit.mat.shu;
@@ -289,7 +290,7 @@ window.MyokoCritters = (function () {
       poseFox(f, P);
       const ground = gy(f.x, f.z), ahead = gy(f.x + Math.cos(f.hd) * 110, f.z + Math.sin(f.hd) * 110), behind = gy(f.x - Math.cos(f.hd) * 110, f.z - Math.sin(f.hd) * 110);
       const root = f.rig.root;
-      root.position.set(f.x, ground + 4 + height, f.z);
+      root.position.set(f.x, ground + 4 + (SF - 125) * 0.08 + height, f.z);
       root.rotation.order = "YZX"; root.rotation.set(0, -f.hd, Math.atan2(ahead - behind, 220) * 0.8 * (height > 0 ? 0 : 1));
       root.scale.setScalar(Math.max(0.001, grow * gate));
       const sh = f.shadow; sh.position.set(f.x, ground + 5, f.z); sh.rotation.y = -f.hd;
@@ -301,7 +302,7 @@ window.MyokoCritters = (function () {
     }
 
     /* ================================================================ THE SNAKE (v19: one continuous skin) */
-    const SNAKE_LENGTH = 580, BODY_SPANS = 96, BODY_SIDES = 12;
+    const SNAKE_LENGTH = 580 * RESIDENT_SCALE, BODY_SPANS = Math.round(96 * RESIDENT_SCALE), BODY_SIDES = 12;
     const kurPk = peakOf("Mt Kurohime");
     const houseBlocks = ((L.houses && L.houses.items) || []).map(h => ({ x: h[0], z: h[1], r: h[2] * 0.9 + 80 }));
     let fieldBlocks = [];
@@ -332,7 +333,7 @@ window.MyokoCritters = (function () {
         const path = new T.CatmullRomCurve3(points, true, "centripetal");
         path.arcLengthDivisions = 2048; path.updateArcLengths();
         const length = path.getLength();
-        let safe = length > SNAKE_LENGTH * 3;
+        let safe = length > SNAKE_LENGTH * 2;
         for (let d = 0; safe && d < length; d += 8) {
           const p = path.getPointAt(d / length);
           for (let j = 0; j < 8; j++) {
@@ -429,7 +430,7 @@ window.MyokoCritters = (function () {
       const wantLift = s.st === "look" ? 27 * paused * smooth(s.t / 0.8) : 0;
       s.lift = lerp(s.lift, wantLift, 1 - Math.exp(-3 * dt));
       const ud = s.obj.userData, arr = ud.body.geometry.attributes.position.array;
-      const sc = gate;
+      const sc = gate * RESIDENT_SCALE;
       s.obj.visible = sc > 0.015;
       const centers = ud.centers; centers.length = 0;
       for (let i = 0; i <= BODY_SPANS; i++) {

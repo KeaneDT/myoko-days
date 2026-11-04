@@ -96,9 +96,9 @@ MD.data = (function () {
 
     // ---------- More in the Myoko area (desk research) ----------
     { id: "tsubame", name: "Tsubame Onsen Outdoor Bath", zone: "MK", ll: [138.14111, 36.90258], geo: "pub", art: [50.4, 36.99], cat: "onsen",
-      u: 1, w: "pm", ef: 3, price: 0, months: [5, 6, 7, 8, 9, 10, 11], host: "Free public bath", src: "desk",
+      u: 1, w: "pm", ef: 4, price: 0, months: [5, 6, 7, 8, 9, 10, 11], host: "Free public bath", src: "desk",
       ph: "Milky hot spring by a mountain river",
-      desc: "A free milky-white hot spring by a river, 15 minutes up a mountain trail. Open early May to early November." },
+      desc: "Milky-white outdoor baths above Tsubame Onsen village, reached by a steep mountain path. Check the bath and approach are open before visiting." },
     { id: "onsen", name: "Evening Onsen Hopping", zone: "MK", ll: [138.17683, 36.89437], geo: "pub", art: [48.5, 47.81], cat: "onsen",
       u: 0, slot: "eve", ef: 1, price: AS.price.onsen, months: ALL, host: "Onsen towns", src: "desk",
       ph: "Steam rising over an outdoor bath",
@@ -116,7 +116,7 @@ MD.data = (function () {
       ph: "Cosmos field with mountains behind",
       desc: "A million cosmos at their peak from mid-September, with a panoramic lift over Lake Nojiri." },
     { id: "foodwalk", name: "Arai Food Walk", zone: "AR", ll: [138.25562, 37.02684], geo: "pub", art: [91.3, 72.53], cat: "food",
-      u: 2, w: "full", ef: 3, price: 11300, lunch: true, months: [5, 6, 7, 8, 9, 10], host: "Heartland Japan", src: "desk",
+      u: 2, w: "full", ef: 4, price: 11300, lunch: true, months: [5, 6, 7, 8, 9, 10], host: "Heartland Japan", src: "desk",
       ph: "Miso barrels in a cellar",
       desc: "Six hours on foot around Arai: rice balls, miso, kanzuri and sake. 4.4 km, flat. Starts at Arai Station." },
     { id: "farmers", name: "Farmers' Shop at Road Station Arai", zone: "AR", ll: [138.22589, 37.02612], geo: "pub", art: [89.64, 65.26], cat: "food",
@@ -189,10 +189,10 @@ MD.data = (function () {
   };
 
   const hosts = [
-    ["Kotaro Nomura", "Myoko Coffee", "A café perspective on local life"],
-    ["Seiko Ohata", "Myoko Connect", "Licensed English guide-interpreter"],
-    ["Nanase Iyoshi", "E-bike guide", "Rides the Kurohime farm roads"],
-    ["Haruna Maruyama", "SLOPE PLANNING", "Paddleboard guide on Lake Nojiri"]
+    ["Kotaro Nomura", "Local café perspective", "Myoko Coffee"],
+    ["Seiko Ohata", "Licensed English guide-interpreter", "Myoko Connect"],
+    ["Nanase Iyoshi", "E-bike guide", "Kurohime farm roads"],
+    ["Haruna Maruyama", "Paddleboard guide", "SLOPE PLANNING · Lake Nojiri"]
   ];
 
   const months = { 7: "July", 8: "August", 9: "September", 10: "October" };
@@ -210,7 +210,8 @@ MD.data = (function () {
 
   return {
     photos, zones, activities, courses, stations, peaks, landmarks, bases, transport, hosts, months, events,
-    effort: ["", "Seated", "Gentle", "Easy", "Moderate", "Active"],
+    effort: ["", "Gentle", "Gentle", "Gentle", "Moderate", "Active"],
+    effortNotes: {naena:"Stairs, uneven paths and a suspension bridge.",tsubame:"A steep approach on a mountain path; not a summit climb.",winery:"Short walks around the grounds.",culture:"Short walks between cultural stops.",sup:"Balance and sustained paddling.",kayak:"Sustained paddling; some upper-body effort.",zip:"Active movement and height exposure; operator limits apply.",ebike:"Assisted cycling on farm roads.",mtmyoko:"A full-day mountain ascent on demanding terrain.",foodwalk:"Six hours on foot, including stops."},
     walk: [[3, "Flat and short"], [4, "Some hills and steps"], [5, "Active days"]],
     who: [["couple", "Couple"], ["family", "Family with parents"], ["friends", "Friends"], ["solo", "Solo"]],
     yenPerSgd: AS.yenPerSgd,

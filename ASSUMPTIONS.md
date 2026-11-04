@@ -8,7 +8,7 @@ Room rates are modelled, not quoted. They are priced by the night of arrival, pe
 
 | ID | Assumption | Value | Used in | Basis | To confirm with |
 |---|---|---|---|---|---|
-| A-S1 | Six Senses Myoko is open and bookable on every date the site offers | Open year-round, including green season | js/stay.js, Plan page | Six Senses Myoko is planned as a year-round destination. PCG's own target for opening is later than the dates the prototype accepts, so the site treats it as operating. | PCG to confirm opening date and green-season operation |
+| A-S1 | Six Senses Myoko is open and bookable on every date the site offers | Open year-round, including green season | js/stay.js, Plan page | Six Senses Myoko is planned as a year-round destination. User-approved presentation scenario (3 November 2026): the destination is presented as operating after Six Senses opens; selectable calendar years are illustrative and do not establish actual opening or availability. | PCG to confirm opening date and green-season operation |
 | A-S2 | Madarao Kogen Hotel, weeknight room rate | ¥18,000 per room per night | js/stay.js | Modelled for a green-season midweek night, room only, tax included. | PCG revenue team |
 | A-S3 | Lime Resort Myoko, weeknight room rate | ¥34,000 per room per night | js/stay.js | Modelled as a step above Madarao for a wellness resort with onsen. | PCG revenue team |
 | A-S4 | Six Senses Myoko, weeknight room rate | ¥95,000 per room per night | js/stay.js | Modelled for a luxury suite with private onsen. | PCG revenue team / Six Senses |
@@ -36,7 +36,8 @@ Transport figures used to total a trip.
 
 | ID | Assumption | Value | Used in | Basis | To confirm with |
 |---|---|---|---|---|---|
-| A-T1 | Chartered van | ¥30,000 per day for the group | js/app.js (getAround) | About five hours of hire a day for a nine-seat van with driver, fuel and tolls, at about ¥6,000 an hour. | PCG transport |
+| A-T1 | Chartered van | ¥30,000 per day for the group | js/app.js (getAround) | User-approved flat group charge for each day with scheduled activities, including local or free activities. Modelled nine-seat van with driver, fuel and tolls; shared by the entered party size. | PCG transport |
+| A-T4 | Nagano–Myoko-Kogen return rail | ¥1,700 per adult | js/costs.js | Two ordinary paper-ticket fares of ¥850, Shinano Railway fare table effective 14 March 2026, page 5: https://www.shinanorailway.co.jp/rail-info/fare/docs/20260314_shinetsu.pdf. Used as a planning reference, not a guaranteed future fare. | Shinano Railway fare reference |
 | A-T2 | Party sizes | Solo 1, couple 2, friends 4, family with parents 4 | js/assumptions.js | Used to split the van and the rooms. | Team |
 | A-T3 | Tokyo–Nagano return rail | ¥16,680 per person | js/data.js, Review page | Two reserved-seat fares of ¥8,340 each. | Re-check against JR East before launch |
 | A-T4 | Currency conversion | JPY source prices; reference display conversions in SGD, USD, EUR, GBP, AUD and HKD; original SGD fallback at ¥120 = S$1 | js/currency.js | Reference rates retrieved from Frankfurter with rate date shown. Cached rates are labelled; unavailable non-SGD conversions show JPY. Display preference stays in the browser; source calculations remain JPY. | Team |

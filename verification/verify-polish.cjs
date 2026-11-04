@@ -7,5 +7,5 @@ assert.match(ctx.dayNote(base),/open day/i);assert.match(ctx.dayNote({...base,am
 assert.match(ctx.dayNote({...base,long:true,am:activity,pm:activity,items:[activity]}),/full-day outing/i);
 assert.match(ctx.dayNote({...base,edge:'arrival'}),/journey to Myoko/);assert.match(ctx.dayNote({...base,edge:'departure'}),/journey home/);
 assert.match(ctx.dayNote({...base,zones:['MK','NJ'],am:activity,pm:activity,items:[activity]}),/travel between areas/);
-assert.match(ctx.dayNote({...base,items:[{ef:5,caution:'More walking than you chose; Outside the listed season on this day'}]}),/seasonal dates.*walking preference/);
+assert.match(ctx.dayNote({...base,items:[{ef:5,caution:'Above your activity preference; Outside the listed season on this day'}]}),/seasonal dates.*activity preference/);
 console.log('PASS daily notes for open blocks, full-day outings, transfers, travel edges and combined seasonal/walking cautions.');

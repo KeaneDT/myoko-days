@@ -13,5 +13,5 @@ MD.currency=(()=>{
     catch(e){failed=true;}finally{clearTimeout(timer);busy=false;announce();}
   }
   function select(c){if(!codes.includes(c))return;selected=c;try{localStorage.setItem('md_currency',c);}catch(e){}if(c!=='JPY')refresh();announce();}
-  return{codes,format,note,code:()=>selected,select,init:()=>{if(selected!=='JPY')refresh();}};
+  return{codes,format,note,displayCode:actual,code:()=>selected,select,init:()=>{if(selected!=='JPY')refresh();}};
 })();

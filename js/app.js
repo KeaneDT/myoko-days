@@ -6,7 +6,8 @@
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const yen = v => "¥" + Math.round(v).toLocaleString("en-US");
+  const yen = v => MD.currency.format(v);
+  const sourceYen = v => "¥" + Math.round(v).toLocaleString("en-US");
   const sgd = v => MD.currency.format(v);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const smooth = reduceMotion ? "auto" : "smooth";
@@ -19,10 +20,10 @@
     sel: new Set(), placements: {}, stay: "madarao", date: "2027-09-07",
     focus: null, target: null,                       // target = { day, slot|null }: where the next added place should go
     catFilter: [], fitsOnly: false, showExtras: false, query: "",
-    party: 2, rooms: 1, removed: []
+    party: 2, rooms: 1, removed: [], styleChoice: null
   };
   const KEY = "md_trip_v10";
-  const persist = () => ({ party: S.party, rooms: S.rooms, who: S.who, walk: S.walk, days: S.days, month: S.month, course: S.course, flex: S.flex, sel: [...S.sel], stay: S.stay, date: S.date, placements: S.placements });
+  const persist = () => ({ styleChoice: S.styleChoice, party: S.party, rooms: S.rooms, who: S.who, walk: S.walk, days: S.days, month: S.month, course: S.course, flex: S.flex, sel: [...S.sel], stay: S.stay, date: S.date, placements: S.placements });
   function save() { try { localStorage.setItem(KEY, JSON.stringify(persist())); } catch (e) { /* private mode or blocked storage */ } }
   const today = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
   const localDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -32,6 +33,7 @@
       const o = JSON.parse(localStorage.getItem(KEY) || "null");
       if (!o || typeof o !== "object" || !Array.isArray(o.sel)) return;
       hasSavedTrip = true;
+      if (D.courses[o.styleChoice]) S.styleChoice = o.styleChoice;
       if (D.who.some(w => w[0] === o.who)) S.who = o.who;
       S.party = MD.setup.party(o.party, MD.stay.partyOf(S.who));
       S.rooms = MD.setup.rooms(o.rooms, S.party);
@@ -42,7 +44,7 @@
       if(o.stay==="undecided")S.stay="own";
       else if (MD.stay.OPTIONS[o.stay]) S.stay = o.stay;
       else if (o.base && o.base !== "madarao") S.stay = "own";                       // an older save: anything but the Madarao hotel meant "somewhere else"
-      if (P.validDate(o.date) && D.months[Number(o.date.slice(5, 7))] && o.date >= today()) S.date = o.date;
+      if (!MD.setup.range(o.date,MD.stay.addDays(o.date,S.days-1),today()).error) S.date = o.date;
       S.month = Number(S.date.slice(5, 7));
       S.sel = new Set(o.sel.filter(id => D.byId[id]));
       if (o.placements && typeof o.placements === "object" && !Array.isArray(o.placements)) {
@@ -61,7 +63,8 @@
 
   /* anything that changes the trip calls changed(): save, then redraw whoever is listening */
   const listeners = [];
-  function changed(meta) { save(); setCount(); listeners.forEach(fn => fn(meta || {})); }
+  let lastUndo=null;
+  function changed(meta) { if(meta?.before)lastUndo=()=>restore(meta.before); save(); setCount(); listeners.forEach(fn => fn(meta || {})); }
   function setCount() { const n = $("#navcount"); if (n) { const b = $("#navn"); if (b) b.textContent = S.sel.size; n.dataset.n = S.sel.size; n.title = S.sel.size + (S.sel.size === 1 ? " place" : " places") + " in your trip"; const em = n.querySelector("em"); if (em) em.textContent = S.sel.size === 1 ? " place" : " places"; } }
 
   /* ---------- small helpers ---------- */
@@ -74,13 +77,15 @@
     t.className = "toast" + (o.kind ? " toast--" + o.kind : "");
     t.setAttribute("role", "status");
     const m = document.createElement("span"); m.textContent = msg; t.appendChild(m);
-    const gone = () => { t.classList.remove("is-in"); setTimeout(() => t.remove(), 600); };   // fades out, then goes
+    const gone = () => { if(t.matches(":hover")||t.contains(document.activeElement))return; t.classList.remove("is-in"); setTimeout(() => {if(t.matches(":hover")||t.contains(document.activeElement)){t.classList.add("is-in");arm();}else t.remove();}, 600); };
     const addBtn = (label, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "toast__undo"; b.textContent = label; b.addEventListener("click", () => { fn(); gone(); }); t.appendChild(b); };
-    if (o.undo) addBtn("Undo", o.undo);
+    if (o.undo) {lastUndo=o.undo;addBtn("Undo",()=>{const fn=lastUndo;lastUndo=null;fn?.();});}
     if (o.act) addBtn(o.act.label, o.act.fn);
     box.appendChild(t);
     requestAnimationFrame(() => t.classList.add("is-in"));
-    setTimeout(gone, o.undo || o.act ? 5000 : 3200);
+    let timer;const arm=()=>{clearTimeout(timer);timer=setTimeout(gone,o.undo||o.act?8000:3200);};
+    t.addEventListener('pointerenter',()=>clearTimeout(timer));t.addEventListener('focusin',()=>clearTimeout(timer));
+    t.addEventListener('pointerleave',()=>{if(!t.contains(document.activeElement))arm();});t.addEventListener('focusout',arm);arm();
   }
   let revealObs = null;
   function reveal() {
@@ -108,7 +113,7 @@
   }
   const isPinned = a => !!a.art;
   const CATS = { water: "Water", walk: "Walks", food: "Food", leaf: "Nature", culture: "Culture", onsen: "Onsen", bike: "Cycling", sky: "Views", craft: "Crafts" };
-  const WALK_LABEL = { 3: "Flat & short", 4: "Some hills", 5: "Active days" };
+  const WALK_LABEL = { 3: "Gentle", 4: "Moderate", 5: "Active" };
   const thumb = a => a.img ? `assets/thumb/${a.img}.jpg` : null;
   const SLOT_NAME = { am: "morning", pm: "afternoon", x: "" };
   const dateLabel = i => { const d = P.dateAt(S, i); return d ? d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : `Day ${i + 1}`; };
@@ -118,6 +123,20 @@
   const avail = a => P.availability(a, S);            // hard blocks only (closed, not a day-by-day activity)
   const caution = (a, day) => P.caution(a, S, day);   // soft notes: more walking than chosen, outside the listed season
 
+  function confirmAction(title,description,action,label='Confirm'){
+    let dlg=$('#tripDecision');if(!dlg){dlg=document.createElement('dialog');dlg.id='tripDecision';dlg.className='plan-conflict';dlg.setAttribute('aria-labelledby','tripDecisionTitle');document.body.append(dlg);}
+    const opener=document.activeElement;
+    dlg.innerHTML=`<h2 id="tripDecisionTitle">${esc(title)}</h2><p>${esc(description)}</p><div class="decision-actions"><button type="button" class="btn" data-accept>${esc(label)}</button><button type="button" class="linkbtn" data-cancel autofocus>Keep current plan</button></div>`;
+    dlg.onclick=e=>{if(e.target===dlg||e.target.closest('[data-cancel]'))dlg.close();else if(e.target.closest('[data-accept]')){dlg.close();action();}};
+    dlg.onclose=()=>{if(opener?.isConnected)opener.focus({preventScroll:true});};dlg.showModal();
+  }
+  function costDifference(next){const a=MD.costs.quote(S),b=MD.costs.quote(next),delta=b.total-a.total;return `${delta>0?'+':delta<0?'−':''}${sgd(Math.abs(delta))} per person · new estimate ${sgd(b.total)}${b.vanDays>a.vanDays?' · includes an extra van day':''}`;}
+  function confirmChange(next,action,note){
+    if(MD.setup.range(next.date,MD.stay.addDays(next.date,next.days-1),today()).error){toast('Keep your trip within July–October.',{kind:'warn'});return true;}
+    const a=MD.costs.quote(S),b=MD.costs.quote(next),extra=b.vanDays>a.vanDays||next.days>S.days;
+    if(!extra&&!note)return false;
+    confirmAction(note?'Check this activity':'Your trip estimate changes', [note?.replace('More walking than you chose','Above your activity preference'),extra?costDifference(next):''].filter(Boolean).join('. '),action,'Confirm change');return true;
+  }
   /* ---------- planning actions (used by every part of the interface) ---------- */
   function sentence(r, a) {
     let s = `Added ${a.name} to ${where(r.placed)}`;
@@ -139,6 +158,8 @@
     const before = snap();
     const r=o.auto?P.add(S,id,{targetDay:null,lock:false}):P.direct(S,id,t);
     if(!r.ok){requestPlacement(id,t,r.why);return r;}
+    const next={...S,sel:new Set([...S.sel,id]),placements:r.placements,days:r.days||S.days};
+    if(!o.approved && confirmChange(next,()=>addPlace(id,{...o,approved:true}),caution(a,r.placed?.day)))return {...r,pending:true};
     S.sel.add(id); S.placements = r.placements; S.days = r.days || S.days; S.removed = [];
     S.focusNew = id;
     changed({ added: id, moved: (r.moved || []).map(m => m.id), before });
@@ -167,8 +188,8 @@
       }
     });
     if(target&&occupied.length>1){const cleared={...temp,sel:new Set([...temp.sel].filter(x=>!occupied.includes(x))),placements:{...temp.placements}};occupied.forEach(x=>delete cleared.placements[x]);offer(`Remove ${occupied.map(x=>D.byId[x].name).join(' and ')}; place ${a.name} here`,P.direct(cleared,id,target),occupied);}
-    if(S.days<MAX_DAYS&&!choices.some(c=>!c.removed.length)){const r=P.direct({...temp,days:S.days+1},id,null);offer(`Extend the trip to ${S.days+1} days; place ${a.name}${r.placed?' on '+where(r.placed):''}`,r);}
-    dlg.innerHTML=`<p class="label">Your itinerary · your choice</p><h2 id="conflictTitle">Make room for ${esc(a.name)}</h2><p>${esc(why||'Choose a new block or remove this activity.')} Nothing will change until you choose.</p><div class="plan-conflict__choices">${choices.map((c,i)=>`<button type="button" data-placement-choice="${i}">${esc(c.label)}</button>`).join('')}${S.sel.has(id)?`<button type="button" data-placement-remove>Remove ${esc(a.name)} from my trip</button>`:''}</div><button type="button" class="plan-conflict__cancel" data-placement-cancel>Keep my plan unchanged</button>`;
+    if(S.days<MAX_DAYS&&!MD.setup.range(S.date,MD.stay.addDays(S.date,S.days),today()).error&&!choices.some(c=>!c.removed.length)){const r=P.direct({...temp,days:S.days+1},id,null);offer(`Extend the trip to ${S.days+1} days; place ${a.name}${r.placed?' on '+where(r.placed):''}`,r);}
+    dlg.innerHTML=`<p class="label">Your itinerary · your choice</p><h2 id="conflictTitle">Make room for ${esc(a.name)}</h2><p>${esc((why||'Choose a new block or remove this activity').replace(/[.!?]+$/,''))}. Nothing will change until you choose.</p><div class="plan-conflict__choices">${choices.map((c,i)=>`<button type="button" data-placement-choice="${i}">${esc(c.label)}${P.caution(a,{...S,days:c.r.days||S.days},c.r.placements[id]?.day)?`<small class="change-price">${esc(P.caution(a,{...S,days:c.r.days||S.days},c.r.placements[id]?.day))}</small>`:""}<small class="change-price">${esc(costDifference({...S,sel:new Set([...S.sel].filter(id=>!c.removed.includes(id)).concat(id)),placements:c.r.placements,days:c.r.days||S.days}))}</small></button>`).join('')}${S.sel.has(id)?`<button type="button" data-placement-remove>Remove ${esc(a.name)} from my trip</button>`:''}</div><button type="button" class="plan-conflict__cancel" data-placement-cancel>Keep my plan unchanged</button>`;
     dlg.onclick=e=>{
       if(e.target===dlg||e.target.closest('[data-placement-cancel]')){dlg.close();return;}
       if(e.target.closest('[data-placement-remove]')){dlg.close();removePlace(id);return;}
@@ -182,31 +203,42 @@
     const before = snap();
     S.sel.delete(id); delete S.placements[id]; S.removed = [];
     if (S.focus === id && !S.keepFocusOnRemove) { /* keep the card open so the visitor can re-add */ }
-    changed({ removed: id });
+    changed({ removed: id, before });
     toast(`Removed ${a.name}`, { undo: () => restore(before) });
   }
   function togglePlace(id) { return S.sel.has(id) ? (removePlace(id), { ok: true }) : addPlace(id); }
-  function placeManual(id, day, slot) {
+  function placeManual(id, day, slot, approved=false) {
     const before = snap();
     const isNew = !S.sel.has(id);
     const tmp = isNew ? { ...S, sel: new Set([...S.sel, id]) } : S;
     const r = P.place(tmp, id, day, slot);
     if (!r.ok) { requestPlacement(id,{day,slot},r.why); return r; }
+    let note = caution(D.byId[id], r.placed?.day);
+    if (r.swapped) {
+      note = [id, r.swapped].map(key => {
+        const activity = D.byId[key];
+        const previous = caution(activity, S.placements[key].day);
+        const next = caution(activity, r.placements[key].day);
+        return next && next !== previous ? `${activity.name}: ${next}` : "";
+      }).filter(Boolean).join(". ");
+    }
+    if(!approved&&confirmChange({...tmp,placements:r.placements,days:r.days||S.days},()=>placeManual(id,day,slot,true),note))return {...r,pending:true};
     if (isNew) S.sel.add(id);
     S.placements = r.placements; S.days = r.days || S.days;
-    changed({ added: isNew ? id : null, moved: [id, ...(r.moved || []).map(m => m.id)] });
+    changed({ added: isNew ? id : null, moved: [id, ...(r.moved || []).map(m => m.id)], before });
     const a = D.byId[id];
     const extra = r.swapped ? ` Swapped with ${D.byId[r.swapped].name}.` : (r.moved && r.moved.length ? ` Moved ${D.byId[r.moved[0].id].name} to ${where(r.moved[0].to)}.` : "");
     const cn = caution(a, r.placed && r.placed.day);
     toast(`${a.name} is on ${where(r.placed)}.${extra}${cn ? ` Note: ${cn.charAt(0).toLowerCase() + cn.slice(1)}.` : ""}${r.extended ? ` Added a day (${S.days} days now).` : ""}`, { undo: () => restore(before) });
     return r;
   }
-  function moveToDay(id, day) {
+  function moveToDay(id, day, approved=false) {
     const before = snap();
     const r = P.move(S, id, day);
     if (!r.ok) { requestPlacement(id,{day},r.why); return r; }
+    if(!approved&&confirmChange({...S,placements:r.placements,days:r.days||S.days},()=>moveToDay(id,day,true),caution(D.byId[id],r.placed?.day)))return {...r,pending:true};
     S.placements = r.placements; S.days = r.days || S.days;
-    changed({ moved: [id] });
+    changed({ moved: [id], before });
     toast(day === -1 ? "Taken out of your days" : `${D.byId[id].name} moved to ${where(r.placed)}`, { undo: () => restore(before) });
     return r;
   }
@@ -219,11 +251,18 @@
     return S.removed;
   }
   function changeSetting(k, v) {
+    if(k==='days'){
+      if(MD.setup.range(S.date,MD.stay.addDays(S.date,v-1),today()).error){toast('Keep your trip within July–October.',{kind:'warn'});return [];}
+      if(v>S.days){const next={...S,days:v};confirmAction('Add a day?',costDifference(next),()=>applySetting(k,v),'Add a day');return [];}
+    }
+    return applySetting(k,v);
+  }
+  function applySetting(k,v){
     const before = snap();
     S[k] = v;
     if (k === "month") { const d = new Date(S.date + "T12:00:00"); d.setDate(1); d.setMonth(v - 1); if (localDate(d) < today()) d.setFullYear(d.getFullYear() + 1); S.date = localDate(d); }
     const gone = reconcile();
-    changed({ settings: true });
+    changed({ settings: true, before });
     toast(gone.length ? `Kept your choices. ${gone.length} need a new block; choose where to move them in Build.` : "Updated. Your activities stay where you placed them.", { kind: gone.length ? "warn" : "", undo: () => restore(before) });
     return gone;
   }
@@ -258,7 +297,8 @@
     const c = D.courses[key];
     const ids = c.ids.filter(id => !avail(D.byId[id]) && !caution(D.byId[id]));   // a ready-made trip respects your settings; adding by hand never does
     const tmp = { ...S, sel: new Set(ids), placements: {} };
-    const r = P.fit(tmp), fitted = ids.filter(id => !r.dropped.includes(id));
+    const r = P.fit(tmp), fitted = ids.filter(id => !r.dropped.includes(id) && !P.caution(D.byId[id],tmp,r.placements[id]?.day));
+    Object.keys(r.placements).forEach(id=>{if(!fitted.includes(id))delete r.placements[id];});
     return { ids: fitted, placements: r.placements, yen: fitted.reduce((n, id) => n + (D.byId[id].price || 0), 0), tbc: 0, dropped: c.ids.length - fitted.length };
   }
   function startCourse(key) {
@@ -268,42 +308,46 @@
     return [];
   }
   function startBlank() { S.course = "blank"; S.sel = new Set(); S.placements = {}; S.removed = []; S.focus = null; S.target = null; }
-  function pickCourse(v) {
+  function pickCourse(v,approved=false) {
+    if(S.sel.size&&!approved){confirmAction("Replace your current itinerary?", "Your existing activities will be replaced.",()=>pickCourse(v,true),"Replace itinerary");return;}
     const before = snap();
     const note = v === "blank" ? (startBlank(), []) : startCourse(v);
-    changed({ restart: true });
+    changed({ restart: true, before });
     toast(v === "blank" ? "Started with a blank map" : "Started from " + D.courses[v].name + (note.length ? ", " + note.join(", ") : ""), { undo: () => restore(before) });
   }
-  function clearTrip() { const before = snap(); startBlank(); changed({ restart: true }); toast("Cleared your trip", { undo: () => restore(before) }); }
+  function clearTrip() { const before = snap(); startBlank(); changed({ restart: true, before }); toast("Cleared your trip", { undo: () => restore(before) }); }
 
   /* ---------- home ---------- */
   function recWhy() {
     if (S.walk >= 5) return "You chose active days.";
 
 
-    return S.walk <= 3 ? "You prefer flat, short walks." : "You're comfortable with some hills and steps.";
+    return S.walk <= 3 ? "You prefer light activity and time to pause." : "You're comfortable with hills, steps and moderate activity.";
   }
-  function courseCard(key, i, rec) {
+  function courseCard(key, i, rec, home = false) {
+    const chosen = !home && S.styleChoice === key, muted = !home && S.styleChoice && !chosen;
     const c = D.courses[key], pv = coursePreview(key), sq = MD.stay.quote(S);
     const ef = Math.max(0, ...pv.ids.map(id => D.byId[id].ef));
-    return `<article class="shape${rec ? " is-rec" : ""}" data-reveal style="--d:${(i * 0.1).toFixed(1)}s">
-      <div class="shape__img">${c.img ? `<img src="assets/img/${esc(c.img)}.jpg" alt="Team fieldwork · ${esc(c.ph)}" loading="lazy" decoding="async">` : ""}<span class="shape__n">0${i + 1}</span>${rec ? '<span class="shape__flag">Suggested</span>' : ""}</div>
+    const estimate=MD.costs.quote({...S,sel:new Set(pv.ids),placements:pv.placements});
+    const image=!home&&key==="active"&&!pv.ids.includes("sup") ? (D.byId[pv.ids[0]]?.img || D.byId.picnic.img) : c.img;
+    return `<article class="shape${rec ? " is-rec" : ""}${chosen ? " is-chosen" : ""}${muted ? " is-muted" : ""}" data-style-card="${key}" data-reveal style="--d:${(i * 0.1).toFixed(1)}s">
+      <div class="shape__img">${image ? `<img src="assets/img/${esc(image)}.jpg" alt="${esc(!home&&key==='active'&&!pv.ids.includes('sup')?(D.byId[pv.ids[0]]?.ph||D.byId.picnic.ph):c.ph)}" loading="lazy" decoding="async">` : ""}<span class="shape__n">0${i + 1}</span>${chosen ? '<span class="shape__flag">Selected</span>' : rec && !S.styleChoice ? '<span class="shape__flag">Suggested</span>' : ""}</div>
       <div class="shape__body">
         <p class="label">${esc(c.for)}</p>
         <h3 class="shape__title">${esc(c.name)}</h3>
         <p class="shape__promise">${esc(c.promise)}</p>
-        ${rec ? `<p class="shape__why">${esc(recWhy())}</p>` : ""}
-        <p class="shape__meta">${S.days} days · ${D.effort[ef] || "Choose your pace"} walking · ${lunches(pv.ids.filter(id => D.byId[id].lunch).length)}</p>
+        ${rec && !S.styleChoice ? `<p class="shape__why">${esc(recWhy())}</p>` : ""}
+        <p class="shape__meta">${S.days} days · ${D.effort[ef] || "Choose your pace"} effort · ${lunches(pv.ids.filter(id => D.byId[id].lunch).length)}</p>
         <ul class="shape__list">${pv.ids.map(id => `<li>${esc(D.byId[id].name)}</li>`).join("")}</ul>
-        <p class="shape__drop">${pv.ids.length} ${pv.ids.length === 1 ? "stop" : "stops"} across your days.</p>
+        <p class="shape__drop">${pv.ids.length} ${pv.ids.length === 1 ? "stop" : "stops"} across your days.${key==="active"&&S.walk<5?' <button type="button" class="linkbtn" data-active-course>For the full Move experience, use Active.</button>':""}</p>
         <div class="shape__foot">
-          <div class="shape__price"><small>Activities</small><b>${pv.yen ? yen(pv.yen) : "Free"}</b>${sq.stay ? `<span class="shape__with">With ${esc(sq.option.name)}: <span class="shape__with-n" data-convert="${pv.yen + sq.perPerson}">${sgd(pv.yen + sq.perPerson)}</span> per person</span>` : ""}</div>
-          <button type="button" class="link-arrow" data-course="${key}">Start this itinerary ${ARROW}</button>
+          <div class="shape__price"><small>Total for ${S.party} ${S.party===1?"traveller":"travellers"}</small><b data-convert="${estimate.groupTotal}">${sgd(estimate.groupTotal)}</b><span class="shape__with"><span data-convert="${estimate.total}">${sgd(estimate.total)}</span> per person · activities, van${sq.stay?' & stay':''}</span><details class="estimate-detail"><summary>Cost breakdown</summary><span>Activities ${sgd(estimate.activities)} · Stay ${sgd(estimate.stay)}<br>Van share ${sgd(estimate.van)}</span></details></div>
+          <button type="button" class="btn course-start" ${muted ? `data-choose-style="${key}"` : `data-course="${key}"`}>${home ? "Plan this itinerary" : muted ? "Choose " + c.name : "Start this itinerary"} ${ARROW}</button>
         </div>
       </div></article>`;
   }
   function renderHome() {
-    $("#homeCourses").innerHTML = ["restore", "discover", "active"].map((k, i) => courseCard(k, i)).join("");
+    $("#homeCourses").innerHTML = ["restore", "discover", "active"].map((k, i) => courseCard(k, i, false, true)).join("");
   }
   function renderArea() {
     $("#areaHosts").innerHTML = D.hosts.map(([name, role, affiliation]) =>
@@ -364,7 +408,7 @@
   const PEAKS = n => n===0?`<svg class="stay-card__peaks" viewBox="0 0 48 22" width="40" height="18" aria-hidden="true"><path d="M7 20h34M13 20V10l11-7 11 7v10M20 20v-7h8v7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>`:`<svg class="stay-card__peaks" viewBox="0 0 48 22" width="40" height="18" aria-hidden="true" focusable="false"><path d="${["M4 20 24 4l20 16", "M2 20 15 6l9 9 8-11 14 16", "M1 20 11 9l6 6 7-12 8 11 5-5 9 11"][Math.max(0, n - 1)]}" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
   const nightsWord = n => n + (n === 1 ? " night" : " nights");
   const dayTag = iso => { const d = new Date(MD.stay.parse(iso)); return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }); };
-  function shiftAllowed(date) { return P.validDate(date) && date >= today() && !!D.months[Number(date.slice(5, 7))]; }
+  function shiftAllowed(date) { return !MD.setup.range(date,MD.stay.addDays(date,S.days-1),today()).error; }
   function stayCards() {
     return MD.stay.ORDER.map(k => {
       const o = MD.stay.OPTIONS[k], q = MD.stay.quote({ ...S, stay: k }), on = S.stay === k;
@@ -379,8 +423,8 @@
   }
   function stayDetail() {
     const q = MD.stay.quote(S);
-    if (!q.stay) return `<p class="stay-note">${S.stay==="undecided"?"Accommodation is not chosen and is excluded from your total.":"Stay booked independently."} Activities, the van and the rail fare are priced as usual, and you can add one of the three properties at any time.</p>`;
-    const chips = q.nights.map(n => `<li class="night${n.tags.length ? " night--peak" : ""}"><span class="night__d">${esc(dayTag(n.date))}</span><b class="night__r">${yen(n.rate)}</b>${n.tags.length ? `<i class="night__t">${esc(n.tags.join(" · "))}</i>` : `<i class="night__t night__t--quiet">Midweek</i>`}</li>`).join("");
+    if (!q.stay) return `<p class="stay-note">${S.stay==="undecided"?"Accommodation is not chosen and is excluded from your total.":"Stay booked independently."} Your estimate covers activities and the van. You can choose a property anytime.</p>`;
+    const chips = q.nights.map(n => `<li class="night${n.tags.length ? " night--peak" : ""}"><span class="night__d">${esc(dayTag(n.date))}</span><b class="night__r">${yen(n.rate)}</b>${n.tags.length ? `<i class="night__t">${esc(n.tags.join(" · "))}</i>` : `<i class="night__t night__t--quiet">Standard rate</i>`}</li>`).join("");
     const hint = MD.stay.shiftHint(S, shiftAllowed);
     return `<div class="stay-nights"><p class="stay-nights__h">Your ${nightsWord(q.nights.length)} at ${esc(q.option.name)}</p><ul class="nights">${chips}</ul>
       <p class="stay-nights__sum"><span>${q.rooms === 1 ? "1 room" : q.rooms + " rooms"} · ${yen(q.total)}</span><b>${sgd(q.perPerson)} <small>per person</small></b></p>
@@ -397,10 +441,10 @@
     const range = P.validDate(S.date) ? `${dayLong(0)} to ${dayLong(S.days - 1)}` : "";
     $("#questions").innerHTML =
       `<div class="q q--group"><span class="q__n">01</span><span class="q__t">Who's coming?</span><div class="group-fields"><label for="partyCount">Travellers<select id="partyCount">${Array.from({length:9},(_,i)=>`<option value="${i+1}"${S.party===i+1?' selected':''}>${i+1} ${i?'travellers':'traveller'}</option>`).join('')}</select></label><label for="roomCount">Rooms<select id="roomCount">${Array.from({length:S.party-Math.ceil(S.party/2)+1},(_,i)=>i+Math.ceil(S.party/2)).map(n=>`<option value="${n}"${S.rooms===n?' selected':''}>${n} ${n===1?'room':'rooms'}</option>`).join('')}</select></label><label for="displayCurrency">Display currency<select id="displayCurrency">${MD.currency.codes.map(c=>`<option${MD.currency.code()===c?' selected':''}>${c}</option>`).join('')}</select></label></div></div>` +
-      q(2, "How much walking is comfortable?", "walk", [[3,'Gentle · Flat & Short'],[4,'Moderate · Hills & Steps'],[5,'Active · Longer Walks']], S.walk) +
+      q(2, "What activity level suits you?", "walk", [[3,'Gentle · Light Activity'],[4,'Moderate · Hills & Steps'],[5,'Active · Sustained Effort']], S.walk) +
       stayQuestion() +
       `<div class="q q--date"><span class="q__n">04</span><span class="q__t" id="plan-date-l">When will you visit?</span>${dateControl("plan-date", S.date)}<p class="date-echo" aria-live="polite">${esc(range)}</p><p class="small date-guidance">Green season runs July to October.</p></div>`;
-    const r = P.recommended(S);
+    const r = S.styleChoice || P.recommended(S);
     $("#planRec").innerHTML = `<span class="rec__k">A starting idea</span><span class="rec__name">${esc(D.courses[r].name)}</span><span class="rec__why">${esc(recWhy())}<span>In ${D.months[S.month]}: ${esc(D.events[S.month])}</span></span>`;
     $("#planCourses").innerHTML = ["restore", "discover", "active"].map((k, i) => courseCard(k, i, k === r)).join("");
     reveal();
@@ -440,12 +484,12 @@
     if(!d.edge&&!d.long){if(!d.am&&!d.pm)notes.push('An open day, with room to explore.');else if(!d.am)notes.push('Morning left open.');else if(!d.pm)notes.push('Afternoon left open.');else if(!notes.length)notes.push('Keep a little time between stops.');}
     const cautions=d.items.map(a=>P.caution(a,S,d.i));
     if(cautions.some(n=>n.includes('season')))notes.push('Check seasonal dates with the host.');
-    if(cautions.some(n=>n.includes('walking')))notes.push('Some activities exceed your walking preference.');
+    if(cautions.some(n=>n.includes('preference')))notes.push('Some activities exceed your activity preference.');
     return notes.join(' ');
   }
-  const EF = { 1: "Very easy", 2: "Easy", 3: "Moderate", 4: "Active", 5: "Strenuous" };
+  const EF = D.effort;
   const KANJI = ["一", "二", "三", "四", "五", "六", "七"];
-  const dots = n => `<span class="efdots" title="${EF[n] || ""}" aria-label="${EF[n] || ""}">${[1, 2, 3, 4, 5].map(i => `<i${i <= n ? ' class="on"' : ""}></i>`).join("")}</span>`;
+  const dots = n => `<span class="efdots" title="${EF[n] || ""}" aria-label="${EF[n] || ""}">${[1, 2, 3].map(i => `<i${i <= (n<=3?1:n===4?2:3) ? ' class="on"' : ""}></i>`).join("")}</span>`;
   const MODEL3D = new Set(["imori", "daruma", "picnic", "naena", "soba", "zip", "madarao", "ebike", "sup", "kayak", "cruise", "winery", "culture", "rice", "forest", "train"]);   // activities that have a crafted 3D model
   const bImg = (a, cls) => a.img ? `<img class="${cls}" src="${esc(thumb(a))}" alt="" loading="lazy" decoding="async">` : `<span class="${cls} ${cls}--ico" aria-hidden="true">${esc((CATS[a.cat] || "·").slice(0, 1))}</span>`;
   function renderBook(stayOnly=false) {
@@ -454,10 +498,10 @@
     const g = getAround(plan), nights = S.days - 1, nAct = ids.length, sq = MD.stay.quote(S);
     const dayTitle = d => d.zones.length ? d.zones.map(z => esc(D.zones[z].short)).join(" · ") : d.edge === "arrival" ? "Arrival" : d.edge === "departure" ? "Departure" : "A free day";
     const where2 = (d, a) => `${slotTitle(d, a) || "All day"} · Day ${d.i + 1}`;
-    const perPerson = t.yen + D.railReturn + g.share + sq.perPerson;
+    const perPerson = MD.costs.quote(S,plan).total;
     // the little itinerary beside the film
     const railCell = (d, a, wide) => !a ? `<div class="rail__s rail__s--empty" aria-label="Unplanned time"><span class="rail__empty-line" aria-hidden="true"></span></div>` : `<div class="rail__s${wide ? " rail__s--wide" : ""}">${MODEL3D.has(a.id) ? `<div class="rail__m" data-model="${a.id}" role="img" aria-label="3D model of ${esc(a.name)}. Drag to turn it."></div>` : `<div class="rail__m rail__m--none" aria-hidden="true"></div>`}<strong title="${esc(a.name)}">${esc(a.name)}</strong></div>`;
-    const TRAIN_IN = { id: "train", name: "Arrive by Shinano Railway" }, TRAIN_OUT = { id: "train", name: "Depart by Shinano Railway" };   // the journey itself, drawn like the activities
+    const TRAIN_IN = { id: "train", name: "Arrive at Myoko-Kogen" }, TRAIN_OUT = { id: "train", name: "Return journey" };   // the journey itself, drawn like the activities
     const rail = plan.days.map(d => { const am = d.edge === "arrival" && !d.am ? TRAIN_IN : d.am, pm = d.edge === "departure" && !d.pm ? TRAIN_OUT : d.pm; return `<li class="rail__day"><div class="rail__d"><b>Day ${d.i + 1}</b><span>${esc(dayShort(d.i))}</span></div>${am && am === pm ? railCell(d, am, true) : railCell(d, am) + railCell(d, pm)}</li>`; }).join("");
     const cards = plan.days.map(d => {
       const gd = g.days[d.i], note = dayNote(d);
@@ -474,20 +518,19 @@
     const ledger = `<div class="ledger">
       <h3 class="ledger__h">Activities</h3>${actRows || row("Nothing planned yet", "", "")}
       ${row("Activities subtotal", "", yen(t.yen), "sub")}
-      <h3 class="ledger__h">Getting there and around</h3>
-      ${row("Tokyo–Nagano return rail", "Reserved seats", yen(D.railReturn))}
-      ${row(`Chartered van · ${g.rideDays} day${g.rideDays === 1 ? "" : "s"}`, `${g.rideDays} × ${yen(g.perDay)} = ${yen(g.total)} for the group. Your share, split ${g.party} way${g.party === 1 ? "" : "s"}`, yen(g.share))}
-      ${row("Transport subtotal", "", yen(D.railReturn + g.share), "sub")}
+      <h3 class="ledger__h">Getting around</h3>
+      ${row(`Chartered van · ${g.rideDays} day${g.rideDays === 1 ? "" : "s"}`, `Flat ${sourceYen(g.perDay)} per activity day for the whole group. ${g.rideDays} days · ${yen(g.total)} total, shared by ${g.party}.`, yen(g.share))}
+      ${row("Transport subtotal", "", yen(g.share), "sub")}
       <h3 class="ledger__h">Your stay</h3>
       <div class="ledger__stay" style="min-height:${(nights+1)*88}px">${sq.stay
         ? sq.nights.map(n => row(esc(dayTag(n.date)), `${esc(sq.option.name)}${n.tags.length ? " · " + esc(n.tags.join(" · ")) : ""} · ${yen(n.rate)} a room`, yen(n.rate * sq.rooms / sq.party))).join("") + row("Stay subtotal", `${nights === 1 ? "1 night" : nights + " nights"} · ${sq.rooms === 1 ? "1 room" : sq.rooms + " rooms"} for ${sq.party}`, yen(sq.perPerson), "sub")
         : row(S.stay==="undecided"?"Accommodation not chosen":"Your own stay", "Excluded from this total. Days start from Myoko-Kogen Station", "Not included", "muted")}</div>
       ${row("Meals and personal extras", "Beyond what an activity includes", "Not included", "muted")}
-      <div class="ledger__total"><div><span class="ledger__k">Trip total per person</span><small>Activities, rail, van share${sq.stay ? " and stay" : ""}</small></div><div class="ledger__amt"><b>${yen(perPerson)}</b><span>${sgd(perPerson)}</span></div></div></div>`;
+      <div class="ledger__total"><div><span class="ledger__k">Trip total per person</span><small>Activities, van share${sq.stay ? " and stay" : ""}</small></div><div class="ledger__amt"><b>${sgd(perPerson)}</b><span>${sourceYen(perPerson)}</span></div></div></div>`;
     const stayPanel = `<div class="panel panel--card stay-panel"><div class="panel__head"><h2>Your stay</h2></div>
         <p>${sq.stay ? `${esc(sq.option.name)}, ${esc(sq.option.line.toLowerCase())}. ${nights === 1 ? "1 night" : nights + " nights"} from ${esc(dayShort(0))}.` : S.stay==="undecided"?"Accommodation is not chosen or included in your total. You can select a property at any time.":"Stay booked independently."}</p>
         <div class="stay-review-grid" role="group" aria-label="Where will you stay?">${MD.stay.ORDER.map(k=>{const o=MD.stay.OPTIONS[k],q=MD.stay.quote({...S,stay:k});return `<button type="button" data-stay-b="${k}" aria-pressed="${S.stay===k}">${o.pcg?PEAKS(o.tier):PEAKS(0)}<b>${esc(o.name)}</b><small>${o.pcg?yen(q.avgRoom)+" / Room / Night":k==="undecided"?"Accommodation excluded":"Booked independently"}</small></button>`;}).join("")}</div></div>`;
-    const bookHTML = `<header class="bk-head"><div class="bk-head__t"><p class="label">03 · Review your trip</p><h1>Your Myoko trip.</h1></div><p class="bk-head__meta">Prepared for<br><b>Patience Capital Group</b></p><p class="bk-head__p">${dayLong(0)} to ${dayLong(S.days - 1)} · ${S.days} days, ${nights} nights.</p></header>
+    const bookHTML = `<header class="bk-head"><div class="bk-head__t"><p class="label">03 · Review your trip</p><h1>Your Myoko trip.</h1></div><p class="bk-head__p">${dayLong(0)} to ${dayLong(S.days - 1)} · ${S.days} days, ${nights} nights.</p></header>
       <section class="bk-hero" aria-label="Your trip film and itinerary">
         <div class="bk-hero__film"><section class="trip-film" id="tripFilm" aria-label="Your trip film"></section></div>
         <aside class="bk-rail" aria-label="Your days at a glance"><div class="rail__cols" aria-hidden="true"><span></span><span>Morning</span><span>Afternoon</span></div><ol class="rail">${rail}</ol>${plan.overflow.length ? `<div class="notice"><b>Not in this itinerary:</b> ${plan.overflow.map(a => esc(a.name)).join(", ")}. Excluded from the subtotal.</div>` : ""}<div class="bk-rail__f"><a class="linkbtn" href="#build">Edit days</a><a class="linkbtn" href="#day-1" data-jump="day-1">Day-by-day details ↓</a></div></aside>
@@ -497,14 +540,14 @@
         <div class="stat"><span class="stat__k">The trip</span><b>${S.days}<small> days</small></b><span class="stat__s">${nights} night${nights === 1 ? "" : "s"}</span></div>
         <div class="stat"><span class="stat__k">Activities</span><b>${nAct}</b><span class="stat__s">planned</span></div>
         <div class="stat"><span class="stat__k">${sq.stay ? "Your stay" : "Stay"}</span><b>${sq.stay ? sgd(sq.perPerson) : S.stay==="undecided"?"To choose":"Own"}</b><span class="stat__s">${sq.stay ? esc(sq.option.name) + " · per person" : "Not included"}</span></div>
-        <div class="stat stat--total"><span class="stat__k">Trip total</span><b>${sgd(perPerson)}</b><span class="stat__s">${yen(perPerson)} per person</span></div>
+        <div class="stat stat--total"><span class="stat__k">Estimated trip total</span><b>${sgd(perPerson)}</b><span class="stat__s">${sourceYen(perPerson)} per person</span></div>
       </section>
       <section class="bk-main"><div class="panel panel--days"><div class="panel__head"><h2>Day by day</h2><a href="#build" class="linkbtn">Edit days</a></div><div class="bdays">${cards}</div></div>
-        <div class="panel panel--cost"><div class="panel__head"><h2>Your cost checklist</h2><span class="panel__aside">Per person · yen</span></div><p class="cost-note">${S.party} travellers · ${S.rooms} rooms · adult fares. Meals and extras excluded.</p>${ledger}
+        <div class="panel panel--cost"><div class="panel__head"><h2>Your cost checklist</h2><span class="panel__aside">Per person · ${MD.currency.displayCode()}</span></div><p class="cost-note">${S.party} ${S.party===1?"traveller":"travellers"} · ${S.rooms} ${S.rooms===1?"room":"rooms"} · adult fares. Meals and extras excluded.</p><div class="cost-summary"><div><small>Total for ${S.party} ${S.party===1?"traveller":"travellers"}</small><b>${sgd(MD.costs.quote(S,plan).groupTotal)}</b></div><div><small>Per person</small><b>${sgd(perPerson)}</b></div></div>${ledger}
           </div></section>
       <section class="bk-cards" aria-label="Next steps">
         ${stayPanel}
-        <div class="panel panel--card"><div class="panel__head"><h2>Plan your rail journey</h2></div><p>Tokyo → Nagano by Hokuriku Shinkansen, then the Kita-Shinano Line to Myoko-Kogen.</p><div class="panel__act"><a class="btn btn--sm" href="https://www.eki-net.com/en/jreast-train-reservation/Top/Index" target="_blank" rel="noopener">JR East reservations ↗</a><a class="linkbtn" href="https://www.shinanorailway.co.jp/rail-info/time-table/" target="_blank" rel="noopener">Kita-Shinano timetables (Japanese) ↗</a></div></div>
+        <div class="panel panel--card"><div class="panel__head"><h2>Plan your rail journey</h2></div><p>Tokyo → Nagano by Hokuriku Shinkansen, then the Kita-Shinano Line to Myoko-Kogen.</p><p class="rail-cost-note">Rail is booked separately. Allow about ${sgd(MD.costs.quote(S,plan).rail)} per adult, return; excluded from your trip total.</p><div class="panel__act"><a class="btn btn--sm" href="https://www.eki-net.com/en/jreast-train-reservation/Top/Index" target="_blank" rel="noopener">JR East reservations ↗</a><a class="linkbtn" href="https://www.shinanorailway.co.jp/rail-info/time-table/" target="_blank" rel="noopener">Kita-Shinano timetables (Japanese) ↗</a></div></div>
         <div class="panel panel--card save-panel"><div class="panel__head"><h2>Keep your plan</h2></div><p>Save your dates, days and costs. No name or email is needed.</p><div class="panel__act"><button type="button" class="btn" id="downloadPlan">Download plan</button><button type="button" class="btn btn--ghost" id="copyPlan">Copy plan</button></div><p id="copyMsg" class="small" aria-live="polite"></p></div></section>`;
     if(stayOnly){
       const oldPanelTop=$('#bookRoot .stay-panel')?.getBoundingClientRect().top;
@@ -532,29 +575,31 @@
       d.extras.forEach(a => parts.push(`Also: ${a.name} [${priceTxt(a)}]`));
       return `Day ${d.i + 1} (${dateLabel(d.i)}): ${parts.join("; ") || (d.edge === "arrival" ? "Arrival / settle in" : d.edge === "departure" ? "Departure / travel" : "Free day")}`;
     };
-    const total = t.yen + D.railReturn + g.share + sq.perPerson, both = v => `${yen(v)} (${sgd(v)})`;
+    const total = MD.costs.quote(S,p).total, both = v => `${sourceYen(v)} (${sgd(v)})`;
     const stayLines = sq.stay
       ? [`Stay: ${sq.option.name}, ${nights} night${nights === 1 ? "" : "s"}, ${sq.rooms} room${sq.rooms === 1 ? "" : "s"} for ${sq.party}`, ...sq.nights.map(n => `  ${dayTag(n.date)}: ${yen(n.rate)} a room${n.tags.length ? " · " + n.tags.join(" · ") : ""}`)]
       : [S.stay==="undecided"?"Stay: not chosen; accommodation excluded.":"Stay: your own arrangement; accommodation excluded. Days start from Myoko-Kogen Station."];
     return [`MYOKO DAYS — YOUR TRIP`, `${S.date} · ${S.days} days / ${nights} nights`, ...stayLines, "", ...p.days.map(line), "",
       `Not in this itinerary: ${p.overflow.map(a => a.name).join("; ") || "None"}`, "",
-      `GROUP: ${S.party} travellers, ${S.rooms} rooms`, `COST PER PERSON`, `Activities: ${both(t.yen)}`, `Tokyo–Nagano return rail: ${both(D.railReturn)}`,
+      `GROUP: ${S.party} ${S.party===1?'traveller':'travellers'}, ${S.rooms} ${S.rooms===1?'room':'rooms'}`, `TRIP TOTAL FOR THE GROUP: ${both(MD.costs.quote(S,p).groupTotal)}`, `COST PER PERSON`, `Activities: ${both(t.yen)}`,
       `Chartered van, ${g.rideDays} day${g.rideDays === 1 ? "" : "s"} (${yen(g.total)} for the group of ${g.party}): ${both(g.share)}`,
       sq.stay ? `Stay: ${both(sq.perPerson)}` : `Stay: not included`, `Trip total: ${both(total)}`, `Meals and personal extras are not included.`, "",
-      `JR East: https://www.eki-net.com/en/jreast-train-reservation/Top/Index`, `Shinano Railway: https://www.shinanorailway.co.jp/rail-info/time-table/`].join("\n");
+      `Rail is separate: allow about ${both(MD.costs.quote(S,p).rail)} per adult return via Nagano; excluded from the trip total.`, `JR East: https://www.eki-net.com/en/jreast-train-reservation/Top/Index`, `Shinano Railway: https://www.shinanorailway.co.jp/rail-info/time-table/`].join("\n");
   }
 
   /* ---------- events (home, plan, review) ---------- */
   function onClick(e) {
     const t = e.target;
+    if(t.closest('[data-undo-last]')){const fn=lastUndo;lastUndo=null;fn?.();return;}
+    if(t.closest('[data-active-course]')){changeSetting('walk',5);renderPlan();return;}
     if (t.closest("#heroVideoToggle")) { const dialog = $("#filmDialog"); dialog.showModal(); const play = $("#fullFilm").play(); if (play?.catch) play.catch(() => {}); return; }
     if (t.closest("#heroPause")) { const v = $("#heroVideo"); if (v.paused) v.play().catch(() => {}); else v.pause(); return; }
     if (t.closest("#filmClose")) { $("#filmDialog").close(); return; }
-    const quick=t.closest('[data-quick-course]');if(quick){if(quick.dataset.quickCourse!=='existing'){startCourse(quick.dataset.quickCourse);changed({restart:true});}location.hash='#book';return;}
+    const quick=t.closest('[data-quick-course]');if(quick){if(quick.dataset.quickCourse!=='existing'){if(S.sel.size){confirmAction("Replace your current itinerary?","Your existing activities will be replaced.",()=>{const before=snap();startCourse(quick.dataset.quickCourse);changed({restart:true,before});location.hash="#book";},"Replace itinerary");return;}startCourse(quick.dataset.quickCourse);changed({restart:true});}location.hash='#book';return;}
     const q = t.closest("[data-q]");
     if (q) {
       const k = q.dataset.q, v = k === "who" ? q.dataset.v : Number(q.dataset.v), before = snap();
-      S[k] = v; reconcile(); changed({ settings: true }); renderPlan();
+      S[k] = v; reconcile(); changed({ settings: true, before }); renderPlan();
       if (S.removed.length) toast(`Kept all choices. ${S.removed.length} need a new block in Build.`, { kind: "warn", undo: () => { restore(before); renderPlan(); } });
       return;
     }
@@ -564,10 +609,15 @@
     if (sb) { const anchor=document.querySelector('.stay-panel').getBoundingClientRect().top;document.documentElement.style.overflowAnchor='none';setStay(sb.dataset.stayB, true); renderBook(true);const keep=()=>window.scrollBy({top:document.querySelector('.stay-panel').getBoundingClientRect().top-anchor,behavior:'instant'});keep();requestAnimationFrame(()=>{keep();requestAnimationFrame(()=>{keep();document.documentElement.style.overflowAnchor='';});}); const again = document.querySelector(`[data-stay-b="${sb.dataset.stayB}"]`); if (again) again.focus({ preventScroll: true }); return; }
     const sh = t.closest("[data-shift]");
     if (sh) { setDate(sh.dataset.shift); renderPlan(); return; }
+    const choice = t.closest("[data-choose-style]");
+    if(choice){S.styleChoice=choice.dataset.chooseStyle;save();renderPlan();document.querySelector(`#planCourses [data-style-card="${S.styleChoice}"] .course-start`)?.focus({preventScroll:true});return;}
     const c = t.closest("[data-course]");
     if (c) {
+      S.styleChoice=c.dataset.course;
+      if(c.closest('#homeCourses')){save();location.hash='#plan';return;}
+      if(S.sel.size){confirmAction("Replace your current itinerary?","Your existing activities will be replaced.",()=>{const before=snap();startCourse(c.dataset.course);changed({restart:true,before});location.hash="#build";toast("Started from "+D.courses[c.dataset.course].name,{undo:()=>restore(before)});},"Replace itinerary");return;}
       const before = snap(), note = startCourse(c.dataset.course);
-      changed({ restart: true });
+      changed({ restart: true, before });
       location.hash = "#build";
       toast("Started from " + D.courses[c.dataset.course].name + (note.length ? ", " + note.join(", ") : ""), { undo: () => restore(before) });
       return;
@@ -661,8 +711,8 @@
     S, D, P, $, $$, esc, yen, sgd, ARROW, dateControl, readDate, reduceMotion, smooth, CATS, WALK_LABEL, MIN_DAYS, MAX_DAYS,
     save, snap, restore, changed, toast, countUp, reveal, thumb, today, localDate,
     priceTxt, lenTxt, runsTxt, isPinned, dateLabel, dayShort, dayLong, where, avail, caution, dayNote,
-    getAround, setStay, stayName, dayTag, nightsWord, addPlace, removePlace, togglePlace, placeManual, moveToDay, requestPlacement, reconcile, changeSetting, setDate, setDates, pickCourse, clearTrip, startCourse, startBlank, coursePreview,
-    onChange: fn => listeners.push(fn), planText, renderPlan, renderBook, route,
+    confirmAction, costDifference, undoAvailable:()=>!!lastUndo, getAround, setStay, stayName, dayTag, nightsWord, addPlace, removePlace, togglePlace, placeManual, moveToDay, requestPlacement, reconcile, changeSetting, setDate, setDates, pickCourse, clearTrip, startCourse, startBlank, coursePreview,
+    confirmChange, onChange: fn => listeners.push(fn), planText, renderPlan, renderBook, route,
     start() {
       if (!hasSavedTrip) { startBlank(); S.stay = "madarao"; S.days = 3; blankDefaults = true; }   // v17.4: nothing is chosen until the visitor picks a course (or a blank map) on the Plan page, so going straight to Build gives an empty map: no places, 3 days, and "somewhere else" as the stay (no PCG base is chosen for them)
       reconcile(); setCount(); route(); MD.currency.init();

@@ -59,7 +59,7 @@ MD.planner = (() => {
   function caution(a, s, day) {
     if (!a) return '';
     const bits = [];
-    if (a.ef > s.walk) bits.push('More walking than you chose');
+    if (a.ef > s.walk) bits.push('Above your activity preference');
     if (day != null) {
       const d = dateAt(s, day), m = d ? d.getMonth() + 1 : s.month;
       if (!a.months.includes(m)) bits.push('Outside the listed season on this day');

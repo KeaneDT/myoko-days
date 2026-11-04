@@ -9,7 +9,7 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta property="og:title" content="Myoko Days">
 <meta property="og:description" content="Make room for Myoko. Choose places on an illustrated 3D map and shape the days around them.">
-<meta property="og:image" content="assets/video/hero-poster.jpg">
+<meta property="og:image" content="https://keanedt.github.io/myoko-days/docs/images/map-overview.png">
 <link rel="icon" href="assets/brand/myoko-peaks.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/shippori-mincho-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -19,14 +19,15 @@
 <link rel="stylesheet" href="css/diorama.css">
 <link rel="stylesheet" href="css/refinement.css">
 <link rel="stylesheet" href="css/editorial.css?v=8.3">
-<link rel="stylesheet" href="css/media.css?v=9.2">
-<link rel="stylesheet" href="css/studio.css?v=12.3">
+<link rel="stylesheet" href="css/media.css?v=1.7.3">
+<link rel="stylesheet" href="css/studio.css?v=1.7.3">
 <link rel="stylesheet" href="css/v12.css?v=16.2">
 <link rel="stylesheet" href="css/v16.css?v=17.11">
 <link rel="stylesheet" href="css/ux.css?v=1.2.0">
-<link rel="stylesheet" href="css/quiet.css?v=1.4.1"><link rel="stylesheet" href="css/polish.css?v=1.5.3">
-<link rel="stylesheet" href="css/fieldnotes.css?v=1.2.2"><link rel="stylesheet" href="css/area.css?v=1.2.1">
+<link rel="stylesheet" href="css/quiet.css?v=1.4.1"><link rel="stylesheet" href="css/polish.css?v=1.7.6">
+<link rel="stylesheet" href="css/fieldnotes.css?v=1.2.2"><link rel="stylesheet" href="css/area.css?v=1.2.3">
 <script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="css/explore.css?v=1.7.3">
 </head>
 <body class="on-home">
 <a class="skip" href="#main">Skip to content</a>
@@ -76,7 +77,7 @@
 
     <section class="mapfeat" aria-labelledby="mapfeatTitle">
       <div class="mapfeat__art">
-        <img id="mapfeatImg" src="docs/images/map-overview.png" alt="The illustrated Myoko map, with mountains, villages, Lake Nojiri and activity markers" width="2576" height="1206" loading="lazy" decoding="async">
+        <img id="mapfeatImg" src="docs/images/map-overview.png" alt="Myoko Days illustrated 3D map, with mountains, villages, Lake Nojiri and activity markers" width="2576" height="1206" loading="lazy" decoding="async">
         <span class="mapfeat__credit">The Myoko Days map</span>
       </div>
       <span class="mapfeat__frame" aria-hidden="true"></span>
@@ -85,8 +86,8 @@
       <div class="mapfeat__txt">
         <div data-reveal>
           <h2 id="mapfeatTitle">Find your next day out on one 3D map.</h2>
-          <p>Turn it, zoom in, and open any place. Add it to a free block, or choose where it goes. Your days sit beside the map, always in view.</p>
-          <a class="btn" href="#build">Open the map <span class="arrow" aria-hidden="true"></span></a>
+          <p>Explore the mountains, villages and lakes. Get closer to the places that draw you, then make them part of your days.</p>
+          <button class="btn" type="button" data-open-explorer>Open the map <span class="arrow" aria-hidden="true"></span></button>
         </div>
       </div>
       <div class="mapfeat__compass" aria-hidden="true">
@@ -129,10 +130,9 @@
         <div data-reveal><p class="label"><span class="label__n">B</span>Getting there</p><h2>Two ways in by rail.</h2></div>
         <div class="arow__body" data-reveal>
           <ol class="timeline">
-            <li><b>Tokyo → Nagano</b><span>Hokuriku Shinkansen. Reserved seats are booked with JR East.</span></li>
-            <li><b>Nagano → Myoko-Kogen</b><span>Shinano Railway Kita-Shinano Line, a change of train at Nagano, ending at Myoko-Kogen.</span></li>
-            <li><b>Or by Jōetsumyōkō</b><span>Leave the Hokuriku Shinkansen at Jōetsumyōkō and take the Echigo Tokimeki Myoko Haneuma Line through Arai and Sekiyama to Myoko-Kogen. The two lines meet at Myoko-Kogen, where you change trains across the platform.</span></li>
-            <li><b>Around Myoko</b><span>Keinan buses link the station with Ikenotaira. Your plan includes a chartered van on the days you have something booked, so the mountain and lakeside places are covered.</span></li>
+            <li><b>Via Nagano</b><span>Tokyo → Nagano by Hokuriku Shinkansen, then the Kita-Shinano Line to Myoko-Kogen. Book Shinkansen seats with JR East.</span></li>
+            <li><b>Via Jōetsumyōkō</b><span>Leave the Hokuriku Shinkansen at Jōetsumyōkō and take the Echigo Tokimeki Myoko Haneuma Line through Arai and Sekiyama to Myoko-Kogen. Alight at Myoko-Kogen.</span></li>
+            <li><b>Around Myoko</b><span>Keinan buses link the station with Ikenotaira. The estimate includes a private van on activity days, so the mountain and lakeside places are covered.</span></li>
           </ol>
         </div>
       </section>
@@ -158,7 +158,7 @@
         <div class="arow__body faq" data-reveal>
           <details><summary>How do the days arrange themselves?</summary><p>Half-day activities take a morning or afternoon; full-day outings reserve both. Manual additions never move other choices silently. If a block is full, choose where to move an activity or what to remove. Drag a place onto Auto-arrange when you want automatic sorting.</p></details>
           <details><summary>Can I change my saved plan?</summary><p>Yes. Open Build and move or remove activities explicitly. Your choices stay in place until you decide otherwise.</p></details>
-          <details><summary>Is it suitable for older parents?</summary><p>Choose "Flat and short" walking when you plan. Activities above that effort level will not be added unless you raise the setting. The setting is a guide to effort, not an accessibility guarantee.</p></details>
+          <details><summary>Is it suitable for older parents?</summary><p>Choose Gentle activity pace. Suggested itineraries follow your preference. You can add a more demanding activity yourself; we’ll flag it before you confirm. Effort ratings are not an accessibility guarantee.</p></details>
                     <details><summary>What if it rains?</summary><p>Keep some free time in your days. Anything that cannot run in bad weather can be moved to another morning or afternoon.</p></details>
         </div>
       </section>
@@ -180,7 +180,7 @@
       </div>
     </header>
     <div class="wrap sect sect--tight">
-      <aside class="plan-price-note"><p><b>Prices vary with your dates.</b> Weekends and peak dates usually cost more.</p></aside>
+      <aside class="plan-price-note"><p><b>Prices vary with your dates.</b> Weekends and peak dates usually cost more. A flat ¥30,000 van charge per activity day is shared by your group. Rail is separate.</p></aside>
       <div class="questions" id="questions"></div>
       <div class="rec" id="planRec" aria-live="polite" hidden></div>
       <div class="plan__pick"><div><h2>Choose your starting point.</h2><p>Compare Restore, Discover and Move, or choose activities yourself on the map.</p></div><a href="#build" id="blankStart" class="btn btn--ghost">Build my own plan <span class="arrow" aria-hidden="true"></span></a></div>
@@ -222,7 +222,7 @@
     <div class="foot__top">
       <div>
         <a class="brand" href="#home"><span class="seal seal--peaks" aria-hidden="true"><svg viewBox="0 0 48 32" fill="none"><path d="M2 28 13 11l7 11L27 3l8 19 4-9 8 15H2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m9 18 4 3 3-4m7-5 4 4 4-4m6 6 2 3 2-3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M3 31h42" stroke="currentColor" stroke-width=".8"/></svg></span><span class="brand__name">Myoko Days</span></a>
-        <p class="foot__desc">A green-season itinerary builder for Myoko, made for Patience Capital Group.</p>
+        <p class="foot__desc">Slow journeys through Myoko’s mountains, lakes and local life.</p>
       </div>
       <div><h4>Plan</h4><ul><li><a href="#plan">01 · Plan a trip</a></li><li><a href="#build">02 · Build on the map</a></li><li><a href="#book">03 · Review your trip</a></li></ul></div>
       <div><h4>Read</h4><ul><li><a href="#about">About Myoko</a></li><li><a href="#about" data-area-jump="area-fieldnotes">Field Notes</a></li><li><a href="#courses">Three ways to feel Myoko</a></li></ul></div>
@@ -233,16 +233,16 @@
 
 <dialog id="mapExample" class="map-example example-modal" aria-labelledby="exampleTitle" hidden></dialog>
 <dialog id="filmDialog" class="film-dialog" aria-label="Myoko film"><div class="fd__stage" id="fdStage"><video id="fullFilm" playsinline preload="metadata" poster="assets/video/hero-poster.jpg?v=17.7"><source src="assets/video/hero.mp4?v=17.7" type="video/mp4">Your browser cannot play this film.</video><button type="button" id="filmClose" class="film-close" aria-label="Close film"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button><div class="fd__bar" id="fdBar"><button type="button" id="fdPlay" class="fd__play" aria-label="Pause"><svg class="i-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="i-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button><input id="fdSeek" class="fd__seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek"><span class="fd__time" id="fdTime">0:00 / 0:00</span></div></div><p class="fd__note">Use the written activity details for availability and times.</p></dialog>
-<script src="js/assumptions.js?v=17.0"></script>
+<script src="js/assumptions.js?v=1.7.3"></script>
 <script src="js/stay.js?v=1.4.1"></script>
-<script src="js/data.js?v=1.6.0"></script>
-<script src="js/planner.js?v=1.2.1"></script>
+<script src="js/data.js?v=1.7.3"></script>
+<script src="js/planner.js?v=1.2.2"></script>
 <script src="js/vignettes.js"></script>
-<script src="js/map.js?v=1.4.0"></script>
-<script src="js/media-data.js?v=13.1"></script><script src="js/media.js?v=1.5.0"></script>
-<script src="js/focus-data.js?v=13.1"></script><script src="js/focus.js?v=11.0"></script>
-<script src="js/calendar.js?v=1.5.0"></script>
+<script src="js/map.js?v=1.7.4"></script>
+<script src="js/media-data.js?v=1.7.3"></script><script src="js/media.js?v=1.7.3"></script>
+<script src="js/focus-data.js?v=1.7.3"></script><script src="js/focus.js?v=11.0"></script>
+<script src="js/calendar.js?v=1.7.3"></script>
 <script src="js/fieldnotes.js?v=1.3.0"></script>
-<script src="js/setup.js?v=1.4.0"></script><script src="js/currency.js?v=1.4.0"></script><script src="js/app.js?v=1.6.3"></script><script src="js/studio.js?v=1.5.0"></script><script src="js/map-example.js?v=1.5.0"></script><script src="js/tiles.js?v=13.1"></script><script src="js/filmplayer.js?v=12.5d"></script>
+<script src="js/setup.js?v=1.4.0"></script><script src="js/currency.js?v=1.7.3"></script><script src="js/costs.js?v=1.7.3"></script><script src="js/app.js?v=1.7.8"></script><script src="js/explore.js?v=1.7.3"></script><script src="js/studio.js?v=1.7.3"></script><script src="js/map-example.js?v=1.5.0"></script><script src="js/tiles.js?v=13.1"></script><script src="js/filmplayer.js?v=12.5d"></script>
 </body>
 </html>

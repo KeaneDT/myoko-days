@@ -2,31 +2,47 @@
 #v-about {
   --area-text: #33463c;
   --area-inset: clamp(20px, 4.2vw, 76px);
+  --area-white: #fff;
 }
 
 #v-about .area-content { width: 100%; }
+#v-about .pagehead {
+  width: 100%;
+  padding-inline: max(var(--area-inset), calc((100% - var(--wrap)) / 2));
+  background: var(--moss);
+  border-bottom: 0;
+}
+#v-about .pagehead h1,
+#v-about .pagehead .lede { color: #f9f6ee; }
+#v-about .pagehead .label { color: #e1e9df; }
 
 #v-about .area-jumps {
-  align-items: center;
-  gap: 4px clamp(16px, 2.4vw, 32px) !important;
-  padding: 12px var(--area-inset) 18px;
+  align-items: stretch;
+  gap: 8px !important;
+  padding: 16px var(--area-inset);
+  background: var(--area-white);
 }
 #v-about .area-jumps a:nth-child(n) {
+  display: inline-flex;
+  align-items: center;
   color: var(--area-text);
+  background: var(--area-white);
+  border: 1px solid #b8c2b8;
   font-size: 14px;
   min-height: 44px;
-  text-decoration: underline;
-  text-decoration-color: #869387;
-  text-underline-offset: 5px;
+  padding: 8px 14px;
+  text-decoration: none;
 }
 #v-about .area-jumps a:hover {
-  text-decoration-color: currentColor;
+  background: #eef2ed;
+  border-color: var(--area-text);
 }
 
 #v-about .fn {
   margin: 0;
   padding: var(--area-inset);
-  background: #e8eee5;
+  background: var(--paper);
+  padding-block-end: clamp(18px, 1.4vw, 30px);
 }
 #v-about .fn-heading > p,
 #v-about .fn-caption p {
@@ -51,10 +67,11 @@
   outline-offset: -4px;
 }
 
-#area-season { --area-band: #f0e5ca; }
-#area-travel { --area-band: #e4ecef; }
-#area-essentials { --area-band: #efe3da; }
-#area-questions { --area-band: #f9f6ee; }
+#area-season { --area-band: var(--paper); }
+#area-travel { --area-band: #faf8f2; }
+#area-essentials { --area-band: var(--paper); }
+#area-questions { --area-band: var(--area-white); }
+#v-about .area-next { background: var(--area-white); }
 #v-about .arow {
   grid-template-columns: minmax(165px, 1fr) minmax(0, 2.55fr);
   gap: 18px clamp(24px, 4vw, 56px);
@@ -124,7 +141,8 @@
 #v-about .area-fieldwork {
   margin: 0;
   padding: var(--area-inset);
-  background: #f2ede1;
+  background: #faf8f2;
+  padding-block-start: clamp(22px, 2vw, 40px);
   scroll-margin-top: 90px;
 }
 #v-about .area-fieldwork h2 { font-size: clamp(24px, 2.5vw, 34px); }

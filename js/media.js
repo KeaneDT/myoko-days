@@ -16,7 +16,7 @@ window.MD = window.MD || {};
   // No thematic substitutions: only an exact activity ID with a scheduled item qualifies.
   function compose(days) {
     const clips = [], missing = [], seen = new Set();
-    days.forEach(day => day.items.forEach(a => {
+    days.forEach(day => [...day.items,...(day.extras||[])].forEach(a => {
       if (seen.has(a.id)) return;
       seen.add(a.id);
       const videos = library[a.id]?.videos || [];
@@ -30,9 +30,9 @@ window.MD = window.MD || {};
     MD.tripFilm.destroy();
     if (!root) return;
     const {clips, missing} = compose(days), chapters=clips.map((c,i)=>({c,i})).filter((x,i,a)=>i===0||x.c.id!==a[i-1].c.id), total = clips.reduce((n,c) => n+c.duration, 0);
-    root.innerHTML = `<div class="trip-film__heading"><div><p class="label">A glimpse of your itinerary</p><h2>Your days, in motion.</h2></div><p>Real moments from the team’s October 2026 fieldwork, drawn from the activities in your plan.</p></div>`;
+    root.innerHTML = `<div class="trip-film__heading"><div><p class="label">A glimpse of your itinerary</p><h2>Your days, in motion.</h2></div><p>${chapters.length} of ${chapters.length+missing.length} planned activities shown · filmed in Myoko.</p></div>`;
     if (!clips.length) {
-      root.innerHTML += `<div class="trip-film__empty"><span aria-hidden="true">▷</span><h3>${missing.length?'Your plan is ready. Its footage is still to come.':'Start with a place that draws you in.'}</h3><p>${missing.length?'There is no matched footage for these planned activities yet.':'Add activities to your itinerary to bring your trip film to life.'}</p><a class="linkbtn" href="#build">Return to your itinerary →</a></div>`;
+      root.innerHTML += `<div class="trip-film__empty"><span aria-hidden="true">▷</span><h3>${missing.length?'Your plan is ready. Keep exploring Myoko.':'Start with a place that draws you in.'}</h3><p>${missing.length?'There is no matched footage for these planned activities yet.':'Add activities to your itinerary to bring your trip film to life.'}</p><a class="linkbtn" href="#build">Return to your itinerary →</a></div>`;
       return;
     }
     root.innerHTML += `<div class="trip-film__screen"><div class="trip-film__picture"><img class="trip-film__backdrop" src="${esc(clips[0].poster)}" alt=""><video class="trip-film__video" muted playsinline preload="metadata" aria-label="Your itinerary film"></video><video class="trip-film__video" muted playsinline preload="none" aria-hidden="true"></video><div class="trip-film__shade"></div><span class="trip-film__credit">Myoko Days · fieldwork film</span><button type="button" class="trip-film__start" data-film-start aria-label="Play your trip film">▷<span>Play your trip</span></button></div><div class="trip-film__caption"><span class="label" data-film-day></span><h3 data-film-name></h3></div></div><div class="trip-film__controls"><button type="button" data-film-prev title="Previous activity" aria-label="Previous activity">←</button><button type="button" data-film-play aria-label="Play your trip film">Play</button><button type="button" data-film-next title="Next activity" aria-label="Next activity">→</button><label class="sr-only" for="filmSeek">Seek through your trip film</label><input id="filmSeek" type="range" min="0" max="${total}" value="0" step="0.1"><span class="trip-film__time" data-film-time></span><span class="trip-film__silent">Silent film</span></div><div class="trip-film__chapters" aria-label="Film chapters">${chapters.map(({c,i})=>`<button type="button" data-film-chapter="${i}" aria-label="Skip to ${esc(c.name)}, Day ${c.day}"><img src="${esc(c.poster)}" alt=""><span><small>Day ${c.day}</small>${esc(c.name)}</span></button>`).join('')}</div><p class="sr-only" data-film-status aria-live="polite"></p>`;
@@ -71,7 +71,7 @@ window.MD = window.MD || {};
       const video=videos[active], c=clips[index];
       videos.forEach((v,i)=>{v.classList.toggle('is-active',i===active);v.setAttribute('aria-hidden',String(i!==active));});
       root.querySelector('.trip-film__backdrop').src=c.poster;
-      root.querySelector('[data-film-day]').textContent=`Day ${c.day} · activity ${chapters.findIndex(x=>x.c.id===c.id)+1} of ${chapters.length}`;
+      root.querySelector('[data-film-day]').textContent=`Day ${c.day} · film ${chapters.findIndex(x=>x.c.id===c.id)+1} of ${chapters.length}${missing.length?' · '+(chapters.length+missing.length)+' planned':''}`;
       root.querySelector('[data-film-name]').textContent=c.name;
       root.querySelector('[data-film-status]').textContent=`Day ${c.day}: ${c.name}`;
       root.querySelectorAll('[data-film-chapter]').forEach(b=>{const on=clips[Number(b.dataset.filmChapter)].id===c.id;b.classList.toggle('is-current',on);b.setAttribute('aria-current',on?'true':'false');});
