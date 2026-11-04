@@ -304,9 +304,11 @@
   }
   function renderHome() {
     $("#homeCourses").innerHTML = ["restore", "discover", "active"].map((k, i) => courseCard(k, i)).join("");
-    $("#homeHosts").innerHTML = D.hosts.map((h, i) => `<li class="host" data-reveal style="--d:${(i * 0.06).toFixed(2)}s"><span class="host__n">0${i + 1}</span><span class="host__name">${esc(h[0])}</span><span class="host__org">${esc(h[1])}</span><span class="host__role">${esc(h[2])}</span></li>`).join("");
+  }
+  function renderArea() {
+    $("#areaHosts").innerHTML = D.hosts.map((h, i) => `<li class="host" data-reveal style="--d:${(i * 0.06).toFixed(2)}s"><span class="host__n">0${i + 1}</span><span class="host__name">${esc(h[0])}</span><span class="host__org">${esc(h[1])}</span><span class="host__role">${esc(h[2])}</span></li>`).join("");
     $("#fieldworkJournal").innerHTML = ["coffee", "apple", "sake"].map(id => `<button type="button" data-gallery="${id}"><img src="${MD.mediaLibrary[id].photos[0].src}" alt="" loading="lazy"><span><small>From our fieldwork</small>${esc(MD.mediaLibrary[id].name)} <i aria-hidden="true">↗</i></span></button>`).join("");
-    $("#homeStrip").innerHTML = [["naena", 0, "Naena Falls"], ["winery", 0, "St Cousair vineyard"], ["sup", 0, "Lake Nojiri · paddling"], ["soba", 0, "Soba, made by hand"], ["daruma", 0, "Daruma painting"], ["ebike", 1, "Kurohime rice fields"]].map(([id, n, cap]) => `<figure><button type="button" data-gallery="${id}" aria-label="View ${esc(MD.mediaLibrary[id].name)} photos and films"><img src="${MD.mediaLibrary[id].photos[n].src}" alt="${esc(MD.mediaLibrary[id].photos[n].caption)}" loading="lazy" decoding="async"><figcaption>${esc(cap)}<span aria-hidden="true"> ↗</span></figcaption></button></figure>`).join("");
+    $("#areaGallery").innerHTML = [["naena", 0, "Naena Falls"], ["winery", 0, "St Cousair vineyard"], ["sup", 0, "Lake Nojiri · paddling"], ["soba", 0, "Soba, made by hand"], ["daruma", 0, "Daruma painting"], ["ebike", 1, "Kurohime rice fields"]].map(([id, n, cap]) => `<figure><button type="button" data-gallery="${id}" aria-label="View ${esc(MD.mediaLibrary[id].name)} photos and films"><img src="${MD.mediaLibrary[id].photos[n].src}" alt="${esc(MD.mediaLibrary[id].photos[n].caption)}" loading="lazy" decoding="async"><figcaption>${esc(cap)}<span aria-hidden="true"> ↗</span></figcaption></button></figure>`).join("");
   }
 
   /* ---------- day-first date control: three selects, so 7/9 can never be read as 9 July, and no past or out-of-season date can be picked ---------- */
@@ -567,7 +569,7 @@
 
   /* ---------- scroll: solid header after the hero, gentle parallax ---------- */
   const header = $("#siteHeader");
-  const PARALLAX = [["#heroMedia", 0.22, "top"], ["#mapfeatImg", 0.10, "mid"], ["#closingImg", 0.10, "mid"], ["#aboutImg", 0.08, "mid"]];
+  const PARALLAX = [["#heroMedia", 0.22, "top"], ["#mapfeatImg", 0.10, "mid"], ["#aboutImg", 0.08, "mid"]];
   let ticking = false;
   function onScroll() {
     if (ticking) return;
@@ -616,7 +618,8 @@
     document.body.classList.toggle("on-build", view === "build");
     document.title = view === "home" ? "Myoko Days · " + TITLES.home : TITLES[view] + " · Myoko Days";
     setCount();
-    if (view === "home" || view === "about") renderHome();
+    if (view === "home") renderHome();
+    if (view === "about") renderArea();
     heroPlay(view === "home");
     if (view === "plan") renderPlan();
     if (view === "build") MD.studio && MD.studio.enter(prev !== "build"); else MD.studio && MD.studio.leave();

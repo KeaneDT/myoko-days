@@ -1,0 +1,139 @@
+/* The Area reads as a journal followed by four distinct planning sections. */
+#v-about {
+  --area-text: #33463c;
+  --area-inset: clamp(20px, 3.5vw, 48px);
+}
+
+#v-about .area-jumps {
+  align-items: center;
+  gap: 4px clamp(16px, 2.4vw, 32px) !important;
+  padding: 12px 0 18px;
+}
+#v-about .area-jumps a:nth-child(n) {
+  color: var(--area-text);
+  font-size: 14px;
+  min-height: 44px;
+  text-decoration: underline;
+  text-decoration-color: #869387;
+  text-underline-offset: 5px;
+}
+#v-about .area-jumps a:hover {
+  text-decoration-color: currentColor;
+}
+
+#v-about .fn {
+  margin: 0 0 16px;
+  padding: var(--area-inset);
+  background: #e8eee5;
+}
+#v-about .fn-heading > p,
+#v-about .fn-caption p {
+  color: var(--area-text);
+  font-size: 15px;
+  line-height: 1.65;
+}
+#v-about .fn-heading > p { max-width: 35ch; }
+#v-about .fn-spread { background: #faf8f0; }
+#v-about .fn-places { padding: 18px 0 0; }
+#v-about .fn-places > span,
+#v-about .fn-places > small,
+#v-about .fn-sources {
+  color: var(--area-text);
+  font-size: 12px;
+}
+#v-about .fn-place-links button { font-size: 14px; }
+#v-about .fn-sources { padding-left: 0; }
+#v-about .fn-tabs button[aria-selected=true],
+#v-about .fn-steps button[aria-pressed=true] {
+  outline: 1px solid currentColor;
+  outline-offset: -4px;
+}
+
+#area-season { --area-band: #f0e5ca; }
+#area-travel { --area-band: #e4ecef; }
+#area-essentials { --area-band: #efe3da; }
+#area-questions { --area-band: #f9f6ee; }
+#v-about .arow {
+  grid-template-columns: minmax(165px, 1fr) minmax(0, 2.55fr);
+  gap: 18px clamp(24px, 4vw, 56px);
+  margin: 0 0 16px;
+  padding: var(--area-inset);
+  background: var(--area-band);
+  scroll-margin-top: 90px;
+}
+#v-about .arow .label,
+#v-about .arow .label__n { color: var(--area-text); }
+#v-about .arow h2 { font-size: clamp(24px, 2.5vw, 34px); }
+#v-about .arow__body {
+  max-width: 76ch;
+  color: var(--area-text);
+  font-size: 16px;
+  line-height: 1.65;
+}
+#v-about .arow__body :is(p, span) { color: inherit; }
+#v-about .season-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 28px;
+  padding: 0;
+}
+#v-about .season-notes p { padding: 0; }
+#v-about .season-notes b { display: block; }
+#v-about .timeline,
+#v-about .ticks,
+#v-about .faq { border-top: 0; }
+#v-about .timeline li {
+  grid-template-columns: minmax(115px, 1fr) minmax(0, 3fr);
+  gap: 6px 18px;
+  border-color: #33463c33;
+  padding: 12px 0;
+}
+#v-about .timeline li:first-child { padding-top: 0; }
+#v-about .timeline li:last-child,
+#v-about .ticks li:last-child,
+#v-about .faq details:last-child { border-bottom: 0; padding-bottom: 0; }
+#v-about .timeline b { font: 600 15px/1.65 var(--sans); }
+#v-about .timeline span { font-size: inherit; }
+#v-about .ticks li { border-bottom: 0; }
+#v-about .faq details { border-color: #33463c33; }
+#v-about .faq summary {
+  min-height: 48px;
+  padding: 12px 0;
+  color: var(--area-text);
+  font-size: 19px;
+}
+#v-about .faq summary:hover { text-decoration: underline; text-underline-offset: 4px; }
+#v-about .faq details p { padding-bottom: 16px; }
+
+@media (max-width: 760px) {
+  #v-about .arow { grid-template-columns: minmax(0, 1fr); }
+  #v-about .arow__body { font-size: 15px; }
+  #v-about .timeline li { grid-template-columns: minmax(0, 1fr); }
+  #v-about .fn-tabs { flex-wrap: wrap; gap: 8px; }
+  #v-about .fn-tabs button { padding-inline: 10px; }
+}
+@media (max-width: 480px) {
+  #v-about .season-notes,
+  #v-about .cols2 { grid-template-columns: minmax(0, 1fr); }
+  #v-about .fn-steps { flex-wrap: wrap; }
+  #v-about .fn-steps button { flex: 1 0 auto; }
+}
+
+#v-about .area-fieldwork {
+  margin: 0 0 16px;
+  padding: var(--area-inset);
+  background: #f2ede1;
+  scroll-margin-top: 90px;
+}
+#v-about .area-fieldwork h2 { font-size: clamp(24px, 2.5vw, 34px); }
+#v-about .area-fieldwork .gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+#v-about .area-fieldwork .gallery figure { margin: 0; max-width: none; grid-column: auto; }
+#v-about .area-fieldwork .gallery img { width: 100%; aspect-ratio: 3 / 2; height: auto; object-fit: cover; }
+@media (max-width: 650px) {
+  #v-about .area-fieldwork .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
