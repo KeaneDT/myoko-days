@@ -275,21 +275,21 @@
     if (!quiet) toast(k === "own" ? "Activities only. Your days start from Myoko-Kogen Station." : "Staying at " + stayName(k) + ".", { undo: () => restore(before) });
   }
   function setDate(value) { return setDates(value,MD.stay.addDays(value,S.days-1)); }
-  function setDates(arrival,departure,approved=false) {
-    const result=MD.setup.range(arrival,departure,today());
-    if(result.error)return false;
-    const proposed={...S,date:arrival,month:Number(arrival.slice(5,7)),days:result.days},current=P.schedule(S);
-    const next=P.schedule(proposed),issues=new Set(next.overflow.map(a=>a.name));
-    for(const id of S.sel){const a=D.byId[id],pl=P.slotOf(next,id);if(a&&P.caution(a,proposed,pl?.day)&&P.caution(a,proposed,pl?.day)!==P.caution(a,S,P.slotOf(current,id)?.day))issues.add(a.name);}
-    if(issues.size&&!approved){
-      let dialog=$('#dateChangeDialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='dateChangeDialog';dialog.className='date-change-dialog';dialog.setAttribute('aria-labelledby','dateChangeTitle');dialog.setAttribute('aria-describedby','dateChangeDescription');document.body.append(dialog);}
-      dialog.innerHTML=`<h2 id="dateChangeTitle">Check your new dates</h2><p id="dateChangeDescription">${[...issues].map(esc).join(', ')} may need a different block or fall outside the listed season. All your choices will be kept; nothing moves automatically.</p><div><button type="button" class="btn" data-apply-dates>Apply dates</button><button type="button" class="btn btn--ghost" data-keep-dates autofocus>Keep current dates</button></div>`;
-      dialog.querySelector('[data-apply-dates]').onclick=()=>{dialog.close();setDates(arrival,departure,true);if(currentView==='plan')renderPlan();};
-      dialog.querySelector('[data-keep-dates]').onclick=()=>dialog.close();dialog.showModal();return false;
-    }
-    const before=snap();S.date=arrival;S.month=proposed.month;S.days=result.days;
-    const gone=reconcile();changed({settings:true});
-    toast(gone.length?`New dates. ${gone.length} choices need a new block; nothing was removed.`:'New dates. Your activity order is unchanged.',{kind:gone.length?'warn':'',undo:()=>restore(before)});return true;
+  function setDates(arrival, departure) {
+    const result = MD.setup.range(arrival, departure, today());
+    if (result.error) return false;
+
+    const before = snap();
+    S.date = arrival;
+    S.month = Number(arrival.slice(5, 7));
+    S.days = result.days;
+    const unresolved = reconcile();
+    changed({ settings: true });
+    toast(unresolved.length
+      ? `New dates. ${unresolved.length} choices need a new block; nothing was removed.`
+      : 'New dates. Your activity order is unchanged.',
+    { kind: unresolved.length ? 'warn' : '', undo: () => restore(before) });
+    return true;
   }
   /* Start from a sample itinerary or a blank page */
   function coursePreview(key) {
