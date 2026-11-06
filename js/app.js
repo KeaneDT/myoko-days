@@ -23,7 +23,7 @@
     party: 2, rooms: 1, removed: [], styleChoice: null
   };
   const KEY = "md_trip_v10";
-  const persist = () => ({ styleChoice: S.styleChoice, party: S.party, rooms: S.rooms, who: S.who, walk: S.walk, days: S.days, month: S.month, course: S.course, flex: S.flex, sel: [...S.sel], stay: S.stay, date: S.date, placements: S.placements });
+  const persist = () => ({ party: S.party, rooms: S.rooms, who: S.who, walk: S.walk, days: S.days, month: S.month, course: S.course, flex: S.flex, sel: [...S.sel], stay: S.stay, date: S.date, placements: S.placements });
   function save() { try { localStorage.setItem(KEY, JSON.stringify(persist())); } catch (e) { /* private mode or blocked storage */ } }
   const today = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
   const localDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -33,7 +33,6 @@
       const o = JSON.parse(localStorage.getItem(KEY) || "null");
       if (!o || typeof o !== "object" || !Array.isArray(o.sel)) return;
       hasSavedTrip = true;
-      if (D.courses[o.styleChoice]) S.styleChoice = o.styleChoice;
       if (D.who.some(w => w[0] === o.who)) S.who = o.who;
       S.party = MD.setup.party(o.party, MD.stay.partyOf(S.who));
       S.rooms = MD.setup.rooms(o.rooms, S.party);
@@ -609,12 +608,20 @@
     if (sb) { const anchor=document.querySelector('.stay-panel').getBoundingClientRect().top;document.documentElement.style.overflowAnchor='none';setStay(sb.dataset.stayB, true); renderBook(true);const keep=()=>window.scrollBy({top:document.querySelector('.stay-panel').getBoundingClientRect().top-anchor,behavior:'instant'});keep();requestAnimationFrame(()=>{keep();requestAnimationFrame(()=>{keep();document.documentElement.style.overflowAnchor='';});}); const again = document.querySelector(`[data-stay-b="${sb.dataset.stayB}"]`); if (again) again.focus({ preventScroll: true }); return; }
     const sh = t.closest("[data-shift]");
     if (sh) { setDate(sh.dataset.shift); renderPlan(); return; }
+    const planLink = t.closest('a[href="#plan"]');
+    if (planLink && !e.defaultPrevented && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+      if (S.styleChoice !== null) {
+        S.styleChoice = null;
+        if (currentView === "plan") renderPlan();
+      }
+      return;
+    }
     const choice = t.closest("[data-choose-style]");
     if(choice){S.styleChoice=choice.dataset.chooseStyle;save();renderPlan();document.querySelector(`#planCourses [data-style-card="${S.styleChoice}"] .course-start`)?.focus({preventScroll:true});return;}
     const c = t.closest("[data-course]");
     if (c) {
       S.styleChoice=c.dataset.course;
-      if(c.closest('#homeCourses')){save();location.hash='#plan';return;}
+      if(c.closest('#homeCourses')){location.hash='#plan';return;}
       if(S.sel.size){confirmAction("Replace your current itinerary?","Your existing activities will be replaced.",()=>{const before=snap();startCourse(c.dataset.course);changed({restart:true,before});location.hash="#build";toast("Started from "+D.courses[c.dataset.course].name,{undo:()=>restore(before)});},"Replace itinerary");return;}
       const before = snap(), note = startCourse(c.dataset.course);
       changed({ restart: true, before });
@@ -689,7 +696,7 @@
     document.body.classList.toggle("on-build", view === "build");
     document.title = view === "home" ? "Myoko Days · " + TITLES.home : TITLES[view] + " · Myoko Days";
     setCount();
-    if (view === "home") renderHome();
+    if (view === "home") { S.styleChoice = null; renderHome(); }
     if (view === "about") renderArea();
     heroPlay(view === "home");
     if (view === "plan") renderPlan();

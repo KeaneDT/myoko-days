@@ -50,6 +50,16 @@ body.on-build .toasts,body.on-build.drawer-open .toasts{top:auto;bottom:82px;rig
 .shape__foot{flex-wrap:wrap;gap:18px}.shape__foot .course-start{width:100%;justify-content:space-between;margin-top:6px;white-space:normal;font-size:11px;padding:14px 18px;min-height:46px;border:1px solid var(--ink);text-decoration:none}
 .shape__foot .course-start .arrow{flex-shrink:0}.shape__price{min-width:0}
 
+#courses .home-course-guide {
+  width: 100%;
+  min-height: 54px;
+  margin-top: clamp(14px, 2vw, 24px);
+  padding: 12px clamp(16px, 3vw, 28px);
+  white-space: normal;
+  line-height: 1.4;
+}
+#courses .home-course-guide .arrow { width: 22px; }
+
 #homeCourses .shape__foot {
   border-top: 0;
   justify-content: flex-start;
